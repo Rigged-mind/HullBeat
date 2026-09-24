@@ -1,0 +1,1607 @@
+{
+  "en": {
+    "aircon": [
+      "air con",
+      "AC",
+      "climate",
+      "Webasto marine"
+    ],
+    "ais": [
+      "AIS",
+      "transponder"
+    ],
+    "alternator_belt": [
+      "fan belt",
+      "vee belt",
+      "serpentine belt"
+    ],
+    "anchor_bridle_hook": [
+      "chain hook",
+      "chain grab",
+      "Mantus hook"
+    ],
+    "anodes_hull": [
+      "zincs",
+      "sacrificial anodes",
+      "hull zincs"
+    ],
+    "autopilot": [
+      "auto pilot",
+      "pilot",
+      "self steering"
+    ],
+    "bathing_platform": [
+      "swim platform",
+      "swim ladder",
+      "boarding ladder"
+    ],
+    "battery_monitor": [
+      "shunt",
+      "BMV",
+      "Victron",
+      "state of charge"
+    ],
+    "bilge_alarm": [
+      "high water alarm",
+      "bilge water alarm",
+      "float alarm"
+    ],
+    "bitter_end": [
+      "chain bitter end",
+      "chain tail"
+    ],
+    "blower": [
+      "blower",
+      "bilge blower",
+      "engine bay fan",
+      "ventilation fan"
+    ],
+    "boat_hook": [
+      "boathook",
+      "pike pole"
+    ],
+    "bonding_system": [
+      "bonding",
+      "ground bus",
+      "earth bonding",
+      "galvanic bonding"
+    ],
+    "bow_thruster_grates": [
+      "tunnel grate",
+      "thruster grate"
+    ],
+    "chainplates": [
+      "chain plates",
+      "shroud attachment"
+    ],
+    "chartplotter": [
+      "plotter",
+      "MFD",
+      "GPS",
+      "Raymarine",
+      "Garmin",
+      "B&G"
+    ],
+    "clutches": [
+      "rope clutch",
+      "jammer",
+      "Spinlock"
+    ],
+    "code_zero_furler": [
+      "top down furler",
+      "continuous line furler",
+      "torsion rope"
+    ],
+    "coolant": [
+      "antifreeze",
+      "glycol"
+    ],
+    "davits": [
+      "dinghy davits",
+      "lifting gear"
+    ],
+    "dc_dc_charger": [
+      "DC to DC",
+      "B2B charger",
+      "Orion"
+    ],
+    "deck_rails_lifelines": [
+      "guard rails",
+      "pulpit",
+      "pushpit",
+      "stanchions",
+      "guardwires"
+    ],
+    "diesel_heater": [
+      "Webasto",
+      "Eberspacher",
+      "diesel heating"
+    ],
+    "drain_plug": [
+      "drain plug",
+      "garboard plug",
+      "bung",
+      "transom plug",
+      "boat plug"
+    ],
+    "drogue": [
+      "series drogue",
+      "Jordan drogue",
+      "sea brake"
+    ],
+    "dry_exhaust_silencer": [
+      "dry stack",
+      "stack",
+      "dry exhaust"
+    ],
+    "egt_monitoring": [
+      "pyrometer",
+      "EGT gauge",
+      "exhaust temperature"
+    ],
+    "engine_oil": [
+      "oil change",
+      "lube oil",
+      "motor oil"
+    ],
+    "engine_oil_filter": [
+      "oil filter"
+    ],
+    "epirb": [
+      "beacon",
+      "PLB",
+      "personal locator"
+    ],
+    "exhaust_bellows": [
+      "expansion joint",
+      "bellows",
+      "compensator"
+    ],
+    "exhaust_hose": [
+      "waterlock",
+      "water lift muffler",
+      "muffler",
+      "wet exhaust"
+    ],
+    "flares": [
+      "pyrotechnics",
+      "parachute flares",
+      "smoke signals"
+    ],
+    "flex_coupling": [
+      "flexible coupling",
+      "R&D coupling"
+    ],
+    "folding_prop": [
+      "feathering prop",
+      "Gori",
+      "Flexofold",
+      "Maxprop"
+    ],
+    "fridge": [
+      "refrigeration",
+      "Isotherm",
+      "Frigoboat",
+      "cold plate"
+    ],
+    "fuel_filter_fine": [
+      "secondary filter",
+      "on engine filter"
+    ],
+    "fuel_prefilter": [
+      "Racor",
+      "water separator",
+      "primary filter",
+      "separator"
+    ],
+    "gas_leak_test": [
+      "LPG leak test",
+      "propane leak test",
+      "bubble test"
+    ],
+    "gas_locker_drain": [
+      "propane locker drain",
+      "gas locker vent"
+    ],
+    "gearbox": [
+      "transmission",
+      "ZF",
+      "Hurth"
+    ],
+    "gen_enclosure": [
+      "sound shield",
+      "acoustic enclosure",
+      "canopy"
+    ],
+    "glow_plugs": [
+      "heater plugs",
+      "preheat plugs"
+    ],
+    "grab_bag": [
+      "ditch bag",
+      "abandon ship bag"
+    ],
+    "harnesses_tethers": [
+      "tether",
+      "safety harness",
+      "clip on"
+    ],
+    "heads_pump": [
+      "toilet",
+      "head",
+      "joker valve",
+      "marine toilet"
+    ],
+    "headsail_furler": [
+      "roller furling",
+      "furler",
+      "genoa furler",
+      "Furlex",
+      "Profurl"
+    ],
+    "headsail_uv": [
+      "sacrificial strip",
+      "UV strip",
+      "sun strip"
+    ],
+    "heat_exchanger_anode": [
+      "pencil zinc",
+      "pencil anode"
+    ],
+    "holding_tank": [
+      "black tank",
+      "waste tank",
+      "blackwater"
+    ],
+    "hydrogenerator": [
+      "hydro generator",
+      "Watt and Sea",
+      "WattandSea",
+      "towed generator"
+    ],
+    "inner_forestay": [
+      "baby stay",
+      "solent stay",
+      "cutter stay"
+    ],
+    "interior_joinery": [
+      "headliner",
+      "cabin sole",
+      "woodwork"
+    ],
+    "inverter": [
+      "inverter charger",
+      "Multiplus"
+    ],
+    "jackstays": [
+      "jacklines",
+      "jack lines",
+      "safety lines"
+    ],
+    "keel_cooling": [
+      "Gridcooler",
+      "Fernstrum",
+      "keel cooler"
+    ],
+    "keel_joint": [
+      "keel smile",
+      "keel to hull joint"
+    ],
+    "lifejacket_cylinders": [
+      "gas cylinder",
+      "rearm kit",
+      "auto cartridge"
+    ],
+    "lifejackets": [
+      "PFD",
+      "life vest",
+      "life jacket",
+      "buoyancy aid"
+    ],
+    "liferaft": [
+      "life raft",
+      "raft"
+    ],
+    "macerator": [
+      "waste pump",
+      "pump out",
+      "deck pumpout"
+    ],
+    "mainsheet_traveler": [
+      "traveller",
+      "mainsheet track",
+      "traveler car"
+    ],
+    "mast_step": [
+      "mast partners",
+      "step",
+      "mast foot"
+    ],
+    "mixing_elbow": [
+      "elbow",
+      "exhaust elbow",
+      "riser",
+      "injection bend"
+    ],
+    "mob_equipment": [
+      "man overboard",
+      "lifesling",
+      "danbuoy",
+      "horseshoe",
+      "MOB"
+    ],
+    "mooring_cleats": [
+      "bitts",
+      "bollard",
+      "chock",
+      "cleat",
+      "fairlead",
+      "hawsehole",
+      "mooring pipe",
+      "panama lead",
+      "samson post"
+    ],
+    "mooring_snubbers": [
+      "dock line snubber",
+      "mooring compensator",
+      "shock absorber"
+    ],
+    "national_inspection": [
+      "BSS",
+      "ITB",
+      "Revisione",
+      "Bootszeugnis",
+      "safety scheme"
+    ],
+    "nav_lights": [
+      "navigation lights",
+      "running lights",
+      "steaming light"
+    ],
+    "nmea_network": [
+      "NMEA 2000",
+      "N2K",
+      "SeaTalk",
+      "backbone"
+    ],
+    "nonskid": [
+      "non slip",
+      "non-slip",
+      "deck grip"
+    ],
+    "ob_anodes": [
+      "outboard zincs"
+    ],
+    "operator_licence": [
+      "ICC",
+      "skipper license",
+      "day skipper"
+    ],
+    "passerelle": [
+      "boarding plank",
+      "gangplank",
+      "gangway"
+    ],
+    "pelican_hooks": [
+      "gate hooks",
+      "lifeline gate",
+      "senhouse slip"
+    ],
+    "radio_licence": [
+      "MMSI",
+      "ship radio license",
+      "call sign"
+    ],
+    "raw_water_impeller": [
+      "impeller",
+      "Jabsco",
+      "water pump impeller",
+      "sea water pump"
+    ],
+    "raw_water_strainer": [
+      "sea strainer",
+      "seawater strainer",
+      "basket strainer"
+    ],
+    "rcd_elcb": [
+      "RCD",
+      "GFCI",
+      "ELCB",
+      "earth leakage"
+    ],
+    "rigging_shears": [
+      "bolt cutter",
+      "rig cutter",
+      "hydraulic cutter",
+      "cable cutter"
+    ],
+    "running_backstays": [
+      "runners",
+      "checkstays",
+      "running backs"
+    ],
+    "safety_padeyes": [
+      "backing plate",
+      "harness point",
+      "jackline anchor",
+      "padeye",
+      "u-bolt"
+    ],
+    "sail_covers": [
+      "stack pack",
+      "lazy bag",
+      "lazyjacks",
+      "lazy jacks",
+      "mainsail cover"
+    ],
+    "saildrive_anode": [
+      "saildrive zinc"
+    ],
+    "sart": [
+      "AIS SART",
+      "search and rescue transponder"
+    ],
+    "sea_anchor": [
+      "parachute anchor",
+      "para anchor"
+    ],
+    "sea_chest": [
+      "seachest",
+      "sea box"
+    ],
+    "seacocks": [
+      "thru hull valve",
+      "through hull valve",
+      "ball valve",
+      "sea cock"
+    ],
+    "secondary_anchor": [
+      "kedge",
+      "kedge anchor",
+      "storm anchor",
+      "Fortress"
+    ],
+    "shaft_anode": [
+      "shaft zinc",
+      "prop zinc"
+    ],
+    "shaft_bellows": [
+      "shaft seal bellows",
+      "PSS bellows"
+    ],
+    "snubber": [
+      "bridle",
+      "anchor snubber",
+      "chain hook"
+    ],
+    "snuffer": [
+      "sock",
+      "spinnaker sock",
+      "squeezer",
+      "ATN"
+    ],
+    "solar": [
+      "solar panels",
+      "MPPT",
+      "PV"
+    ],
+    "sprayhood_bimini": [
+      "dodger",
+      "spray hood",
+      "bimini",
+      "canvas",
+      "cockpit enclosure"
+    ],
+    "steering_cables_sheaves": [
+      "steering chain",
+      "turning sheaves",
+      "idlers",
+      "cable steering"
+    ],
+    "stern_tube": [
+      "cutless bearing",
+      "cutlass bearing",
+      "shaft bearing"
+    ],
+    "stove_gimbal": [
+      "gimbal",
+      "fiddles",
+      "pot holders"
+    ],
+    "stuffing_box": [
+      "packing gland",
+      "shaft seal",
+      "dripless",
+      "PSS",
+      "packing"
+    ],
+    "survey": [
+      "surveyor",
+      "pre purchase survey",
+      "condition survey"
+    ],
+    "teak_deck": [
+      "teak",
+      "caulking",
+      "deck seams"
+    ],
+    "tender_hull": [
+      "dinghy",
+      "RIB",
+      "inflatable",
+      "tender"
+    ],
+    "tender_outboard": [
+      "outboard",
+      "dinghy motor",
+      "kicker"
+    ],
+    "through_hulls": [
+      "thru hulls",
+      "skin fittings",
+      "thruhull"
+    ],
+    "timing_belt": [
+      "cam belt",
+      "cambelt",
+      "timing chain"
+    ],
+    "tracks_cars": [
+      "genoa track",
+      "jib track",
+      "sheet car"
+    ],
+    "transducers": [
+      "depth sounder",
+      "sounder",
+      "log",
+      "paddlewheel",
+      "depth transducer"
+    ],
+    "trim_tabs": [
+      "interceptors",
+      "trim plates"
+    ],
+    "tube_valves": [
+      "Halkey Roberts",
+      "inflation valve",
+      "valve"
+    ],
+    "tubes": [
+      "hypalon",
+      "inflatable collar",
+      "pontoon",
+      "PVC",
+      "sponson",
+      "tube"
+    ],
+    "vang": [
+      "kicker",
+      "boom vang",
+      "rod kicker"
+    ],
+    "ventilation": [
+      "dorade",
+      "dorades",
+      "vents",
+      "mushroom vent"
+    ],
+    "vhf": [
+      "radio",
+      "DSC",
+      "marine radio"
+    ],
+    "washboards": [
+      "hatch boards",
+      "drop boards",
+      "companionway boards"
+    ],
+    "water_heater_anode": [
+      "calorifier anode",
+      "magnesium anode"
+    ],
+    "water_pump": [
+      "pressure pump",
+      "fresh water pump",
+      "accumulator"
+    ],
+    "watermaker": [
+      "desalinator",
+      "reverse osmosis",
+      "RO",
+      "Spectra"
+    ],
+    "wind_instrument": [
+      "anemometer",
+      "masthead unit",
+      "wind vane"
+    ],
+    "windlass": [
+      "anchor winch",
+      "capstan",
+      "gypsy"
+    ],
+    "windlass_clutch": [
+      "gypsy clutch",
+      "friction cone"
+    ],
+    "wire_terminals": [
+      "swage terminals",
+      "Sta-Lok",
+      "Norseman",
+      "rigging terminals"
+    ],
+    "wooden_bungs": [
+      "softwood plugs",
+      "tapered plugs",
+      "emergency plugs"
+    ]
+  },
+  "uk": {
+    "aircon": [
+      "кондиционер"
+    ],
+    "alternator_belt": [
+      "ремінь генератора",
+      "пас помпи",
+      "клиновий ремінь",
+      "поліклиновий пас",
+      "струмок",
+      "ремень",
+      "приводной ремень"
+    ],
+    "anchor_chain": [
+      "цепь",
+      "якорная цепь"
+    ],
+    "anchor_light": [
+      "якорный огонь"
+    ],
+    "anodes_hull": [
+      "протектори",
+      "цинки",
+      "жертовні аноди",
+      "цинкові аноди",
+      "жертви",
+      "аноди",
+      "цинковий захист",
+      "цинк",
+      "аноды корпуса",
+      "магнієвий анод",
+      "алюмінієвий анод",
+      "цинковий анод"
+    ],
+    "anti_siphon": [
+      "антисифон",
+      "повітряний клапан",
+      "сифонний клапан",
+      "петля антисифона"
+    ],
+    "antifouling": [
+      "антифоулінг",
+      "фарба днища",
+      "протиобростайка",
+      "необростайка",
+      "необрастайка",
+      "ядовитка",
+      "фарба для днища",
+      "антіфоулінг",
+      "купороска",
+      "краска днища"
+    ],
+    "autopilot": [
+      "автопілот",
+      "авторульовий",
+      "автопилот",
+      "авторулевой"
+    ],
+    "backstay": [
+      "ахтерштаг"
+    ],
+    "battery_monitor": [
+      "шунт",
+      "монітор батарей",
+      "BMV",
+      "Victron"
+    ],
+    "bilge_alarm": [
+      "сигналізація трюмної води",
+      "датчик рівня в трюмі",
+      "пищалка трюму",
+      "датчик затоплення",
+      "поплавок тривоги"
+    ],
+    "bilge_pump_auto": [
+      "трюмная помпа",
+      "насос трюмный"
+    ],
+    "bitter_end": [
+      "корінний кінець",
+      "кріплення ланцюга в ящику",
+      "жвака-галс",
+      "жвакагалс",
+      "хвіст ланцюга",
+      "прив'язка якірного ланцюга"
+    ],
+    "blocks": [
+      "блоки",
+      "роульсы"
+    ],
+    "blower": [
+      "бловер",
+      "витяжка моторного",
+      "вентиляція моторного відсіку",
+      "продувка трюму",
+      "blower",
+      "витяжний вентилятор",
+      "продув"
+    ],
+    "boat_hook": [
+      "багор",
+      "відпірний гак",
+      "гак",
+      "отпорник"
+    ],
+    "boom": [
+      "гік",
+      "гіка",
+      "вертлюг",
+      "вертлюг гіка",
+      "gooseneck",
+      "гик"
+    ],
+    "chainplates": [
+      "обушки вант",
+      "кріплення вант",
+      "вант-путенси",
+      "путенси",
+      "пластини вант",
+      "вуха вант"
+    ],
+    "chartplotter": [
+      "плотер",
+      "картплоттер",
+      "навігатор",
+      "GPS",
+      "плоттер"
+    ],
+    "clutches": [
+      "стопори",
+      "клавіші",
+      "клатчі",
+      "спінаклети",
+      "піаніно",
+      "гребінка стопорів"
+    ],
+    "compass": [
+      "компас",
+      "девиация"
+    ],
+    "control_lines": [
+      "топенант",
+      "каннінгем",
+      "канінгем",
+      "рифи",
+      "риф-шкерти",
+      "риф-гаси",
+      "відтяжка галса"
+    ],
+    "coolant": [
+      "антифриз",
+      "тосол",
+      "охолоджуюча рідина",
+      "охлаждающая жидкость"
+    ],
+    "damage_control": [
+      "аварійний ремнабір",
+      "аварійний ремонтний набір",
+      "чопи",
+      "пластир",
+      "БЖС",
+      "боротьба за живучість",
+      "damage control",
+      "набір для пробоїн"
+    ],
+    "deck": [
+      "палуба"
+    ],
+    "deck_rails_lifelines": [
+      "леера",
+      "леерное ограждение",
+      "стойки"
+    ],
+    "diesel_heater": [
+      "отопитель",
+      "печка",
+      "вебасто"
+    ],
+    "drain_plug": [
+      "корок транця",
+      "транцевий корок",
+      "зливний корок",
+      "корок днища",
+      "drain plug",
+      "garboard plug",
+      "пробка транця",
+      "чіп транця"
+    ],
+    "drogue": [
+      "кормовий конус",
+      "гальмівний парашут",
+      "дрог",
+      "водне гальмо",
+      "кормовий гальмівний дрог",
+      "кормове гальмо",
+      "drogue",
+      "series drogue",
+      "джордан",
+      "гальмо"
+    ],
+    "engine_mounts": [
+      "подушки двигуна",
+      "лапи мотора",
+      "віброопори",
+      "центрування вала",
+      "подушки двигателя",
+      "опоры двигателя"
+    ],
+    "engine_oil": [
+      "масло",
+      "моторне масло",
+      "моторное масло"
+    ],
+    "engine_oil_filter": [
+      "масляний фільтр",
+      "фільтр масла"
+    ],
+    "epirb": [
+      "радіобуй",
+      "буй",
+      "EPIRB",
+      "PLB",
+      "АРБ",
+      "епірб",
+      "аварійний буй",
+      "копас-сарсат",
+      "супутниковий буй",
+      "маяк",
+      "аварийный радиобуй"
+    ],
+    "exhaust_hose": [
+      "водяний затвор",
+      "ватерлок",
+      "глушник",
+      "банка вихлопу",
+      "водяний глушник",
+      "бочка вихлопу",
+      "замок вихлопу"
+    ],
+    "fenders": [
+      "кранці",
+      "балони",
+      "яйця",
+      "сосиски",
+      "балони захисні",
+      "кранцева дошка",
+      "кранец",
+      "кранцы"
+    ],
+    "fire_extinguishers": [
+      "огнетушитель",
+      "огнетушители"
+    ],
+    "first_aid": [
+      "аптечка",
+      "медичка"
+    ],
+    "folding_prop": [
+      "складаний гвинт",
+      "складник",
+      "горчак",
+      "флюгер",
+      "флюгерний гвинт",
+      "folding prop"
+    ],
+    "forestay": [
+      "форштаг",
+      "штаг"
+    ],
+    "fridge": [
+      "холодильник"
+    ],
+    "fuel_polishing": [
+      "полірування палива",
+      "чистка палива"
+    ],
+    "fuel_prefilter": [
+      "сепаратор",
+      "Racor",
+      "відстійник",
+      "ракор",
+      "колба",
+      "фільтр з відстійником",
+      "водороздільник"
+    ],
+    "fuel_tank": [
+      "топливный бак",
+      "бак топлива"
+    ],
+    "gas_bottles": [
+      "газовый баллон",
+      "баллоны газа"
+    ],
+    "gearbox": [
+      "редуктор",
+      "коробка",
+      "реверс",
+      "коробка передач"
+    ],
+    "gen_belt": [
+      "ремінь генератора",
+      "клиновий ремінь",
+      "поліклиновий пас",
+      "струмок",
+      "ремень генератора"
+    ],
+    "gen_enclosure": [
+      "шумоізолюючий капот",
+      "звукоізоляційний кожух"
+    ],
+    "gen_impeller": [
+      "імпелер",
+      "крильчатка",
+      "резинка помпи",
+      "крильчатка охолодження",
+      "імпеллер"
+    ],
+    "glow_plugs": [
+      "свечи накала",
+      "свечи накаливания"
+    ],
+    "grab_bag": [
+      "граб-бег",
+      "тривожна валізка",
+      "аварійний мішок",
+      "grab bag"
+    ],
+    "halyards": [
+      "фалы",
+      "фал"
+    ],
+    "hatches_portlights": [
+      "иллюминатор",
+      "иллюминаторы",
+      "люки"
+    ],
+    "heads_pump": [
+      "унітаз",
+      "туалет",
+      "гальюн",
+      "джокер",
+      "джокер-клапан",
+      "прокачка туалету",
+      "манжета туалету",
+      "унитаз"
+    ],
+    "headsail": [
+      "стаксель",
+      "генуя",
+      "передний парус"
+    ],
+    "headsail_furler": [
+      "фурлер",
+      "роллер",
+      "закрутка генуї",
+      "закрутка",
+      "барабан закрутки",
+      "лік-паз"
+    ],
+    "headsail_uv": [
+      "сонцезахист",
+      "УФ-захист",
+      "ультрафіолетка",
+      "смуга на генуї"
+    ],
+    "heat_exchanger_anode": [
+      "протектор теплообмінника",
+      "цинк теплообмінника",
+      "олівець"
+    ],
+    "holding_tank": [
+      "чорний бак",
+      "септик",
+      "фекальний танк",
+      "фекалка",
+      "холдінг танк",
+      "black water tank"
+    ],
+    "interior_joinery": [
+      "підлога",
+      "меблі",
+      "обшивка"
+    ],
+    "jackstays": [
+      "страхувальні леєри",
+      "джекштоки",
+      "стрічки безпеки",
+      "штормові леєри",
+      "страхувальні стропи",
+      "ленти безпеки"
+    ],
+    "keel": [
+      "киль"
+    ],
+    "keel_bolts": [
+      "кільові болти",
+      "болти кіля",
+      "килевые болты"
+    ],
+    "keel_bulb": [
+      "бульб",
+      "балласт"
+    ],
+    "keel_joint": [
+      "посмішка кіля",
+      "кільова тріщина",
+      "кіль смайл",
+      "стик кіля",
+      "шов кіля"
+    ],
+    "kill_switch": [
+      "чека",
+      "глушилка",
+      "шнурок безпеки",
+      "аварійний шнур",
+      "kill switch",
+      "выключатель",
+      "чека безопасности"
+    ],
+    "lifejackets": [
+      "спасжилети",
+      "рятжилети",
+      "PFD",
+      "жилети",
+      "надувні жилети",
+      "самонадувні",
+      "спасательные жилеты",
+      "жилеты"
+    ],
+    "liferaft": [
+      "пліт",
+      "спасплот",
+      "рятувальний пліт",
+      "плот",
+      "спасательный плот"
+    ],
+    "liferaft_hru": [
+      "гідростатичний розчіп",
+      "гідростат",
+      "HRU",
+      "гідростатичний замок",
+      "розмикач плота"
+    ],
+    "macerator": [
+      "фекальний насос",
+      "подрібнювач",
+      "мацератор",
+      "помпа фекалки",
+      "відкачка бака"
+    ],
+    "main_switches": [
+      "выключатели",
+      "массы",
+      "рубильник"
+    ],
+    "mainsail": [
+      "парус",
+      "грот",
+      "паруса"
+    ],
+    "mainsheet_traveler": [
+      "погон",
+      "каретка",
+      "тревелер",
+      "погон гіка-шкота"
+    ],
+    "mast": [
+      "мачта",
+      "мачты",
+      "рангоут"
+    ],
+    "mast_step": [
+      "п'ята щогли",
+      "крок щогли",
+      "гніздо щогли",
+      "степс",
+      "опора щогли",
+      "п'яртнерс",
+      "дірка для щогли",
+      "степс мачты",
+      "пятка мачты"
+    ],
+    "masthead": [
+      "топ мачты"
+    ],
+    "mixing_elbow": [
+      "коліно змішувача",
+      "вихлопне коліно",
+      "елбоу",
+      "змішувач",
+      "калач",
+      "лікоть вихлопу",
+      "впорскування води у вихлоп"
+    ],
+    "mob_equipment": [
+      "данбуй",
+      "danbuoy",
+      "вішка",
+      "рятувальна вішка",
+      "підкова",
+      "рятувальна петля",
+      "lifesling",
+      "людина за бортом",
+      "MOB"
+    ],
+    "mooring_cleats": [
+      "битенг",
+      "клюз",
+      "кнехт",
+      "кнехти",
+      "кіп",
+      "кіпа",
+      "кіпи",
+      "кіпова планка",
+      "напівклюз",
+      "палубна утка",
+      "тумба",
+      "утка",
+      "утки",
+      "швартова планка",
+      "швартовна утка"
+    ],
+    "mooring_lines": [
+      "швартовы",
+      "концы"
+    ],
+    "mooring_snubbers": [
+      "гумовий компенсатор",
+      "демпфер швартова",
+      "компенсатор ривків",
+      "пружина швартова"
+    ],
+    "nav_lights": [
+      "ходові вогні",
+      "бортові вогні",
+      "навігаційні вогні",
+      "ходовые огни",
+      "бортовые огни"
+    ],
+    "nonskid": [
+      "нековзка",
+      "нонскід",
+      "нон-скід",
+      "шагрень",
+      "антиковзка",
+      "наждачка на палубі"
+    ],
+    "ob_anodes": [
+      "протектори підвісного",
+      "цинки"
+    ],
+    "ob_spark_plugs": [
+      "свечи",
+      "свечи зажигания"
+    ],
+    "passerelle": [
+      "гангвей",
+      "пасарель",
+      "сходня",
+      "трап"
+    ],
+    "pelican_hooks": [
+      "леєрні розмикачі",
+      "розмикачі леєрних хвірток",
+      "пеліканів гак",
+      "pelican hook",
+      "карабін хвіртки",
+      "леєрна хвіртка"
+    ],
+    "primary_anchor": [
+      "якорь",
+      "основной якорь"
+    ],
+    "prop_shaft": [
+      "вал",
+      "гребной вал"
+    ],
+    "propeller": [
+      "винт",
+      "гребной винт",
+      "пропеллер"
+    ],
+    "raw_water_impeller": [
+      "крильчатка",
+      "імпеллер",
+      "помпа забортної води",
+      "Jabsco",
+      "імпелер",
+      "резинка помпи",
+      "крильчатка охолодження",
+      "крыльчатка",
+      "импеллер"
+    ],
+    "raw_water_strainer": [
+      "фільтр грубої очистки",
+      "сітка забортної води"
+    ],
+    "rudder": [
+      "руль",
+      "перо руля"
+    ],
+    "rudder_bearings": [
+      "балер",
+      "втулки керма",
+      "підшипники руля",
+      "перо керма вісь",
+      "люфт керма",
+      "подшипники руля",
+      "баллер"
+    ],
+    "safety_padeyes": [
+      "джекстей",
+      "обушок",
+      "обушки",
+      "палубний обушок",
+      "підпалубна пластина",
+      "точка кріплення страхувального кінця"
+    ],
+    "sail_covers": [
+      "лази-джекс",
+      "лейзіджеки",
+      "чохол грота",
+      "стекпак",
+      "лейзі-бек",
+      "лезі-бек",
+      "лейзі-джеки",
+      "лінивчики",
+      "lazy jack",
+      "мішок для грота"
+    ],
+    "saildrive": [
+      "сейлдрайв",
+      "колонка",
+      "нога",
+      "вітрильна колонка",
+      "с-драйв"
+    ],
+    "saildrive_anode": [
+      "протектор сейлдрайва",
+      "цинк"
+    ],
+    "saildrive_diaphragm": [
+      "гумка сейлдрайва",
+      "мембрана",
+      "манжета ноги",
+      "бублик сейлдрайва",
+      "ущільнення колонки"
+    ],
+    "sart": [
+      "сарт",
+      "радарний маяк",
+      "аварійний відповідач"
+    ],
+    "sea_anchor": [
+      "парашут",
+      "парашутний якір",
+      "плавучий якір"
+    ],
+    "sea_chest": [
+      "січест",
+      "донний ящик",
+      "водозабірна коробка"
+    ],
+    "seacocks": [
+      "кингстон",
+      "забортний клапан",
+      "шаровий кран",
+      "seacock",
+      "кінгстони",
+      "крани заборту",
+      "донні клапани",
+      "крани днища",
+      "забортні крани",
+      "кінгстон",
+      "сікоки",
+      "кингстоны",
+      "забортный кран"
+    ],
+    "secondary_anchor": [
+      "запасной якорь",
+      "верп"
+    ],
+    "shaft_anode": [
+      "протектор на валу",
+      "цинк на валу"
+    ],
+    "shaft_bellows": [
+      "сильфон сальника",
+      "гофра"
+    ],
+    "sheets": [
+      "шкоты",
+      "шкот"
+    ],
+    "shrouds": [
+      "ванты",
+      "ванта"
+    ],
+    "snubber": [
+      "снаббер",
+      "якірна вуздечка",
+      "амортизатор ланцюга",
+      "снабер",
+      "розвантажувач ланцюга",
+      "гумовий амортизатор ланцюга"
+    ],
+    "snuffer": [
+      "снафер",
+      "сок",
+      "чулок",
+      "панчоха",
+      "носок",
+      "рукав для вітрила"
+    ],
+    "solar": [
+      "сонячні батареї",
+      "панелі",
+      "MPPT"
+    ],
+    "spinnaker": [
+      "геннакер",
+      "генакер",
+      "спінакер"
+    ],
+    "sprayhood_bimini": [
+      "спрейхуд",
+      "біміні",
+      "тент",
+      "дуга",
+      "козирок",
+      "палатка",
+      "бризговик",
+      "будка",
+      "бімінітоп"
+    ],
+    "spreaders": [
+      "краспиці",
+      "распорки",
+      "роги щогли",
+      "літаки щогли",
+      "краспица",
+      "краспицы",
+      "саллинг"
+    ],
+    "steering_cables_sheaves": [
+      "штуртрос",
+      "штуртроси",
+      "ролики керма",
+      "троси керма",
+      "ланцюг штурвала"
+    ],
+    "steering_quadrant": [
+      "квадрант",
+      "сектор",
+      "качалка керма",
+      "румпельний сектор"
+    ],
+    "steering_system": [
+      "штурвал",
+      "рулевое управление"
+    ],
+    "stern_tube": [
+      "дейдвуд",
+      "підшипник Гудрича",
+      "cutless",
+      "гудрич",
+      "водяний підшипник вала",
+      "кутлес",
+      "подшипник",
+      "дейдвудный подшипник"
+    ],
+    "storm_sails": [
+      "штормовой стаксель",
+      "трисель"
+    ],
+    "stove": [
+      "плита",
+      "камбузная плита"
+    ],
+    "stove_gimbal": [
+      "кардан плити",
+      "фідли",
+      "бортики",
+      "гойдалка печі",
+      "фідлси",
+      "тримачі каструль"
+    ],
+    "stuffing_box": [
+      "сальник",
+      "набивка",
+      "дрипплес",
+      "дейдвуд",
+      "сальник вала",
+      "волосінь",
+      "вольво-гумка",
+      "губка Вольво",
+      "дріплес",
+      "stuffing box",
+      "сальникове набивання"
+    ],
+    "survey": [
+      "сюрвей",
+      "сюрвейєр",
+      "огляд перед покупкою"
+    ],
+    "teak_deck": [
+      "тик",
+      "тикова палуба",
+      "шви палуби",
+      "тиковая палуба"
+    ],
+    "tender_hull": [
+      "тендер",
+      "тузик",
+      "надувастик",
+      "шлюпка",
+      "тузлик",
+      "дінга",
+      "резиновий човен",
+      "тузік",
+      "РІБ"
+    ],
+    "tender_outboard": [
+      "мотор тузика",
+      "підвісник",
+      "моторчик тузика",
+      "ПЛМ",
+      "тохатсу",
+      "ямашка",
+      "вихлик"
+    ],
+    "through_hulls": [
+      "прохід крізь корпус",
+      "проходи крізь корпус",
+      "штуцер заборту",
+      "штуцер"
+    ],
+    "thruster": [
+      "подрулька",
+      "носовий підрулювач",
+      "трустер",
+      "тунелька",
+      "bow thruster"
+    ],
+    "thruster_anode": [
+      "протектор підрулювача"
+    ],
+    "tracks_cars": [
+      "погон",
+      "каретка",
+      "трек",
+      "рейка стакселя",
+      "тревелер"
+    ],
+    "transducers": [
+      "ехолот",
+      "лаг",
+      "датчик глибини",
+      "трансдьюсер",
+      "эхолот",
+      "датчик глубины"
+    ],
+    "tube_valves": [
+      "клапан балона",
+      "ніпель",
+      "підкачка",
+      "тиск у балонах"
+    ],
+    "tubes": [
+      "балон",
+      "балони",
+      "борт",
+      "гіпалон",
+      "надувний борт",
+      "пвх",
+      "тубус",
+      "хайпалон",
+      "шви балонів"
+    ],
+    "turnbuckles": [
+      "талрепи",
+      "натягувачі вант",
+      "бочонки",
+      "шплінти",
+      "пальці вант",
+      "талрепы",
+      "талреп"
+    ],
+    "vang": [
+      "відтяжка",
+      "кікер",
+      "vang",
+      "телескоп гіка"
+    ],
+    "ventilation": [
+      "дефлектори",
+      "дорадо",
+      "вентилятори"
+    ],
+    "vhf": [
+      "рація",
+      "радіостанція",
+      "VHF",
+      "УКВ",
+      "рация",
+      "радиостанция"
+    ],
+    "washboards": [
+      "брандерщит",
+      "щити входу",
+      "каппа",
+      "закладні дошки",
+      "двері в каюту",
+      "щитки каппа",
+      "вхідні щити",
+      "входные щиты"
+    ],
+    "water_heater_anode": [
+      "протектор бойлера",
+      "магнієвий анод"
+    ],
+    "water_tank": [
+      "бак пресной воды",
+      "танк воды"
+    ],
+    "watermaker": [
+      "опреснитель"
+    ],
+    "winches": [
+      "вінчі",
+      "шкотові лебідки",
+      "лебедки",
+      "шкотовые лебедки"
+    ],
+    "windlass": [
+      "якірна лебідка",
+      "шпиль",
+      "лебідка якірна",
+      "брашпіль",
+      "якірний мотор",
+      "зірочка",
+      "турачка",
+      "циганка",
+      "лебедка якорная",
+      "якорная лебедка"
+    ],
+    "windlass_clutch": [
+      "зчеплення брашпиля",
+      "конус",
+      "гальмо брашпиля",
+      "фрикціон"
+    ],
+    "wire_terminals": [
+      "кінцевики тросів",
+      "термінали",
+      "обтискні наконечники"
+    ],
+    "wooden_bungs": [
+      "чопики",
+      "чопи",
+      "конуси",
+      "дерев'яні заглушки",
+      "пробки кінгстона",
+      "бангси",
+      "банги"
+    ]
+  }
+}

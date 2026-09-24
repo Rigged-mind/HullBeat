@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The languages this app ships, declared so Android lists HullBeat under
+    Settings > Apps > HullBeat > Language.
+
+    Without this file the per-app language picker does not exist: 622
+    translated strings, 350 reviewed terms, 118 checklist orders and 154
+    passport labels are all unreachable unless the owner changes the
+    language of their whole phone. That is not a preference, it is a
+    shipping defect - and it survived every check because no check reads
+    the manifest for what is absent from it.
+
+    The first entry is the default when nothing else matches.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="uk" />
+    <locale android:name="en" />
+</locale-config>

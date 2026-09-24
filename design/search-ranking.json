@@ -1,0 +1,19 @@
+{
+  "stemCost": 12,
+  "minStemLength": 3,
+  "maxDroppedChars": 2,
+  "scores": {
+    "exactTitle": 120,
+    "exactEnTitle": 110,
+    "prefixTitle": 90,
+    "prefixEnTitle": 85,
+    "wordPrefixTitle": 70,
+    "wordPrefixEnTitle": 65,
+    "exactSynonym": 55,
+    "prefixSynonym": 45,
+    "containsSynonym": 35,
+    "substringTitle": 40,
+    "containsCategory": 30,
+    "specOrNotes": 20
+  }
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Resource shrinking must not touch the catalog strings.
+
+    `release` sets `isShrinkResources = true`, and every component and category
+    name is looked up BY NAME at runtime:
+
+        getIdentifier("cmp_$catalogCode", "string", packageName)
+
+    A dynamic lookup is invisible to the shrinker. Without this file it would
+    strip all 467 of them - 329 component names, 21 category names and 117
+    checklist lines, in both
+    locales - because nothing in the code references them literally.
+
+    The failure would be silent and configuration-specific in the worst way:
+    debug builds keep every resource, so the tree reads perfectly all through
+    development, and the release APK shows a boat with 253 blank rows.
+
+    Shrinking is worth keeping on: these strings are a fraction of the APK,
+    and the alternative is disabling it for the whole app.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/cmp_*,@string/cat_*,@string/chk_*,@string/hint_*,@string/opt_*,@string/axis_*"
+    tools:shrinkMode="strict" />

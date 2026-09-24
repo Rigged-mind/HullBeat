@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Quantity strings.
+
+    THE RULE, learned the hard way: a plural resource holds the WHOLE PHRASE,
+    never just the counted noun. English lets you get away with wrapping one
+    word because the verb does not agree - "1 tick will write" / "5 ticks will
+    write". Ukrainian agrees the verb, and pulling it out of the plural
+    produces "21 позначка створять", which is wrong in a way an English
+    speaker never has to think about.
+
+    THE LIMIT: an Android plural takes ONE quantity. A sentence whose two
+    numbers vary independently ("2 ticks will write 2 records") cannot be one
+    resource - it has to be composed from two, or reworded so only one number
+    is inflected. Every string below is worded to need exactly one.
+-->
+<resources>
+    <plurals name="toast_jobs_saved">
+        <item quantity="one">Saved %d job</item>
+        <item quantity="other">Saved %d jobs</item>
+    </plurals>
+
+    <plurals name="checklist_will_log">
+        <item quantity="one">%d tick will write a record and reset the interval</item>
+        <item quantity="other">%d ticks will write records and reset their intervals</item>
+    </plurals>
+
+    <plurals name="checklist_not_applicable">
+        <item quantity="one">%d item does not apply to this boat</item>
+        <item quantity="other">%d items do not apply to this boat</item>
+    </plurals>
+
+    <plurals name="checklist_skipped">
+        <item quantity="one">%d item skipped</item>
+        <item quantity="other">%d items skipped</item>
+    </plurals>
+
+    <plurals name="due_overdue_days">
+        <item quantity="one">%d day overdue</item>
+        <item quantity="other">%d days overdue</item>
+    </plurals>
+
+    <plurals name="due_in_hours">
+        <item quantity="one">in %d engine hour</item>
+        <item quantity="other">in %d engine hours</item>
+    </plurals>
+
+    <plurals name="onboarding_seeded">
+        <item quantity="one">%d maintenance item created</item>
+        <item quantity="other">%d maintenance items created</item>
+    </plurals>
+
+    <!-- Two independent numbers, so two resources; see the uk file. -->
+    <plurals name="boat_nodes">
+        <item quantity="one">%d component</item>
+        <item quantity="other">%d components</item>
+    </plurals>
+
+    <plurals name="boat_categories_in">
+        <item quantity="one">in %d category</item>
+        <item quantity="other">in %d categories</item>
+    </plurals>
+
+    <plurals name="boat_categories">
+        <item quantity="one">%d category</item>
+        <item quantity="other">%d categories</item>
+    </plurals>
+
+    <plurals name="boat_categories_dead">
+        <item quantity="one">%d category does not apply</item>
+        <item quantity="other">%d categories do not apply</item>
+    </plurals>
+
+    <plurals name="log_records">
+        <item quantity="one">%d record</item>
+        <item quantity="other">%d records</item>
+    </plurals>
+
+    <plurals name="log_gap_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <plurals name="log_gap_hours">
+        <item quantity="one">%d engine hour</item>
+        <item quantity="other">%d engine hours</item>
+    </plurals>
+
+    <plurals name="log_photos">
+        <item quantity="one">%d photo</item>
+        <item quantity="other">%d photos</item>
+    </plurals>
+
+    <plurals name="store_qty">
+        <item quantity="one">%d pc</item>
+        <item quantity="other">%d pcs</item>
+    </plurals>
+
+    <plurals name="store_items">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+
+    <plurals name="store_locations_in">
+        <item quantity="one">in %d locker</item>
+        <item quantity="other">in %d lockers</item>
+    </plurals>
+
+    <plurals name="due_in_days">
+        <item quantity="one">in %d day</item>
+        <item quantity="other">in %d days</item>
+    </plurals>
+
+    <plurals name="boat_own_nodes">
+        <item quantity="one">%d of them your own</item>
+        <item quantity="other">%d of them your own</item>
+    </plurals>
+
+    <plurals name="now_needs_meter">
+        <item quantity="one">%d node is waiting for its first engine hours</item>
+        <item quantity="other">%d nodes are waiting for their first engine hours</item>
+    </plurals>
+
+    <plurals name="now_needs_first_record">
+        <item quantity="one">%d node has no service history yet</item>
+        <item quantity="other">%d nodes have no service history yet</item>
+    </plurals>
+
+    <plurals name="snack_logged_photos_failed">
+        <item quantity="one">Logged, but %d photo could not be saved</item>
+        <item quantity="other">Logged, but %d photos could not be saved</item>
+    </plurals>
+
+    <plurals name="departure_check_chip">
+        <item quantity="one">Departure check · %d item</item>
+        <item quantity="other">Departure check · %d items</item>
+    </plurals>
+
+    <plurals name="store_stat_items">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+
+    <plurals name="store_stat_lockers">
+        <item quantity="one">in %d locker</item>
+        <item quantity="other">in %d lockers</item>
+    </plurals>
+
+    <plurals name="import_rows_count">
+        <item quantity="one">%d row</item>
+        <item quantity="other">%d rows</item>
+    </plurals>
+
+    <plurals name="import_success_toast">
+        <item quantity="one">Imported %d record</item>
+        <item quantity="other">Imported %d records</item>
+    </plurals>
+</resources>

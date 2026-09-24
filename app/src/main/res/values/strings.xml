@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Play listing title should be "HullBeat - Boat Maintenance Log": the short
+      name carries the brand, the suffix is what people actually search for.
+      The launcher label stays short so it does not truncate under the icon.
+    -->
+    <string name="app_name">HullBeat</string>
+    <string name="notification_channel_due">Maintenance due</string>
+    <string name="notification_channel_due_description">Reminders when a job is due or overdue.</string>
+    <string name="action_mark_done">Done</string>
+    <string name="action_renew">Renew…</string>
+    <string name="due_unknown">Due date unknown</string>
+    <string name="due_unknown_needs_meter">Enter initial engine hours to start forecast</string>
+    <string name="due_unknown_needs_schedule">Configure maintenance schedule</string>
+
+    <!-- Snackbars. "Скасувати" must really undo: see NowViewModel.undoQuickLog. -->
+    <string name="snack_logged">Logged</string>
+    <string name="action_undo">Undo</string>
+    <string name="snack_deferral_cancelled">Deferral cancelled</string>
+    <string name="snack_deferred_until">Deferred until %1$s</string>
+
+    <!-- Deferred state, shown where an urgency line would otherwise go. -->
+    <string name="deferred_until">deferred until %1$s</string>
+    <string name="deferred_until_reason">%1$s · until %2$s</string>
+
+    <!-- Placeholders for the three tabs still to be ported from the prototype. -->
+    <string name="placeholder_boat">Component catalogue and equipment passports.</string>
+    <string name="placeholder_log">Ship\'s log, timeline and search.</string>
+    <string name="placeholder_store">Spares, lockers and stock levels.</string>
+    <!-- Summary line over a stack of reminders. Neither word inflects in
+         Ukrainian either: "прострочено" is the impersonal -no form and
+         "скоро" is an adverb, so no plural resource is needed for once. -->
+    <string name="summary_overdue">%d overdue</string>
+    <string name="summary_soon">%d due soon</string>
+    <string name="summary_more">and %d more</string>
+
+    <!--
+        Stored on a record written from the notification, so the journal can
+        say where the row came from. Resolved at write time, not rendered
+        later, so it follows the locale the owner was actually using.
+    -->
+    <string name="record_from_notification">Logged from the notification</string>
+
+    <!-- Navigation -->
+    <string name="nav_now">Pulse</string>
+    <string name="nav_boat">Boat</string>
+    <string name="nav_log">Log</string>
+    <string name="nav_store">Spares</string>
+
+    <!-- Now Screen -->
+    <string name="departure_check_done_today">Pre-departure check completed today</string>
+    <string name="departure_checklist_title">Pre-departure check</string>
+    <string name="departure_check_fleet_partial">Pre-departure check · done: %s</string>
+    <string name="action_confirm_departure_check">Confirm departure check</string>
+    <string name="action_reset_departure_check">New departure</string>
+    <string name="departure_check_all_required">Check all items to confirm</string>
+    <string name="departure_check_empty_list">Could not load the checklist</string>
+    <string name="action_record_meter">Log engine hours</string>
+    <string name="record_meter_title">Log Engine Hours</string>
+    <string name="meter_reading_saved">Reading recorded</string>
+    <string name="meter_current_reading">Current reading</string>
+    <string name="meter_hours_unit">hrs</string>
+    <string name="meter_decrease_warning">Reading is less than previous (%.1f hrs). Decreasing will disable hour-based maintenance predictions.</string>
+    <string name="meter_decrease_confirm">I understand, save new reading</string>
+    <string name="fleet_all">All</string>
+    <string name="action_add_vessel">Add vessel…</string>
+    <string name="vessel_select_title">Select vessel</string>
+    <string name="vessel_status_all_clear">All clear</string>
+    <string name="cd_select_vessel">Active vessel: %s. Tap to switch or add vessel</string>
+    <string name="status_overdue">overdue</string>
+    <string name="status_soon">due soon</string>
+    <string name="action_cannot_now_defer">Cannot now — defer</string>
+    <string name="action_cancel_deferral">Cancel deferral</string>
+    <string name="all_clear_title">All clear</string>
+    <string name="all_clear_with_deferred">All clear · %1$d deferred</string>
+    <string name="all_clear_description">No maintenance due right now.</string>
+    <string name="now_quick_actions">Quick actions</string>
+    <string name="now_action_quick_log">Log service</string>
+    <string name="now_action_enter_hours">Engine hours</string>
+    <string name="now_action_checklists">Checklists</string>
+    <string name="now_section_upcoming">Upcoming maintenance</string>
+    <string name="now_recent_activity">Latest log entry</string>
+    <string name="now_all_journal">All records ›</string>
+    <string name="now_unrecorded_title">Unrecorded components</string>
+    <string name="now_unrecorded_subtitle">Add initial hours or service date to activate schedule.</string>
+    <string name="action_view_nodes">View</string>
+
+    <!-- Quick Log Sheet -->
+    <string name="quick_log_title">Quick service log</string>
+    <string name="field_date">Date</string>
+    <string name="field_work_type">Work type</string>
+    <string name="field_meter_hours">Engine hours</string>
+    <string name="field_new_expiry">New expiry date</string>
+    <string name="field_cost">Cost</string>
+    <string name="field_notes">Notes</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="service_logged_snackbar">Service record saved</string>
+
+    <!-- Defer Sheet -->
+    <string name="defer_title">Defer maintenance</string>
+    <string name="defer_until_label">DEFER UNTIL</string>
+    <string name="defer_reason_label">REASON (OPTIONAL)</string>
+    <string name="defer_option_one_month">For 1 month</string>
+    <string name="defer_option_haul_out">Until haul-out</string>
+    <string name="defer_option_spring">Until spring</string>
+    <string name="defer_option_pick_date">Pick a date…</string>
+    <string name="defer_explanation">Item will disappear from «Pulse» and return automatically at the chosen time. Overdue status is preserved.</string>
+    <string name="deferred_snackbar">Deferred</string>
+
+    <!-- Themes -->
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_sunlight">Sunlight</string>
+    <string name="theme_night">Night</string>
+
+    <!-- Component Detail -->
+    <string name="detail_back">Back</string>
+    <string name="detail_next_service">Next maintenance</string>
+    <string name="detail_stock">On board spares</string>
+    <string name="detail_passport">Passport</string>
+    <string name="detail_history">Service history</string>
+    <string name="detail_no_spares">No spares linked to this component.</string>
+    <string name="detail_no_history">No service records yet.</string>
+    <string name="detail_no_interval">No interval set — maintenance on condition</string>
+    <string name="detail_not_serviced_yet">Not serviced yet · interval %s</string>
+    <string name="detail_passport_empty_hint">Fill in the passport once to forever solve the «which filter» question. Part numbers can be photographed from the nameplate.</string>
+    <string name="passport_make">Make</string>
+    <string name="passport_model">Model</string>
+    <string name="passport_serial">Serial</string>
+    <string name="passport_year">Year</string>
+    <string name="detail_water_advice">Your cruising area is %1$s, so %2$s is required.</string>
+    <string name="water_salt">salt water</string>
+    <string name="water_fresh">fresh water</string>
+    <string name="water_brackish">brackish water</string>
+    <string name="anode_zinc">zinc anode</string>
+    <string name="anode_magnesium">magnesium anode</string>
+    <string name="anode_aluminum">aluminum anode</string>
+    <string name="spare_in_locker">in %s</string>
+    <string name="spare_no_location">no locker</string>
+    <string name="spare_per_service">%s / service</string>
+    <string name="crit_high">Critical</string>
+    <string name="crit_med">Important</string>
+    <string name="crit_low">Routine</string>
+
+    <!-- Search & Custom components -->
+    <string name="search_hint">Search component, part or spec…</string>
+    <string name="search_found_via">found via «%1$s»</string>
+    <string name="search_found_in_spec">found in passport</string>
+    <string name="search_found_in_notes">found in notes</string>
+    <string name="search_empty">Nothing found</string>
+    <string name="create_component_title">New custom component</string>
+    <string name="create_component_name">Component name</string>
+    <string name="create_component_name_hint">e.g. Watermaker Schenker Zen 30</string>
+    <string name="create_component_category">Category</string>
+    <string name="create_component_criticality">Criticality</string>
+    <string name="create_component_notes">Specs / Notes</string>
+    <string name="create_component_notes_hint">Part number, model, voltage etc.</string>
+    <string name="create_component_action">Create component</string>
+    <string name="create_component_empty_search">Create component «%1$s»</string>
+    <string name="component_rename">Rename</string>
+    <string name="component_rename_title">Custom component name</string>
+    <string name="component_rename_hint">Leave blank to use catalog name</string>
+    <string name="add_custom_component">+ Custom component</string>
+
+    <!-- First run: the profile every appliesTo rule is judged
+         against. Nothing in the catalog can appear until it is
+         answered, which is why this screen comes before the tabs. -->
+    <string name="setup_title">Your boat</string>
+    <string name="setup_subtitle">Answer once and the catalog fills itself in - only the parts your boat actually has.</string>
+    <string name="setup_name_label">Name</string>
+    <string name="setup_default_name">My boat</string>
+    <string name="setup_action">Build my boat</string>
+    <string name="vessel_add_photo">Photo</string>
+    <string name="boat_component_count_suffix">nodes</string>
+    <string name="action_language">Language</string>
+    <string name="passport_add_field">+ Add field</string>
+    <string name="passport_field_name">Field name</string>
+
+    <!-- Work Types -->
+    <string name="work_type_scheduled">Scheduled</string>
+    <string name="work_type_repair">Repair</string>
+    <string name="work_type_inspection">Inspection</string>
+    <string name="work_type_winterization">Winterization</string>
+    <string name="work_type_commissioning">Commissioning</string>
+    <string name="work_type_haul_out">Haul-out</string>
+    <string name="work_type_launch">Launch</string>
+    <string name="work_type_upgrade">Upgrade</string>
+    <string name="work_type_warranty">Warranty</string>
+    <string name="work_type_pre_sale">Pre-sale</string>
+
+    <!-- Condition Photos -->
+    <string name="detail_photos">Condition photos</string>
+    <string name="detail_add_photo">Photo</string>
+    <string name="detail_add_more_photos">Add photo</string>
+    <string name="detail_no_photos">No photos yet. Track wear and corrosion over time.</string>
+    <string name="action_change_photo">Change photo</string>
+    <string name="action_delete_photo">Delete photo</string>
+    <string name="dialog_delete_photo_confirm">Delete this photo?</string>
+    <string name="photo_caption_label">Caption (optional)</string>
+    <string name="photo_add_dialog_title">Add Condition Photo</string>
+    <string name="picker_gallery">Gallery</string>
+    <string name="picker_files">Files</string>
+    <string name="vessel_photo_dialog_title">Vessel Photo</string>
+
+    <!-- Date selection -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_pick_other">Calendar…</string>
+    <string name="date_picker_title">Select date</string>
+
+    <!-- Service record edit & delete -->
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="edit_record_title">Edit service record</string>
+    <string name="action_delete_record">Delete record</string>
+    <string name="dialog_delete_record_title">Delete service record?</string>
+    <string name="dialog_delete_record_message">This service record from %1$s (%2$s) will be permanently deleted from the log.</string>
+
+    <!-- Journal screen -->
+    <string name="journal_empty_title">Ship\'s log is empty</string>
+    <string name="journal_empty_desc">All completed maintenance, service, repairs, and inspections are recorded here. Tapping \"Done\" on Pulse or inside a component card writes an entry here with date, engine hours, and photo.</string>
+    <string name="journal_all_categories">All components</string>
+    <string name="journal_spent_total">%1$s %2$s spent</string>
+    <string name="journal_gap_after_previous">%1$s after previous</string>
+    <string name="journal_gap_and">and</string>
+    <string name="journal_imported_from">from import · sheet \"%1$s\", row %2$d</string>
+    <string name="journal_precision_year">only year known</string>
+    <string name="journal_precision_month">only month known</string>
+    <string name="journal_uncataloged_category">code missing in catalog</string>
+
+    <!-- Boat component management & catalog picker -->
+    <string name="boat_search_hint">Search components on boat…</string>
+    <string name="boat_add_component">+ Add component</string>
+    <string name="catalog_add_title">Add component to boat</string>
+    <string name="catalog_search_hint">Search catalog…</string>
+    <string name="catalog_already_on_boat">On boat</string>
+    <string name="catalog_action_add">+ Add</string>
+    <string name="action_hide_from_boat">Hide from boat</string>
+    <string name="dialog_hide_component_title">Hide component from boat?</string>
+    <string name="dialog_hide_component_message">The component \"%s\" will be hidden from the boat list. All journal records and service history will be preserved.</string>
+    <string name="catalog_from_catalog_tab">From catalog</string>
+    <string name="catalog_custom_tab">Custom component</string>
+    <string name="boat_empty_components">No components on the boat yet.</string>
+
+    <!-- Settings & Currency -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_currency">Currency</string>
+    <string name="settings_currency_subtitle">Select the currency used for service and spare parts costs</string>
+    <string name="settings_currency_custom">Custom currency</string>
+    <string name="settings_currency_custom_hint">Symbol or code, e.g. CAD, CHF, AUD…</string>
+    <string name="settings_theme">Color theme</string>
+    <string name="settings_language">Language</string>
+    <string name="currency_uah">Ukrainian Hryvnia (₴)</string>
+    <string name="currency_usd">US Dollar ($)</string>
+    <string name="currency_eur">Euro (€)</string>
+    <string name="currency_gbp">British Pound (£)</string>
+    <string name="currency_pln">Polish Zloty (zł)</string>
+    <string name="currency_sek">Swedish Krona (kr)</string>
+    <string name="currency_nok">Norwegian Krone (kr)</string>
+    <string name="currency_try">Turkish Lira (₺)</string>
+    <string name="lang_uk">Українська</string>
+    <string name="lang_en">English</string>
+
+    <!-- Units of measurement -->
+    <string name="settings_units_title">Units of measurement</string>
+    <string name="settings_units_subtitle">Configure measurement units across the app</string>
+    <string name="settings_units_preset_metric">Metric</string>
+    <string name="settings_units_preset_nautical">Nautical</string>
+    <string name="settings_unit_length">Boat dimensions &amp; length</string>
+    <string name="settings_unit_distance">Distance &amp; log</string>
+    <string name="settings_unit_volume">Liquid &amp; tank volume</string>
+    <string name="settings_unit_pressure">Pressure</string>
+    <string name="settings_unit_temperature">Temperature</string>
+    <string name="unit_metres">Metres (m)</string>
+    <string name="unit_feet">Feet (ft)</string>
+    <string name="unit_nautical_miles">Nautical miles (NM)</string>
+    <string name="unit_kilometres">Kilometres (km)</string>
+    <string name="unit_statute_miles">Statute miles (mi)</string>
+    <string name="unit_litres">Litres (L)</string>
+    <string name="unit_gallons_us">US Gallons (gal)</string>
+    <string name="unit_gallons_uk">UK Gallons (gal)</string>
+    <string name="unit_bar">Bar (bar)</string>
+    <string name="unit_psi">PSI (psi)</string>
+    <string name="unit_celsius">Celsius (°C)</string>
+    <string name="unit_fahrenheit">Fahrenheit (°F)</string>
+    <string name="unit_short_m">m</string>
+    <string name="unit_short_ft">ft</string>
+    <string name="unit_short_nm">NM</string>
+    <string name="unit_short_km">km</string>
+    <string name="unit_short_mi">mi</string>
+    <string name="unit_short_l">L</string>
+    <string name="unit_short_gal_us">US gal</string>
+    <string name="unit_short_gal_uk">UK gal</string>
+    <string name="unit_short_bar">bar</string>
+    <string name="unit_short_psi">psi</string>
+    <string name="unit_short_celsius">°C</string>
+    <string name="unit_short_fahrenheit">°F</string>
+
+    <!-- Maintenance notifications -->
+    <string name="settings_notifications_title">Maintenance reminders</string>
+    <string name="settings_notifications_subtitle">Daily background check of overdue and upcoming service</string>
+    <string name="settings_notifications_enabled">Enable reminders</string>
+    <string name="settings_notifications_advance">Advance notice</string>
+    <string name="settings_notifications_days_7">7 days</string>
+    <string name="settings_notifications_days_14">14 days</string>
+    <string name="settings_notifications_days_30">30 days</string>
+
+    <!-- Data & Export -->
+    <string name="settings_data_title">Data &amp; storage</string>
+    <string name="settings_data_subtitle">100% offline-first local storage on this device</string>
+    <string name="settings_export_journal">Export ship\'s log (CSV)</string>
+    <string name="settings_export_success">Ship\'s log exported successfully</string>
+    <string name="settings_export_empty">No records to export</string>
+
+    <!-- About -->
+    <string name="settings_about_title">About HullBeat</string>
+    <string name="settings_about_version">Version %1$s</string>
+    <string name="settings_about_desc">HullBeat is an offline-first ship\'s log and maintenance planner designed for sailboats and motor yachts.</string>
+
+    <!-- Store / Spares -->
+    <string name="store_tab_all">All spares</string>
+    <string name="store_tab_tobuy">To buy</string>
+    <string name="store_tab_locations">Lockers</string>
+    <string name="store_search_hint">Search part, number, brand…</string>
+    <string name="store_stat_gone">Out of stock: %1$d</string>
+    <string name="store_stat_low">Low: %1$d</string>
+    <string name="store_add_part">Add part</string>
+    <string name="store_edit_part">Edit part</string>
+    <string name="store_delete_part">Delete from stock</string>
+    <string name="store_add_location">Add locker</string>
+    <string name="store_edit_location">Edit locker</string>
+    <string name="store_delete_location">Delete locker</string>
+    <string name="store_delete_location_confirm">Delete this locker? Parts in it will remain without an assigned locker.</string>
+    <string name="store_delete_part_confirm">Delete \"%1$s\" from stock?</string>
+    <string name="store_part_name">Part name</string>
+    <string name="store_part_name_hint">e.g. Oil filter</string>
+    <string name="store_part_number">Part No.</string>
+    <string name="store_part_number_hint">e.g. 875812</string>
+    <string name="store_part_mfr">Manufacturer / Brand</string>
+    <string name="store_part_mfr_hint">e.g. Volvo Penta, Yanmar</string>
+    <string name="store_part_qty">Quantity aboard</string>
+    <string name="store_part_min_qty">Stock norm</string>
+    <string name="store_part_min_qty_hint">How many to keep aboard</string>
+    <string name="store_location_label">Storage locker</string>
+    <string name="store_no_location">No locker</string>
+    <string name="store_new_location_prompt">+ Create new locker…</string>
+    <string name="store_location_name">Locker / compartment name</string>
+    <string name="store_location_name_hint">e.g. Engine bay, Aft locker</string>
+    <string name="store_location_qr">Label code (optional)</string>
+    <string name="store_location_qr_hint">e.g. R-1, L-A1</string>
+    <string name="store_part_notes">Notes</string>
+    <string name="store_part_notes_hint">Where bought, compatibility, etc.</string>
+    <string name="store_linked_components">Used by components</string>
+    <string name="store_linked_components_hint">Select components this part fits</string>
+    <string name="store_filter_components_hint">Filter components…</string>
+    <string name="store_empty_title">Stock is empty</string>
+    <string name="store_empty_desc">Add your first spare parts or create standard boat lockers for easy inventory.</string>
+    <string name="store_seed_locations_btn">Create standard boat lockers</string>
+    <string name="store_tobuy_empty">All required spare parts are well-stocked aboard.</string>
+    <string name="store_locations_empty">No lockers added yet. Create your first locker or use defaults.</string>
+    <string name="store_loc_empty">No parts in this locker yet.</string>
+    <string name="store_qty_badge">%1$s · norm %2$s</string>
+    <string name="store_out_of_stock">OUT</string>
+    <string name="store_low_stock">LOW</string>
+    <string name="store_default_loc_engine">Engine bay</string>
+    <string name="store_default_loc_cockpit">Cockpit locker (lazarette)</string>
+    <string name="store_default_loc_chart">Nav station</string>
+    <string name="store_default_loc_forepeak">Forepeak locker</string>
+    <string name="store_default_loc_galley">Galley locker</string>
+    <string name="store_items_count">%1$d pcs</string>
+
+    <!-- Import & Rollback -->
+    <string name="settings_import_title">Import service history</string>
+    <string name="settings_import_subtitle">Load records from CSV or TSV spreadsheet</string>
+    <string name="settings_import_btn">Import spreadsheet (CSV)</string>
+    <string name="import_sheet_title">Import journal</string>
+    <string name="import_preview_subtitle">Map columns and preview records</string>
+    <string name="import_file_label">File</string>
+    <string name="import_btn_commit">Import records</string>
+    <string name="import_history_title">Import history</string>
+    <string name="import_history_empty">No imports yet</string>
+    <string name="import_rollback_btn">Undo</string>
+    <string name="import_rollback_success">Import undone</string>
+    <string name="field_map_date">Date</string>
+    <string name="field_map_desc">Description</string>
+    <string name="field_map_work_type">Work type</string>
+    <string name="field_map_hours">Hours</string>
+    <string name="field_map_cost">Cost</string>
+    <string name="field_map_who">Performed by</string>
+    <string name="field_map_notes">Notes</string>
+    <string name="field_map_component">Component</string>
+    <string name="field_map_ignore">Ignore</string>
+
+    <!-- Backup & Restore -->
+    <string name="settings_backup_title">Backup &amp; restore (SAF)</string>
+    <string name="settings_backup_subtitle">Full database backup to storage or cloud</string>
+    <string name="settings_backup_create">Create backup</string>
+    <string name="settings_backup_restore">Restore from backup</string>
+    <string name="settings_backup_success">Backup created successfully</string>
+    <string name="settings_backup_failed">Failed to create backup</string>
+    <string name="settings_restore_success">Database restored successfully</string>
+    <string name="settings_restore_invalid">Invalid backup file</string>
+    <string name="settings_export_store">Export inventory &amp; lockers (CSV)</string>
+    <string name="settings_export_store_empty">No lockers or parts to export</string>
+    <string name="settings_export_store_success">Store and lockers exported successfully</string>
+    <string name="settings_export_excel">Export to Excel (.xlsx)</string>
+    <string name="settings_export_excel_success">Excel file exported successfully</string>
+    <string name="settings_export_excel_failed">Failed to export Excel file</string>
+    <string name="settings_export_excel_empty">No data to export</string>
+    <string name="excel_sheet_journal">Service log</string>
+    <string name="excel_sheet_store">Store &amp; Lockers</string>
+    <string name="settings_export_journal_csv">Log (CSV)</string>
+    <string name="settings_export_store_csv">Store (CSV)</string>
+
+    <!-- Boat Passport PDF -->
+    <string name="settings_export_pdf_passport">Export boat passport (PDF)</string>
+    <string name="settings_export_pdf_success">Boat passport exported successfully</string>
+    <string name="settings_export_pdf_failed">Failed to create PDF document</string>
+    <string name="pdf_passport_title">Vessel Passport &amp; Service Dossier</string>
+    <string name="pdf_section_vessel">Vessel Specifications</string>
+    <string name="pdf_section_equipment">Equipment Registry</string>
+    <string name="pdf_section_equipment_photos">Equipment</string>
+    <string name="pdf_more_photos">+%1$d more</string>
+    <string name="pdf_section_service">Service History</string>
+    <string name="pdf_field_summary">Summary</string>
+    <string name="pdf_field_records_count">Service records: %1$d</string>
+    <string name="pdf_field_total_cost">Total expenses: %1$s</string>
+    <string name="pdf_field_components_count">Registered components: %1$d</string>
+    <string name="pdf_field_make_model">Make / Model</string>
+    <string name="pdf_field_year">Year Built</string>
+    <string name="pdf_field_hin">HIN / CIN</string>
+    <string name="pdf_field_length">Length</string>
+    <string name="pdf_field_hull">Hull Type</string>
+    <string name="pdf_field_engine">Engine Type</string>
+    <string name="pdf_field_drive">Drive Type</string>
+    <string name="pdf_field_fuel">Fuel Type</string>
+    <string name="pdf_field_serial">S/N</string>
+    <string name="pdf_field_installed">Installed</string>
+    <string name="pdf_footer_page">Page %1$d</string>
+    <string name="pdf_footer_brand">HullBeat Ship\'s Log</string>
+    <string name="now_enter_hours">Enter hours</string>
+    <string name="error_photo_save_failed">Could not save the photo</string>
+    <string name="action_ok">OK</string>
+</resources>

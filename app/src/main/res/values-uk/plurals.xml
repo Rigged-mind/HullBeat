@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Українські форми числа. CLDR для uk дає чотири:
+
+      one   1, 21, 31, 101...      (закінчується на 1, крім 11)
+      few   2-4, 22-24, 32-34...   (на 2-4, крім 12-14)
+      many  0, 5-20, 25-30...      (решта цілих)
+      other дробові: 1,5 позначки
+
+    `other` обовʼязковий: без нього Android для 1,5 візьме `many` і дасть
+    «1,5 позначок». Класична помилка — покласти для словʼянської локалі лише
+    one/other, як для англійської: тоді 5 отримає форму однини.
+
+    ГОЛОВНЕ ПРАВИЛО: у plural пакується ВСЯ ФРАЗА з узгодженими дієсловами.
+    Винести дієслово за дужки означає «21 позначка створять».
+-->
+<resources>
+    <plurals name="toast_jobs_saved">
+        <item quantity="one">Записано %d роботу</item>
+        <item quantity="few">Записано %d роботи</item>
+        <item quantity="many">Записано %d робіт</item>
+        <item quantity="other">Записано %d роботи</item>
+    </plurals>
+
+    <!-- Дієслова «створить/скине» узгоджуються з числом так само, як іменник. -->
+    <plurals name="checklist_will_log">
+        <item quantity="one">%d позначка створить запис і скине інтервал вузла</item>
+        <item quantity="few">%d позначки створять записи й скинуть інтервали вузлів</item>
+        <item quantity="many">%d позначок створять записи й скинуть інтервали вузлів</item>
+        <item quantity="other">%d позначки створять записи й скинуть інтервали вузлів</item>
+    </plurals>
+
+    <!-- «не стосується» проти «не стосуються» — те саме узгодження. -->
+    <plurals name="checklist_not_applicable">
+        <item quantity="one">%d пункт не стосується цього човна</item>
+        <item quantity="few">%d пункти не стосуються цього човна</item>
+        <item quantity="many">%d пунктів не стосуються цього човна</item>
+        <item quantity="other">%d пункти не стосуються цього човна</item>
+    </plurals>
+
+    <!-- «Пропущено» безособове й не змінюється: тут справді працює лише іменник. -->
+    <plurals name="checklist_skipped">
+        <item quantity="one">%d пункт пропущено</item>
+        <item quantity="few">%d пункти пропущено</item>
+        <item quantity="many">%d пунктів пропущено</item>
+        <item quantity="other">%d пункти пропущено</item>
+    </plurals>
+
+    <plurals name="due_overdue_days">
+        <item quantity="one">прострочено %d день</item>
+        <item quantity="few">прострочено %d дні</item>
+        <item quantity="many">прострочено %d днів</item>
+        <item quantity="other">прострочено %d дня</item>
+    </plurals>
+
+    <plurals name="due_in_hours">
+        <item quantity="one">за %d мотогодину</item>
+        <item quantity="few">за %d мотогодини</item>
+        <item quantity="many">за %d мотогодин</item>
+        <item quantity="other">за %d мотогодини</item>
+    </plurals>
+
+    <plurals name="onboarding_seeded">
+        <item quantity="one">Створено %d позицію обслуговування</item>
+        <item quantity="few">Створено %d позиції обслуговування</item>
+        <item quantity="many">Створено %d позицій обслуговування</item>
+        <item quantity="other">Створено %d позиції обслуговування</item>
+    </plurals>
+
+    <!-- "253 вузли у 17 категоріях" has TWO independent numbers, and an
+         Android plural takes one. So it is composed from two resources, which
+         is the documented workaround, not a shortcut. -->
+    <plurals name="boat_nodes">
+        <item quantity="one">%d вузол</item>
+        <item quantity="few">%d вузли</item>
+        <item quantity="many">%d вузлів</item>
+        <item quantity="other">%d вузла</item>
+    </plurals>
+
+    <plurals name="boat_categories_in">
+        <item quantity="one">у %d категорії</item>
+        <item quantity="few">у %d категоріях</item>
+        <item quantity="many">у %d категоріях</item>
+        <item quantity="other">у %d категорії</item>
+    </plurals>
+
+    <plurals name="boat_categories">
+        <item quantity="one">%d категорія</item>
+        <item quantity="few">%d категорії</item>
+        <item quantity="many">%d категорій</item>
+        <item quantity="other">%d категорії</item>
+    </plurals>
+
+    <plurals name="boat_categories_dead">
+        <item quantity="one">%d категорія не стосується</item>
+        <item quantity="few">%d категорії не стосуються</item>
+        <item quantity="many">%d категорій не стосуються</item>
+        <item quantity="other">%d категорії не стосується</item>
+    </plurals>
+
+    <plurals name="log_records">
+        <item quantity="one">%d запис</item>
+        <item quantity="few">%d записи</item>
+        <item quantity="many">%d записів</item>
+        <item quantity="other">%d запису</item>
+    </plurals>
+
+    <plurals name="log_gap_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d днів</item>
+        <item quantity="other">%d дня</item>
+    </plurals>
+
+    <plurals name="log_gap_hours">
+        <item quantity="one">%d мотогодина</item>
+        <item quantity="few">%d мотогодини</item>
+        <item quantity="many">%d мотогодин</item>
+        <item quantity="other">%d мотогодини</item>
+    </plurals>
+
+    <plurals name="log_photos">
+        <item quantity="one">%d знімок</item>
+        <item quantity="few">%d знімки</item>
+        <item quantity="many">%d знімків</item>
+        <item quantity="other">%d знімка</item>
+    </plurals>
+
+    <!-- "шт" does not inflect in Ukrainian; the resource exists because
+         English does. All four forms are deliberately identical. -->
+    <plurals name="store_qty">
+        <item quantity="one">%d шт</item>
+        <item quantity="few">%d шт</item>
+        <item quantity="many">%d шт</item>
+        <item quantity="other">%d шт</item>
+    </plurals>
+
+    <plurals name="store_items">
+        <item quantity="one">%d позиція</item>
+        <item quantity="few">%d позиції</item>
+        <item quantity="many">%d позицій</item>
+        <item quantity="other">%d позиції</item>
+    </plurals>
+
+    <!-- Locative: "у 4 локаціях". The nominative count is store_locations. -->
+    <plurals name="store_locations_in">
+        <item quantity="one">у %d локації</item>
+        <item quantity="few">у %d локаціях</item>
+        <item quantity="many">у %d локаціях</item>
+        <item quantity="other">у %d локації</item>
+    </plurals>
+
+    <!-- "за" takes the accusative: 1 день, 2 дні, 5 днів. -->
+    <plurals name="due_in_days">
+        <item quantity="one">за %d день</item>
+        <item quantity="few">за %d дні</item>
+        <item quantity="many">за %d днів</item>
+        <item quantity="other">за %d дня</item>
+    </plurals>
+
+    <plurals name="boat_own_nodes">
+        <item quantity="one">з них %d свій</item>
+        <item quantity="few">з них %d свої</item>
+        <item quantity="many">з них %d своїх</item>
+        <item quantity="other">з них %d свого</item>
+    </plurals>
+
+    <plurals name="now_needs_meter">
+        <item quantity="one">%d вузол чекає на перші мотогодини</item>
+        <item quantity="few">%d вузли чекають на перші мотогодини</item>
+        <item quantity="many">%d вузлів чекають на перші мотогодини</item>
+        <item quantity="other">%d вузла чекають на перші мотогодини</item>
+    </plurals>
+
+    <plurals name="now_needs_first_record">
+        <item quantity="one">%d вузол ще не має жодного запису</item>
+        <item quantity="few">%d вузли ще не мають жодного запису</item>
+        <item quantity="many">%d вузлів ще не мають жодного запису</item>
+        <item quantity="other">%d вузла ще не мають жодного запису</item>
+    </plurals>
+
+    <plurals name="snack_logged_photos_failed">
+        <item quantity="one">Записано, але %d фотографію не вдалося зберегти</item>
+        <item quantity="few">Записано, але %d фотографії не вдалося зберегти</item>
+        <item quantity="many">Записано, але %d фотографій не вдалося зберегти</item>
+        <item quantity="other">Записано, але %d фотографії не вдалося зберегти</item>
+    </plurals>
+
+    <plurals name="departure_check_chip">
+        <item quantity="one">Вихід у море · %d пункт</item>
+        <item quantity="few">Вихід у море · %d пункти</item>
+        <item quantity="many">Вихід у море · %d пунктів</item>
+        <item quantity="other">Вихід у море · %d пункту</item>
+    </plurals>
+
+    <plurals name="store_stat_items">
+        <item quantity="one">%d позиція</item>
+        <item quantity="few">%d позиції</item>
+        <item quantity="many">%d позицій</item>
+        <item quantity="other">%d позиції</item>
+    </plurals>
+
+    <plurals name="store_stat_lockers">
+        <item quantity="one">у %d локації</item>
+        <item quantity="few">у %d локаціях</item>
+        <item quantity="many">у %d локаціях</item>
+        <item quantity="other">у %d локації</item>
+    </plurals>
+
+    <plurals name="import_rows_count">
+        <item quantity="one">%d рядок</item>
+        <item quantity="few">%d рядки</item>
+        <item quantity="many">%d рядків</item>
+        <item quantity="other">%d рядка</item>
+    </plurals>
+
+    <plurals name="import_success_toast">
+        <item quantity="one">Імпортовано %d запис</item>
+        <item quantity="few">Імпортовано %d записи</item>
+        <item quantity="many">Імпортовано %d записів</item>
+        <item quantity="other">Імпортовано %d записи</item>
+    </plurals>
+</resources>

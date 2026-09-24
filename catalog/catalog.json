@@ -1,0 +1,4644 @@
+{
+  "version": 27,
+  "generated": "2026-09-05",
+  "note": "Default intervals are guidance only and are user-editable. Components with verify=true must be confirmed against the manufacturer manual before release.",
+  "profileVocabulary": {
+    "hull": [
+      "monohull_sail",
+      "catamaran_sail",
+      "trimaran_sail",
+      "motor",
+      "rib",
+      "dinghy"
+    ],
+    "cooling": [
+      "raw_water",
+      "keel_cooled"
+    ],
+    "rig": [
+      "none",
+      "sloop",
+      "cutter",
+      "ketch",
+      "yawl",
+      "schooner",
+      "cat_rig",
+      "junk"
+    ],
+    "keel": [
+      "fin",
+      "long",
+      "bilge",
+      "lifting",
+      "centreboard",
+      "daggerboard",
+      "none"
+    ],
+    "storage": [
+      "afloat_year_round",
+      "hauled_winter",
+      "dry_stack",
+      "trailer"
+    ],
+    "extras": [
+      "genset",
+      "watermaker",
+      "aircon",
+      "heater",
+      "thruster",
+      "davits",
+      "passerelle",
+      "tender",
+      "trailer",
+      "holding_tank",
+      "lpg",
+      "solar",
+      "wind_gen",
+      "inverter",
+      "autopilot",
+      "radar",
+      "ais",
+      "liferaft",
+      "epirb",
+      "shore_power",
+      "furler",
+      "windlass",
+      "hydrogenerator",
+      "fresh_water",
+      "heads",
+      "fridge",
+      "cabin",
+      "instruments",
+      "offshore"
+    ],
+    "water": [
+      "salt",
+      "brackish",
+      "fresh"
+    ],
+    "engine": [
+      "diesel",
+      "petrol",
+      "electric",
+      "none"
+    ],
+    "drive": [
+      "shaft",
+      "saildrive",
+      "sterndrive",
+      "outboard",
+      "none"
+    ]
+  },
+  "sailHulls": [
+    "monohull_sail",
+    "catamaran_sail",
+    "trimaran_sail"
+  ],
+  "categories": [
+    {
+      "code": "hull",
+      "sort": 1,
+      "icon": "hull",
+      "en": "Hull & underwater",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "hull_gelcoat",
+          "en": "Hull & gelcoat",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Gelcoat colour",
+            "Polish product"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "antifouling",
+          "en": "Antifouling",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Application date",
+            "Paint brand",
+            "Colour",
+            "Litres used",
+            "Coats"
+          ]
+        },
+        {
+          "code": "hull_cleaning",
+          "en": "Hull cleaning / scrub",
+          "crit": "low",
+          "sched": {
+            "days": 180
+          }
+        },
+        {
+          "code": "osmosis_check",
+          "en": "Osmosis / moisture check",
+          "crit": "med",
+          "sched": {
+            "days": 1825
+          }
+        },
+        {
+          "code": "keel",
+          "en": "Keel",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "keel_bolts",
+          "en": "Keel bolts",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "parent": "keel",
+          "specHints": [
+            "Bolt count",
+            "Torque spec",
+            "Socket size"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "keel_joint",
+          "en": "Keel-to-hull joint (keel smile)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "keel",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "lifting_keel",
+          "en": "Lifting keel / centerboard",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "keelAny": [
+              "lifting",
+              "centreboard",
+              "daggerboard"
+            ]
+          }
+        },
+        {
+          "code": "keel_lift_cable",
+          "en": "Keel pennant / lift wire & winch",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "lifting_keel",
+          "appliesTo": {
+            "keelAny": [
+              "lifting",
+              "centreboard",
+              "daggerboard"
+            ]
+          }
+        },
+        {
+          "code": "skeg",
+          "en": "Rudder skeg",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "keel_bulb",
+          "en": "Keel bulb",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "transom",
+          "en": "Transom",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "through_hulls",
+          "en": "Through-hulls",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "seacocks",
+          "en": "Seacocks",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "through_hulls",
+          "specHints": [
+            "Count",
+            "Sizes",
+            "Grease type"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "raw_water_hoses",
+          "en": "Raw water hoses",
+          "crit": "high",
+          "sched": {
+            "days": 3650
+          },
+          "parent": "through_hulls",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ],
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "hose_clamps",
+          "en": "Hose clamps",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "through_hulls",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wooden_bungs",
+          "en": "Emergency wooden plugs (bungs)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "through_hulls",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "anodes_hull",
+          "en": "Hull anodes",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ]
+        },
+        {
+          "code": "rudder",
+          "en": "Rudder",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "rudder_bearings",
+          "en": "Rudder bearings & stock",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "rudder",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "steering_quadrant",
+          "en": "Quadrant / steering linkage",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "rudder",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "emergency_tiller",
+          "en": "Emergency tiller",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "rudder",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "steering_system",
+          "en": "Steering system (cable / hydraulic)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Type",
+            "Fluid spec",
+            "Cable part no"
+          ]
+        },
+        {
+          "code": "steering_cables_sheaves",
+          "en": "Steering cables, chains & idler sheaves",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Cable part no",
+            "Sheave count"
+          ],
+          "parent": "steering_system"
+        },
+        {
+          "code": "hatches_portlights",
+          "en": "Hatches & portlights",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Seal part numbers"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "washboards",
+          "en": "Companionway hatch, washboards & lock",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "deck",
+          "en": "Deck & superstructure",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "teak_deck",
+          "en": "Teak deck & caulking",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "parent": "deck",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "nonskid",
+          "en": "Deck non-skid",
+          "crit": "low",
+          "sched": {
+            "days": 1095
+          },
+          "parent": "deck",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sprayhood_bimini",
+          "en": "Canvas (sprayhood, bimini, covers)",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "deck_rails_lifelines",
+          "en": "Lifelines, stanchions, pulpit & pushpit",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "rubbing_strake",
+          "en": "Rub rail / rubbing strake",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "bowsprit",
+          "en": "Bowsprit",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "bathing_platform",
+          "en": "Bathing platform & ladder",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "bow_thruster_grates",
+          "en": "Bow thruster tunnel grates",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "thruster"
+            ]
+          }
+        },
+        {
+          "code": "trim_tabs",
+          "en": "Trim tabs & hydraulics",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "motor",
+              "rib"
+            ]
+          },
+          "specHints": [
+            "Actuator type",
+            "Fluid spec"
+          ]
+        },
+        {
+          "code": "keel_cooling",
+          "en": "Keel cooling (dry exhaust)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "keel_cooled"
+            ],
+            "engineAny": [
+              "diesel"
+            ]
+          },
+          "specHints": [
+            "Coolant capacity (L)",
+            "Cooler make",
+            "Expansion tank pressure"
+          ]
+        },
+        {
+          "code": "drain_plug",
+          "en": "Transom drain plug (garboard plug)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Thread size",
+            "Spare aboard?"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "motor",
+              "rib",
+              "dinghy"
+            ]
+          }
+        },
+        {
+          "code": "tubes",
+          "en": "Inflatable tubes & seams",
+          "crit": "high",
+          "sched": {
+            "days": 180
+          },
+          "specHints": [
+            "Tube material",
+            "Working pressure",
+            "Number of chambers"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "rib",
+              "dinghy"
+            ]
+          }
+        },
+        {
+          "code": "tube_valves",
+          "en": "Tube valves & working pressure",
+          "crit": "high",
+          "sched": {
+            "days": 30
+          },
+          "parent": "tubes",
+          "appliesTo": {
+            "hullAny": [
+              "rib",
+              "dinghy"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "drivetrain",
+      "sort": 2,
+      "icon": "propeller",
+      "en": "Drivetrain",
+      "appliesTo": {
+        "driveAny": [
+          "shaft",
+          "saildrive",
+          "sterndrive"
+        ]
+      },
+      "components": [
+        {
+          "code": "prop_shaft",
+          "en": "Propeller shaft",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          },
+          "specHints": [
+            "Diameter",
+            "Length",
+            "Key size"
+          ]
+        },
+        {
+          "code": "stern_tube",
+          "en": "Stern tube & cutless bearing",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "parent": "prop_shaft",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "stuffing_box",
+          "en": "Stuffing box / dripless seal",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "prop_shaft",
+          "specHints": [
+            "Packing size",
+            "Bellows part no"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "shaft_bellows",
+          "en": "Shaft seal bellows replacement",
+          "crit": "high",
+          "sched": {
+            "days": 2190
+          },
+          "parent": "stuffing_box",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "shaft_anode",
+          "en": "Shaft anode",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "prop_shaft",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          },
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ]
+        },
+        {
+          "code": "p_bracket",
+          "en": "P-bracket / shaft strut",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "prop_shaft",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "flex_coupling",
+          "en": "Flexible coupling",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "parent": "prop_shaft",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "saildrive",
+          "en": "Saildrive",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Oil type",
+            "Oil quantity"
+          ]
+        },
+        {
+          "code": "saildrive_oil",
+          "en": "Saildrive oil",
+          "crit": "high",
+          "sched": {
+            "days": 365,
+            "hours": 200
+          },
+          "verify": true,
+          "parent": "saildrive",
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          }
+        },
+        {
+          "code": "saildrive_diaphragm",
+          "en": "Saildrive rubber diaphragm",
+          "crit": "high",
+          "sched": {
+            "days": 2555
+          },
+          "parent": "saildrive",
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          }
+        },
+        {
+          "code": "saildrive_anode",
+          "en": "Saildrive anode",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "saildrive",
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          },
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ]
+        },
+        {
+          "code": "sterndrive",
+          "en": "Sterndrive leg",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "sterndrive_bellows",
+          "en": "Sterndrive bellows",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "parent": "sterndrive",
+          "appliesTo": {
+            "driveAny": [
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "sterndrive_oil",
+          "en": "Sterndrive gear oil",
+          "crit": "high",
+          "sched": {
+            "days": 365,
+            "hours": 100
+          },
+          "verify": true,
+          "parent": "sterndrive",
+          "appliesTo": {
+            "driveAny": [
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "propeller",
+          "en": "Propeller",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Diameter",
+            "Pitch",
+            "Blades",
+            "Type"
+          ]
+        },
+        {
+          "code": "folding_prop",
+          "en": "Folding / feathering propeller",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "propeller",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "thruster",
+          "en": "Bow / stern thruster",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "thruster"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Fuse rating",
+            "Shear pin part no"
+          ],
+          "perEngine": false
+        },
+        {
+          "code": "thruster_anode",
+          "en": "Thruster anode & tunnel",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "thruster",
+          "appliesTo": {
+            "extrasAny": [
+              "thruster"
+            ]
+          },
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ],
+          "perEngine": false
+        }
+      ],
+      "perEngine": true
+    },
+    {
+      "code": "engine_main",
+      "sort": 3,
+      "icon": "engine",
+      "en": "Main engine",
+      "perEngine": true,
+      "appliesTo": {
+        "engineAny": [
+          "diesel",
+          "petrol"
+        ]
+      },
+      "components": [
+        {
+          "code": "engine_oil",
+          "en": "Engine oil",
+          "crit": "high",
+          "sched": {
+            "hours": 200,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Oil grade",
+            "Quantity (L)",
+            "Filter part no"
+          ]
+        },
+        {
+          "code": "engine_oil_filter",
+          "en": "Engine oil filter",
+          "crit": "high",
+          "sched": {
+            "hours": 200,
+            "days": 365
+          },
+          "verify": true,
+          "parent": "engine_oil",
+          "specHints": [
+            "Part number"
+          ]
+        },
+        {
+          "code": "oil_analysis",
+          "en": "Oil analysis",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "fuel_prefilter",
+          "en": "Fuel pre-filter / water separator",
+          "crit": "high",
+          "sched": {
+            "hours": 200,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Element part no",
+            "Micron"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "fuel_filter_fine",
+          "en": "Secondary fuel filter",
+          "crit": "high",
+          "sched": {
+            "hours": 400,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Part number"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "injectors",
+          "en": "Injectors",
+          "crit": "med",
+          "sched": {
+            "hours": 2000
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ],
+            "engineAny": [
+              "diesel"
+            ]
+          }
+        },
+        {
+          "code": "injection_pump",
+          "en": "Injection pump",
+          "crit": "med",
+          "sched": {
+            "hours": 3000
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ],
+            "engineAny": [
+              "diesel"
+            ]
+          }
+        },
+        {
+          "code": "lift_pump",
+          "en": "Fuel lift pump",
+          "crit": "med",
+          "sched": {
+            "hours": 1000
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ],
+            "engineAny": [
+              "diesel"
+            ]
+          }
+        },
+        {
+          "code": "raw_water_impeller",
+          "en": "Raw water pump impeller",
+          "crit": "high",
+          "sched": {
+            "hours": 500,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Impeller part no",
+            "Gasket part no",
+            "Service kit"
+          ],
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ]
+          }
+        },
+        {
+          "code": "raw_water_strainer",
+          "en": "Raw water strainer",
+          "crit": "high",
+          "sched": {
+            "days": 30
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "heat_exchanger",
+          "en": "Heat exchanger",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "verify": true,
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "heat_exchanger_anode",
+          "en": "Heat exchanger anode / pencil zinc",
+          "crit": "high",
+          "sched": {
+            "days": 180
+          },
+          "parent": "heat_exchanger",
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ],
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "coolant",
+          "en": "Coolant (closed circuit)",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "verify": true,
+          "specHints": [
+            "Coolant spec",
+            "Quantity (L)"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "thermostat",
+          "en": "Thermostat",
+          "crit": "med",
+          "sched": {
+            "hours": 2000
+          },
+          "verify": true,
+          "specHints": [
+            "Part number",
+            "Opening temp"
+          ]
+        },
+        {
+          "code": "mixing_elbow",
+          "en": "Exhaust mixing elbow",
+          "crit": "high",
+          "sched": {
+            "days": 1825,
+            "hours": 2000
+          },
+          "verify": true,
+          "specHints": [
+            "Part number"
+          ],
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ]
+          }
+        },
+        {
+          "code": "exhaust_hose",
+          "en": "Exhaust hose & waterlock",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ]
+          }
+        },
+        {
+          "code": "anti_siphon",
+          "en": "Anti-siphon valve",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ]
+          }
+        },
+        {
+          "code": "alternator_belt",
+          "en": "Engine drive belt (alternator, pump)",
+          "crit": "high",
+          "sched": {
+            "hours": 500,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Belt size",
+            "Part number"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "air_filter",
+          "en": "Air filter",
+          "crit": "med",
+          "sched": {
+            "hours": 500,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Part number"
+          ]
+        },
+        {
+          "code": "turbo",
+          "en": "Turbocharger / intercooler",
+          "crit": "med",
+          "sched": {
+            "hours": 1000
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "valve_clearance",
+          "en": "Valve clearance adjustment",
+          "crit": "med",
+          "sched": {
+            "hours": 1000
+          },
+          "verify": true,
+          "specHints": [
+            "Intake gap",
+            "Exhaust gap"
+          ]
+        },
+        {
+          "code": "compression_test",
+          "en": "Compression test",
+          "crit": "low",
+          "sched": {
+            "hours": 2000
+          }
+        },
+        {
+          "code": "engine_mounts",
+          "en": "Engine mounts & alignment",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "specHints": [
+            "Mount part no",
+            "Torque"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "alternator",
+          "en": "Alternator",
+          "crit": "med",
+          "sched": {
+            "hours": 1000,
+            "days": 365
+          },
+          "specHints": [
+            "Output (A)",
+            "Model"
+          ]
+        },
+        {
+          "code": "starter_motor",
+          "en": "Starter motor",
+          "crit": "med",
+          "sched": {
+            "days": 1095
+          }
+        },
+        {
+          "code": "engine_sensors",
+          "en": "Sensors & alarms (temp, oil pressure)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "engine_wiring",
+          "en": "Engine harness & connections",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "gearbox",
+          "en": "Gearbox / transmission",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Model",
+            "Oil type",
+            "Quantity"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "gearbox_oil",
+          "en": "Gearbox oil",
+          "crit": "high",
+          "sched": {
+            "hours": 300,
+            "days": 365
+          },
+          "verify": true,
+          "parent": "gearbox",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "throttle_cables",
+          "en": "Throttle & gear cables",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "kill_switch",
+          "en": "Kill switch / lanyard",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "ob_gearcase_oil",
+          "en": "Outboard gearcase oil",
+          "crit": "high",
+          "sched": {
+            "hours": 100,
+            "days": 365
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          },
+          "specHints": [
+            "Oil type",
+            "Quantity"
+          ]
+        },
+        {
+          "code": "ob_spark_plugs",
+          "en": "Outboard spark plugs",
+          "crit": "med",
+          "sched": {
+            "hours": 100,
+            "days": 365
+          },
+          "verify": true,
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ],
+            "engineAny": [
+              "petrol"
+            ]
+          },
+          "specHints": [
+            "Plug type",
+            "Gap"
+          ]
+        },
+        {
+          "code": "ob_anodes",
+          "en": "Outboard anodes",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          },
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ]
+        },
+        {
+          "code": "ob_tilt_trim",
+          "en": "Outboard tilt & trim",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          }
+        },
+        {
+          "code": "ob_flush",
+          "en": "Outboard freshwater flush",
+          "crit": "med",
+          "sched": {
+            "days": 7
+          },
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          }
+        },
+        {
+          "code": "timing_belt",
+          "en": "Timing belt / cam chain",
+          "crit": "high",
+          "sched": {
+            "hours": 2000,
+            "days": 1825
+          },
+          "verify": true,
+          "specHints": [
+            "Belt or chain",
+            "Part number"
+          ],
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "glow_plugs",
+          "en": "Glow plugs",
+          "crit": "med",
+          "sched": {
+            "hours": 1000
+          },
+          "verify": true,
+          "appliesTo": {
+            "engineAny": [
+              "diesel"
+            ]
+          },
+          "specHints": [
+            "Part number"
+          ]
+        },
+        {
+          "code": "exhaust_blanket",
+          "en": "Exhaust thermal blanket",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "sea_chest",
+          "en": "Engine sea chest",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "perEngine": false,
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ]
+          }
+        },
+        {
+          "code": "dry_exhaust_silencer",
+          "en": "Dry exhaust silencer & stack",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "keel_cooled"
+            ]
+          },
+          "specHints": [
+            "Silencer make",
+            "Stack insulation type"
+          ]
+        },
+        {
+          "code": "exhaust_bellows",
+          "en": "Exhaust expansion bellows",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "keel_cooled"
+            ]
+          },
+          "specHints": [
+            "Part number",
+            "Fitted date"
+          ]
+        },
+        {
+          "code": "egt_monitoring",
+          "en": "Exhaust gas temperature monitoring",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "coolingAny": [
+              "keel_cooled"
+            ]
+          },
+          "specHints": [
+            "Alarm threshold (°C)",
+            "Probe part no"
+          ]
+        },
+        {
+          "code": "blower",
+          "en": "Engine bay blower (bilge ventilation fan)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "CFM",
+            "Duct condition",
+            "Run time before start"
+          ],
+          "appliesTo": {
+            "engineAny": [
+              "petrol"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          },
+          "perEngine": false
+        }
+      ]
+    },
+    {
+      "code": "genset",
+      "sort": 4,
+      "icon": "generator",
+      "en": "Generator",
+      "appliesTo": {
+        "extrasAny": [
+          "genset"
+        ]
+      },
+      "components": [
+        {
+          "code": "gen_oil",
+          "en": "Generator oil & filter",
+          "crit": "high",
+          "sched": {
+            "hours": 150,
+            "days": 365
+          },
+          "verify": true,
+          "specHints": [
+            "Oil grade",
+            "Quantity",
+            "Filter part no"
+          ]
+        },
+        {
+          "code": "gen_fuel_filter",
+          "en": "Generator fuel filter",
+          "crit": "high",
+          "sched": {
+            "hours": 250,
+            "days": 365
+          },
+          "verify": true
+        },
+        {
+          "code": "gen_impeller",
+          "en": "Generator raw water impeller",
+          "crit": "high",
+          "sched": {
+            "hours": 500,
+            "days": 365
+          },
+          "verify": true
+        },
+        {
+          "code": "gen_coolant",
+          "en": "Generator coolant",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "verify": true
+        },
+        {
+          "code": "gen_exhaust",
+          "en": "Generator exhaust & elbow",
+          "crit": "high",
+          "sched": {
+            "days": 1825
+          },
+          "verify": true
+        },
+        {
+          "code": "gen_belt",
+          "en": "Generator drive belt",
+          "crit": "med",
+          "sched": {
+            "hours": 500,
+            "days": 365
+          },
+          "verify": true
+        },
+        {
+          "code": "gen_windings",
+          "en": "Generator end, brushes, bearings",
+          "crit": "med",
+          "sched": {
+            "hours": 2000
+          }
+        },
+        {
+          "code": "gen_control",
+          "en": "Control panel & auto-start",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "gen_enclosure",
+          "en": "Genset sound shield",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "fuel",
+      "sort": 5,
+      "icon": "fuel",
+      "en": "Fuel system",
+      "appliesTo": {
+        "engineAny": [
+          "diesel",
+          "petrol"
+        ]
+      },
+      "components": [
+        {
+          "code": "fuel_tank",
+          "en": "Fuel tank",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Capacity (L)",
+            "Material"
+          ]
+        },
+        {
+          "code": "fuel_polishing",
+          "en": "Fuel polishing / biocide",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fuel_tank_inspection",
+          "en": "Fuel tank inspection port & sump",
+          "crit": "med",
+          "sched": {
+            "days": 1825
+          },
+          "parent": "fuel_tank"
+        },
+        {
+          "code": "fuel_hoses",
+          "en": "Fuel hoses",
+          "crit": "high",
+          "sched": {
+            "days": 3650
+          }
+        },
+        {
+          "code": "fuel_vent",
+          "en": "Tank vent & flame arrestor",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fuel_filler",
+          "en": "Deck filler & seal",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fuel_gauge",
+          "en": "Fuel level sender & gauge",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fuel_valves",
+          "en": "Fuel shut-off valves & manifold",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "portable_tanks",
+          "en": "Portable fuel tanks",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          }
+        },
+        {
+          "code": "fuel_tank_drain",
+          "en": "Fuel tank drain valve",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fuel_return_cooler",
+          "en": "Fuel return cooler",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          }
+        }
+      ]
+    },
+    {
+      "code": "elec_dc",
+      "sort": 6,
+      "icon": "battery",
+      "en": "DC electrical (12/24V)",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "house_batteries",
+          "en": "House batteries",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Chemistry",
+            "Capacity (Ah)",
+            "Count",
+            "Install date"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "start_battery",
+          "en": "Start battery",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Chemistry",
+            "CCA",
+            "Install date"
+          ]
+        },
+        {
+          "code": "battery_terminals",
+          "en": "Terminals & battery boxes",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "battery_bms",
+          "en": "BMS / lithium balancing",
+          "crit": "high",
+          "sched": {
+            "days": 180
+          },
+          "parent": "house_batteries",
+          "appliesTo": {
+            "hullAny": [
+              "catamaran_sail",
+              "monohull_sail",
+              "motor",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "charger",
+          "en": "Shore battery charger",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "shore_power"
+            ]
+          }
+        },
+        {
+          "code": "solar",
+          "en": "Solar panels & MPPT",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "solar"
+            ]
+          },
+          "specHints": [
+            "Panel W",
+            "Controller model"
+          ]
+        },
+        {
+          "code": "wind_gen",
+          "en": "Wind generator",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "wind_gen"
+            ]
+          }
+        },
+        {
+          "code": "inverter",
+          "en": "Inverter",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "inverter"
+            ]
+          }
+        },
+        {
+          "code": "battery_monitor",
+          "en": "Battery monitor / shunt",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "main_switches",
+          "en": "Main switches & busbars",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "dc_panel",
+          "en": "DC distribution panel & fuses",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "dc_wiring",
+          "en": "DC wiring & terminations",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "galvanic_isolator",
+          "en": "Galvanic isolator",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "shore_power"
+            ]
+          }
+        },
+        {
+          "code": "interior_lighting",
+          "en": "Interior lighting",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "dc_dc_charger",
+          "en": "DC-DC charger",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Model",
+            "Output (A)"
+          ]
+        },
+        {
+          "code": "bonding_system",
+          "en": "Bonding system & grounding bus",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "hydrogenerator",
+          "en": "Hydrogenerator",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "hydrogenerator"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Propeller size"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "elec_ac",
+      "sort": 7,
+      "icon": "plug",
+      "en": "AC electrical (230/120V)",
+      "appliesTo": {
+        "extrasAny": [
+          "shore_power",
+          "inverter",
+          "genset"
+        ]
+      },
+      "components": [
+        {
+          "code": "shore_cable",
+          "en": "Shore power cable & plug",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "shore_inlet",
+          "en": "Shore power inlet",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "rcd_elcb",
+          "en": "RCD / ELCB test",
+          "crit": "high",
+          "sched": {
+            "days": 30
+          }
+        },
+        {
+          "code": "isolation_transformer",
+          "en": "Isolation transformer",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "ac_outlets",
+          "en": "AC outlets & earth bonding",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "plumbing",
+      "sort": 8,
+      "icon": "water",
+      "en": "Bilge & water systems",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "bilge_pump_auto",
+          "en": "Automatic bilge pump",
+          "crit": "high",
+          "sched": {
+            "days": 30
+          },
+          "specHints": [
+            "Model",
+            "Flow (l/min)",
+            "Fuse"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "bilge_float_switch",
+          "en": "Bilge float switch",
+          "crit": "high",
+          "sched": {
+            "days": 30
+          },
+          "parent": "bilge_pump_auto",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "bilge_pump_manual",
+          "en": "Manual bilge pump",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Diaphragm kit part no"
+          ]
+        },
+        {
+          "code": "bilge_emergency_pump",
+          "en": "High-capacity emergency pump",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "bilge_hoses",
+          "en": "Bilge hoses & check valves",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "bilge_alarm",
+          "en": "High water bilge alarm",
+          "crit": "high",
+          "sched": {
+            "days": 90
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "bilge_cleanliness",
+          "en": "Bilge cleaning",
+          "crit": "low",
+          "sched": {
+            "days": 90
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "water_tank",
+          "en": "Fresh water tank",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Capacity (L)",
+            "Material"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_tank_sanitise",
+          "en": "Water tank cleaning & sanitizing",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "water_tank",
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_pump",
+          "en": "Pressure water pump & accumulator",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Model",
+            "Pressure switch"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_filter",
+          "en": "Water filter / UV sterilizer",
+          "crit": "low",
+          "sched": {
+            "days": 180
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_pipes",
+          "en": "Water pipework & fittings",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "galley_foot_pump",
+          "en": "Manual galley pump",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_heater",
+          "en": "Water heater (calorifier)",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Capacity (L)",
+            "Anode part no",
+            "Element W"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "water_heater_anode",
+          "en": "Calorifier anode",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "parent": "water_heater",
+          "specHints": [
+            "Material (Zn / Al / Mg)",
+            "Part number",
+            "Count"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "watermaker",
+          "en": "Watermaker",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          },
+          "specHints": [
+            "Membrane part no",
+            "Pre-filter micron"
+          ]
+        },
+        {
+          "code": "watermaker_prefilters",
+          "en": "Watermaker pre-filters",
+          "crit": "med",
+          "sched": {
+            "days": 90
+          },
+          "parent": "watermaker",
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          }
+        },
+        {
+          "code": "watermaker_membrane",
+          "en": "Watermaker membrane & pickling",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "watermaker",
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          }
+        },
+        {
+          "code": "raw_water_pump_deck",
+          "en": "Deck wash / raw water pump",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "heads_pump",
+          "en": "Heads pump & joker valve",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Service kit part no"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "heads"
+            ]
+          }
+        },
+        {
+          "code": "heads_hoses",
+          "en": "Sanitation hoses",
+          "crit": "med",
+          "sched": {
+            "days": 1825
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "heads"
+            ]
+          }
+        },
+        {
+          "code": "holding_tank",
+          "en": "Holding tank",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "holding_tank"
+            ]
+          }
+        },
+        {
+          "code": "macerator",
+          "en": "Macerator & deck pump-out",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "holding_tank"
+            ]
+          }
+        },
+        {
+          "code": "shower_sump",
+          "en": "Shower sump & pump",
+          "crit": "low",
+          "sched": {
+            "days": 180
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "drains_scuppers",
+          "en": "Drains & scuppers",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "gas",
+      "sort": 9,
+      "icon": "gas",
+      "en": "Gas system (LPG/CNG)",
+      "appliesTo": {
+        "extrasAny": [
+          "lpg"
+        ]
+      },
+      "components": [
+        {
+          "code": "gas_bottles",
+          "en": "Gas bottles & locker",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Bottle size",
+            "Connector type"
+          ]
+        },
+        {
+          "code": "gas_regulator",
+          "en": "Gas regulator",
+          "crit": "high",
+          "sched": {
+            "days": 3650
+          },
+          "specHints": [
+            "Part number",
+            "Fitted date"
+          ]
+        },
+        {
+          "code": "gas_hoses",
+          "en": "Gas hoses",
+          "crit": "high",
+          "sched": {
+            "days": 1825
+          },
+          "specHints": [
+            "Date stamped on hose"
+          ]
+        },
+        {
+          "code": "gas_solenoid",
+          "en": "Solenoid shut-off valve",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "gas_detector",
+          "en": "Gas detector",
+          "crit": "high",
+          "sched": {
+            "days": 1825
+          },
+          "specHints": [
+            "Sensor expiry"
+          ]
+        },
+        {
+          "code": "gas_leak_test",
+          "en": "LPG leak test (manometer)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "gas_locker_drain",
+          "en": "LPG locker drain",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "gas_bottles"
+        }
+      ]
+    },
+    {
+      "code": "standing_rig",
+      "sort": 10,
+      "icon": "mast",
+      "en": "Standing rigging",
+      "appliesTo": {
+        "hullAny": [
+          "monohull_sail",
+          "catamaran_sail",
+          "trimaran_sail"
+        ]
+      },
+      "components": [
+        {
+          "code": "mast",
+          "en": "Mast",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Maker",
+            "Section",
+            "Height"
+          ]
+        },
+        {
+          "code": "mast_step",
+          "en": "Mast step & partners",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mast"
+        },
+        {
+          "code": "spreaders",
+          "en": "Spreaders",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mast"
+        },
+        {
+          "code": "masthead",
+          "en": "Masthead, sheaves, fittings",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mast"
+        },
+        {
+          "code": "mast_wiring",
+          "en": "Mast wiring & conduit",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mast"
+        },
+        {
+          "code": "shrouds",
+          "en": "Shrouds (cap, lower, intermediate)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Wire dia",
+            "Type",
+            "Fitted year"
+          ]
+        },
+        {
+          "code": "forestay",
+          "en": "Forestay",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "backstay",
+          "en": "Backstay",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "turnbuckles",
+          "en": "Turnbuckles & split pins",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "chainplates",
+          "en": "Chainplates",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "wire_terminals",
+          "en": "Standing rigging terminals (swage / mechanical)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "rig_replacement",
+          "en": "Full standing rigging replacement",
+          "crit": "high",
+          "sched": {
+            "days": 4380
+          },
+          "specHints": [
+            "Last replaced",
+            "Rigger"
+          ]
+        },
+        {
+          "code": "mast_climb_inspection",
+          "en": "Rig inspection aloft",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "headsail_furler",
+          "en": "Headsail furler",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "furler"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Bearing kit"
+          ]
+        },
+        {
+          "code": "inner_forestay",
+          "en": "Inner forestay / baby stay",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "running_backstays",
+          "en": "Running backstays / checkstays",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "running_rig",
+      "sort": 11,
+      "icon": "rope",
+      "en": "Spars & running rigging",
+      "appliesTo": {
+        "hullAny": [
+          "monohull_sail",
+          "catamaran_sail",
+          "trimaran_sail"
+        ]
+      },
+      "components": [
+        {
+          "code": "boom",
+          "en": "Boom & gooseneck",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "vang",
+          "en": "Kicker / vang",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "spinnaker_pole",
+          "en": "Spinnaker / whisker pole",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "halyards",
+          "en": "Halyards",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Diameter",
+            "Lengths"
+          ]
+        },
+        {
+          "code": "sheets",
+          "en": "Sheets",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "control_lines",
+          "en": "Reefing lines, topping lift, cunningham",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "blocks",
+          "en": "Blocks",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "clutches",
+          "en": "Rope clutches",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "tracks_cars",
+          "en": "Genoa tracks & cars",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "winches",
+          "en": "Winches",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Models",
+            "Count",
+            "Grease type",
+            "Pawl spring part no"
+          ]
+        },
+        {
+          "code": "winch_handles",
+          "en": "Winch handles & holders",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "mainsheet_traveler",
+          "en": "Mainsheet traveler & car",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "code_zero_furler",
+          "en": "Code Zero furler (continuous line)",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "sails",
+      "sort": 12,
+      "icon": "sail",
+      "en": "Sails",
+      "appliesTo": {
+        "hullAny": [
+          "monohull_sail",
+          "catamaran_sail",
+          "trimaran_sail"
+        ]
+      },
+      "components": [
+        {
+          "code": "mainsail",
+          "en": "Mainsail",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Sailmaker",
+            "Year",
+            "Cloth",
+            "Batten count"
+          ]
+        },
+        {
+          "code": "main_battens",
+          "en": "Battens & batten cars",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mainsail"
+        },
+        {
+          "code": "reefing",
+          "en": "Reefing system",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "mainsail"
+        },
+        {
+          "code": "headsail",
+          "en": "Headsail / genoa",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Sailmaker",
+            "Year",
+            "Size %"
+          ]
+        },
+        {
+          "code": "headsail_uv",
+          "en": "UV sacrificial strip",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "parent": "headsail"
+        },
+        {
+          "code": "spinnaker",
+          "en": "Spinnaker / gennaker",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "snuffer",
+          "en": "Snuffer / sock",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "parent": "spinnaker"
+        },
+        {
+          "code": "storm_sails",
+          "en": "Storm jib & trysail",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "sail_covers",
+          "en": "Sail cover / lazy bag & jacks",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "sail_service",
+          "en": "Sail valet & loft inspection",
+          "crit": "med",
+          "sched": {
+            "days": 1095
+          }
+        },
+        {
+          "code": "sail_wash",
+          "en": "Sail wash & dry storage",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "ground_tackle",
+      "sort": 13,
+      "icon": "anchor",
+      "en": "Anchoring & mooring",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "primary_anchor",
+          "en": "Primary anchor",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Type",
+            "Weight (kg)"
+          ]
+        },
+        {
+          "code": "secondary_anchor",
+          "en": "Secondary / kedge anchor",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "anchor_chain",
+          "en": "Anchor chain",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Diameter",
+            "Length",
+            "Grade"
+          ],
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "chain_end_for_end",
+          "en": "Anchor chain end-for-ending",
+          "crit": "med",
+          "sched": {
+            "days": 913
+          },
+          "parent": "anchor_chain",
+          "appliesTo": {
+            "hullAny": [
+              "catamaran_sail",
+              "monohull_sail",
+              "motor",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "chain_markings",
+          "en": "Chain length markings",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "parent": "anchor_chain",
+          "appliesTo": {
+            "hullAny": [
+              "catamaran_sail",
+              "monohull_sail",
+              "motor",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "anchor_swivel",
+          "en": "Swivel & shackles",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "bitter_end",
+          "en": "Bitter end lashing to boat",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "windlass",
+          "en": "Windlass",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "windlass"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Gypsy size",
+            "Fuse",
+            "Oil type"
+          ]
+        },
+        {
+          "code": "windlass_contactor",
+          "en": "Windlass contactor & controls",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "windlass",
+          "appliesTo": {
+            "extrasAny": [
+              "windlass"
+            ]
+          }
+        },
+        {
+          "code": "windlass_manual",
+          "en": "Windlass emergency handle",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "windlass",
+          "appliesTo": {
+            "extrasAny": [
+              "windlass"
+            ]
+          }
+        },
+        {
+          "code": "anchor_locker",
+          "en": "Anchor locker & drain",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "snubber",
+          "en": "Snubber / bridle",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "mooring_cleats",
+          "en": "Mooring cleats, fairleads & bollards",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "boat_hook",
+          "en": "Boat hook",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "mooring_snubbers",
+          "en": "Mooring snubbers & compensators",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "passerelle",
+          "en": "Passerelle / gangway",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "passerelle"
+            ]
+          }
+        },
+        {
+          "code": "mooring_lines",
+          "en": "Mooring lines & springs",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "fenders",
+          "en": "Fenders & fender boards",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "windlass_clutch",
+          "en": "Windlass clutch & friction cone",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "windlass"
+            ]
+          }
+        },
+        {
+          "code": "anchor_bridle_hook",
+          "en": "Anchor bridle hook",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "safety",
+      "sort": 14,
+      "icon": "safety",
+      "en": "Safety & emergency",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "safety_padeyes",
+          "en": "Safety padeyes & backing plates",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "liferaft",
+          "en": "Liferaft",
+          "crit": "high",
+          "sched": {
+            "days": 1095
+          },
+          "expires": true,
+          "leadDays": 60,
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          },
+          "specHints": [
+            "Maker",
+            "Capacity",
+            "Next service due",
+            "Serial"
+          ]
+        },
+        {
+          "code": "liferaft_hru",
+          "en": "Liferaft hydrostatic release",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "expires": true,
+          "parent": "liferaft",
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "lifejackets",
+          "en": "Lifejackets / PFDs",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Count",
+            "Type",
+            "Cylinder size"
+          ]
+        },
+        {
+          "code": "lifejacket_cylinders",
+          "en": "CO2 cylinders & auto cartridges",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "expires": true,
+          "parent": "lifejackets"
+        },
+        {
+          "code": "harnesses_tethers",
+          "en": "Harnesses & tethers",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "jackstays",
+          "en": "Jackstays & clip points",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "mob_equipment",
+          "en": "MOB gear (danbuoy, horseshoe, sling)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "epirb",
+          "en": "EPIRB / PLB",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          },
+          "specHints": [
+            "Hex ID",
+            "Battery expiry",
+            "Registered to"
+          ]
+        },
+        {
+          "code": "epirb_battery",
+          "en": "EPIRB battery",
+          "crit": "high",
+          "sched": {
+            "days": 1825
+          },
+          "expires": true,
+          "parent": "epirb",
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          }
+        },
+        {
+          "code": "epirb_registration",
+          "en": "EPIRB registration & contacts",
+          "crit": "high",
+          "sched": {
+            "days": 730
+          },
+          "expires": true,
+          "leadDays": 30,
+          "parent": "epirb",
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          }
+        },
+        {
+          "code": "flares",
+          "en": "Flares & pyrotechnics",
+          "crit": "high",
+          "sched": {
+            "days": 1278
+          },
+          "expires": true,
+          "specHints": [
+            "Types",
+            "Counts",
+            "Expiry date"
+          ]
+        },
+        {
+          "code": "grab_bag",
+          "en": "Grab bag (abandon ship)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Contents list",
+            "Signaling mirror",
+            "Water",
+            "Handheld VHF"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "fire_extinguishers",
+          "en": "Fire extinguishers",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "specHints": [
+            "Type",
+            "Count",
+            "Size",
+            "Next check"
+          ]
+        },
+        {
+          "code": "engine_fire_system",
+          "en": "Engine bay automatic fire system",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "fire_blanket",
+          "en": "Fire blanket",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "co_smoke_detector",
+          "en": "CO & smoke detectors",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "first_aid",
+          "en": "First aid kit",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "specHints": [
+            "Earliest medicine expiry"
+          ]
+        },
+        {
+          "code": "emergency_tools",
+          "en": "Emergency cutting tools (bolt croppers, hacksaw)",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "damage_control",
+          "en": "Damage control kit",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "radar_reflector",
+          "en": "Radar reflector",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sart",
+          "en": "SART / AIS-SART",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "expires": true,
+          "specHints": [
+            "Battery expiry"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "sound_signals",
+          "en": "Sound signals (horn, bell, whistle)",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "drogue",
+          "en": "Drogue (streamed astern)",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "offshore"
+            ]
+          }
+        },
+        {
+          "code": "sea_anchor",
+          "en": "Sea anchor (parachute)",
+          "crit": "med",
+          "sched": {
+            "days": 730
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "offshore"
+            ]
+          }
+        },
+        {
+          "code": "emergency_plan",
+          "en": "Safety briefing & emergency procedures",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "emergency_vhf_antenna",
+          "en": "Emergency VHF antenna",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "pelican_hooks",
+          "en": "Lifeline pelican hooks",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "rigging_shears",
+          "en": "Rigging emergency shears",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "nav",
+      "sort": 15,
+      "icon": "compass",
+      "en": "Navigation & electronics",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "chartplotter",
+          "en": "Chartplotter",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Model",
+            "Software version"
+          ]
+        },
+        {
+          "code": "chart_updates",
+          "en": "Chart updates",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "chartplotter",
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        },
+        {
+          "code": "paper_charts",
+          "en": "Paper charts & pilot books",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "radar",
+          "en": "Radar",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "radar"
+            ]
+          }
+        },
+        {
+          "code": "ais",
+          "en": "AIS transponder",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "ais"
+            ]
+          },
+          "specHints": [
+            "MMSI",
+            "Type (A/B)"
+          ]
+        },
+        {
+          "code": "vhf",
+          "en": "VHF & DSC",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "MMSI",
+            "Model",
+            "Call sign"
+          ]
+        },
+        {
+          "code": "vhf_antenna",
+          "en": "VHF antenna & coax",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "vhf"
+        },
+        {
+          "code": "handheld_vhf",
+          "en": "Handheld VHF & battery",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "satcom",
+          "en": "Satcom / Starlink",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "ssb",
+          "en": "SSB / HF radio",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "transducers",
+          "en": "Depth & speed transducers",
+          "crit": "med",
+          "sched": {
+            "days": 30
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        },
+        {
+          "code": "wind_instrument",
+          "en": "Wind instrument & masthead unit",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "compass",
+          "en": "Magnetic compass & deviation card",
+          "crit": "high",
+          "sched": {
+            "days": 1825
+          }
+        },
+        {
+          "code": "autopilot",
+          "en": "Autopilot",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "autopilot"
+            ]
+          },
+          "specHints": [
+            "Drive type",
+            "Model",
+            "Belt part no"
+          ]
+        },
+        {
+          "code": "autopilot_drive",
+          "en": "Autopilot drive unit",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "autopilot",
+          "appliesTo": {
+            "extrasAny": [
+              "autopilot"
+            ]
+          }
+        },
+        {
+          "code": "nmea_network",
+          "en": "Instrument network & connectors",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "nav_lights",
+          "en": "Navigation lights",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Bulb types",
+            "Spares aboard"
+          ]
+        },
+        {
+          "code": "anchor_light",
+          "en": "Anchor & steaming lights",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "nav_lights"
+        },
+        {
+          "code": "deck_light",
+          "en": "Deck light & searchlight",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "nav_instruments",
+          "en": "Binoculars, barometer, clock",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "hvac",
+      "sort": 16,
+      "icon": "climate",
+      "en": "Heating, ventilation, air conditioning",
+      "appliesTo": {
+        "extrasAny": [
+          "heater",
+          "aircon"
+        ]
+      },
+      "components": [
+        {
+          "code": "diesel_heater",
+          "en": "Diesel heater",
+          "crit": "med",
+          "sched": {
+            "days": 365,
+            "hours": 1000
+          },
+          "verify": true,
+          "appliesTo": {
+            "extrasAny": [
+              "heater"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Glow plug part no",
+            "Screen part no"
+          ]
+        },
+        {
+          "code": "heater_exhaust",
+          "en": "Heater exhaust & ducting",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "parent": "diesel_heater",
+          "appliesTo": {
+            "extrasAny": [
+              "heater"
+            ]
+          }
+        },
+        {
+          "code": "solid_fuel_stove",
+          "en": "Solid fuel / kerosene (paraffin) heater & flue",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "heater"
+            ]
+          }
+        },
+        {
+          "code": "aircon",
+          "en": "Air conditioning",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "aircon"
+            ]
+          },
+          "specHints": [
+            "Model",
+            "Refrigerant",
+            "Filter part no"
+          ]
+        },
+        {
+          "code": "aircon_pump",
+          "en": "Aircon raw water pump & strainer",
+          "crit": "med",
+          "sched": {
+            "days": 180
+          },
+          "parent": "aircon",
+          "appliesTo": {
+            "extrasAny": [
+              "aircon"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "galley",
+      "sort": 17,
+      "icon": "galley",
+      "en": "Galley & interior",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "stove",
+          "en": "Stove & oven",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Fuel type",
+            "Burner count"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "stove_gimbal",
+          "en": "Stove gimbal & fiddles",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "parent": "stove",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ],
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "fridge",
+          "en": "Refrigeration & freezer",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Compressor model",
+            "Refrigerant"
+          ],
+          "appliesTo": {
+            "extrasAny": [
+              "fridge"
+            ]
+          }
+        },
+        {
+          "code": "fridge_seals",
+          "en": "Fridge seals, insulation, drain",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "parent": "fridge",
+          "appliesTo": {
+            "extrasAny": [
+              "fridge"
+            ]
+          }
+        },
+        {
+          "code": "sink_taps",
+          "en": "Sink, taps, filter",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "interior_joinery",
+          "en": "Joinery, headlining, sole",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "condensation",
+          "en": "Insulation & condensation control",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "ventilation",
+          "en": "Ventilation, dorades, fans",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "berths",
+          "en": "Berths, mattresses, underbunk ventilation",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "doors_catches",
+          "en": "Doors, catches, hinges, storm bars",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "washing_machine",
+          "en": "Laundry & dishwasher",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "entertainment",
+          "en": "Audio, TV, antenna",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "tender",
+      "sort": 18,
+      "icon": "tender",
+      "en": "Tender & outboard",
+      "appliesTo": {
+        "extrasAny": [
+          "tender",
+          "davits"
+        ]
+      },
+      "components": [
+        {
+          "code": "tender_hull",
+          "en": "Tender hull & tubes",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          },
+          "specHints": [
+            "Make",
+            "Length",
+            "Working pressure"
+          ]
+        },
+        {
+          "code": "tender_valves",
+          "en": "Tender valves & pressure",
+          "crit": "med",
+          "sched": {
+            "days": 90
+          },
+          "parent": "tender_hull"
+        },
+        {
+          "code": "tender_repair_kit",
+          "en": "Repair kit, glue, pump, oars",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "tender_outboard",
+          "en": "Tender outboard",
+          "crit": "med",
+          "sched": {
+            "days": 365,
+            "hours": 100
+          },
+          "verify": true,
+          "specHints": [
+            "Model",
+            "Plug type",
+            "Gearcase oil"
+          ]
+        },
+        {
+          "code": "davits",
+          "en": "Davits & lifting gear",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          },
+          "appliesTo": {
+            "extrasAny": [
+              "davits"
+            ]
+          }
+        },
+        {
+          "code": "tender_security",
+          "en": "Tender stowage, cover, security",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "tender_registration",
+          "en": "Tender registration",
+          "crit": "low",
+          "expires": true,
+          "leadDays": 30
+        }
+      ]
+    },
+    {
+      "code": "trailer",
+      "sort": 19,
+      "icon": "trailer",
+      "en": "Trailer",
+      "appliesTo": {
+        "extrasAny": [
+          "trailer"
+        ],
+        "storageAny": [
+          "trailer"
+        ]
+      },
+      "components": [
+        {
+          "code": "trailer_bearings",
+          "en": "Wheel bearings",
+          "crit": "high",
+          "sched": {
+            "days": 365,
+            "miles": 3000
+          },
+          "specHints": [
+            "Bearing part no",
+            "Grease type"
+          ]
+        },
+        {
+          "code": "trailer_brakes",
+          "en": "Brakes & fluid",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_tires",
+          "en": "Tires & spare",
+          "crit": "high",
+          "sched": {
+            "days": 2190
+          },
+          "specHints": [
+            "Size",
+            "Pressure",
+            "DOT date"
+          ]
+        },
+        {
+          "code": "trailer_lights",
+          "en": "Lights & wiring plug",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_winch",
+          "en": "Winch & strap",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_rollers",
+          "en": "Rollers, keel support, bunks",
+          "crit": "med",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_coupling",
+          "en": "Coupling, safety cables, jockey wheel",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_frame",
+          "en": "Frame corrosion & welds",
+          "crit": "high",
+          "sched": {
+            "days": 365
+          }
+        },
+        {
+          "code": "trailer_documents",
+          "en": "Trailer registration & inspection",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 30
+        }
+      ]
+    },
+    {
+      "code": "documents",
+      "sort": 20,
+      "icon": "document",
+      "en": "Documents & admin",
+      "appliesTo": {},
+      "components": [
+        {
+          "code": "registration",
+          "en": "Vessel registration / flag",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 60,
+          "specHints": [
+            "Registry",
+            "Official number",
+            "Expiry"
+          ]
+        },
+        {
+          "code": "insurance",
+          "en": "Insurance",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 30,
+          "specHints": [
+            "Insurer",
+            "Policy no",
+            "Cruising area",
+            "Expiry"
+          ]
+        },
+        {
+          "code": "radio_licence",
+          "en": "Ship radio licence & MMSI",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 45,
+          "specHints": [
+            "MMSI",
+            "Call sign"
+          ]
+        },
+        {
+          "code": "operator_licence",
+          "en": "Operator certificate (ICC, VHF)",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 60
+        },
+        {
+          "code": "national_inspection",
+          "en": "National technical inspection",
+          "crit": "high",
+          "expires": true,
+          "leadDays": 60,
+          "specHints": [
+            "Scheme (ITB/BSS/Revisione/Bootszeugnis)",
+            "Expiry"
+          ]
+        },
+        {
+          "code": "marina_contract",
+          "en": "Marina / winter storage contract",
+          "crit": "med",
+          "expires": true,
+          "leadDays": 30
+        },
+        {
+          "code": "vat_customs",
+          "en": "VAT status & customs papers",
+          "crit": "med",
+          "expires": true,
+          "leadDays": 45
+        },
+        {
+          "code": "ce_certificate",
+          "en": "CE certificate & manuals",
+          "crit": "low",
+          "reference": true
+        },
+        {
+          "code": "survey",
+          "en": "Last survey",
+          "crit": "med",
+          "sched": {
+            "days": 1825
+          },
+          "specHints": [
+            "Surveyor",
+            "Date"
+          ]
+        },
+        {
+          "code": "warranties",
+          "en": "Warranties",
+          "crit": "low",
+          "expires": true,
+          "leadDays": 30
+        },
+        {
+          "code": "ships_log",
+          "en": "Ship's log book",
+          "crit": "low",
+          "sched": {
+            "days": 365
+          }
+        }
+      ]
+    },
+    {
+      "code": "other",
+      "sort": 21,
+      "icon": "other",
+      "en": "Other / custom",
+      "appliesTo": {},
+      "components": []
+    }
+  ]
+}

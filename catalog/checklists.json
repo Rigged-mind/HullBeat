@@ -1,0 +1,1462 @@
+{
+  "version": 1,
+  "catalogVersion": 27,
+  "note": "Seasonal procedures. `node` links an item to a catalog component; `logs` means finishing the item IS that component's scheduled service, so it writes a record and resets the interval.",
+  "checklists": [
+    {
+      "code": "winterize",
+      "season": "autumn",
+      "en": "Winterization / lay-up",
+      "items": [
+        {
+          "code": "wz_engine_oil",
+          "order": 10,
+          "en": "Change engine oil and filter before lay-up, not in spring",
+          "node": "engine_oil",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_gearbox_oil",
+          "order": 20,
+          "en": "Change gearbox oil",
+          "node": "gearbox_oil",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "wz_saildrive_oil",
+          "order": 30,
+          "en": "Change saildrive oil; check it for water",
+          "node": "saildrive_oil",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_fuel_prefilter",
+          "order": 40,
+          "en": "Change the primary filter and drain water from the bowl",
+          "node": "fuel_prefilter",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_fuel_full",
+          "order": 50,
+          "en": "Fill the tank to about 95% and add stabiliser or biocide",
+          "node": "fuel_tank",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_raw_flush",
+          "order": 60,
+          "en": "Flush the raw-water circuit with fresh water",
+          "node": "raw_water_strainer",
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_raw_antifreeze",
+          "order": 70,
+          "en": "Draw antifreeze through until it runs from the exhaust",
+          "node": "raw_water_hoses",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ],
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_coolant_check",
+          "order": 80,
+          "en": "Check antifreeze strength in the closed circuit",
+          "node": "coolant",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_impeller_out",
+          "order": 90,
+          "en": "Remove the impeller, rinse it, grease it with silicone and bag it beside the pump; tag the helm so nobody starts the engine",
+          "node": "raw_water_impeller",
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "wz_stuffing_box",
+          "order": 100,
+          "en": "Grease the stuffing box or check the dripless bellows date",
+          "node": "stuffing_box",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "wz_ob_flush",
+          "order": 110,
+          "en": "Flush the outboard, then fog the cylinders and run the fuel system dry",
+          "node": "ob_flush",
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          }
+        },
+        {
+          "code": "wz_ob_gearcase",
+          "order": 120,
+          "en": "Change gearcase oil; milky oil means a seal has gone",
+          "node": "ob_gearcase_oil",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "outboard"
+            ]
+          }
+        },
+        {
+          "code": "wz_water_drain",
+          "order": 130,
+          "en": "Drain tanks and lines, or push potable antifreeze through",
+          "node": "water_tank",
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "wz_water_heater",
+          "order": 140,
+          "en": "Drain and bypass the calorifier",
+          "node": "water_heater",
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "wz_heads",
+          "order": 150,
+          "en": "Shut the heads intake seacock, drop the intake hose into the pink propylene glycol and pump it through the bowl into the tank",
+          "node": "heads_pump",
+          "appliesTo": {
+            "extrasAny": [
+              "heads"
+            ]
+          }
+        },
+        {
+          "code": "wz_holding",
+          "order": 160,
+          "en": "Empty and rinse the holding tank",
+          "node": "holding_tank",
+          "appliesTo": {
+            "extrasAny": [
+              "holding_tank"
+            ]
+          }
+        },
+        {
+          "code": "wz_bilge",
+          "order": 170,
+          "en": "Pump the bilge dry and clean it; water left in it freezes",
+          "node": "bilge_cleanliness",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_watermaker",
+          "order": 180,
+          "en": "Pickle the membrane",
+          "node": "watermaker_membrane",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          }
+        },
+        {
+          "code": "wz_batteries",
+          "order": 190,
+          "en": "Charge fully, then take them ashore or leave a maintainer on",
+          "node": "house_batteries",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_terminals",
+          "order": 200,
+          "en": "Clean and grease the terminals",
+          "node": "battery_terminals",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_switches",
+          "order": 210,
+          "en": "Switch everything off except the bilge pump if she stays afloat",
+          "node": "main_switches",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_shore",
+          "order": 220,
+          "en": "Check the shore cable and inlet for heat damage before leaving it live all winter",
+          "node": "shore_cable",
+          "appliesTo": {
+            "extrasAny": [
+              "shore_power"
+            ]
+          }
+        },
+        {
+          "code": "wz_wash",
+          "order": 230,
+          "en": "Pressure-wash the hull the hour she comes out, before growth dries on",
+          "node": "hull_cleaning",
+          "logs": "record",
+          "appliesTo": {
+            "storageAny": [
+              "hauled_winter",
+              "dry_stack",
+              "trailer"
+            ]
+          }
+        },
+        {
+          "code": "wz_anodes_note",
+          "order": 240,
+          "en": "Photograph the anodes and note how much is left",
+          "node": "anodes_hull",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_seacocks_open",
+          "order": 250,
+          "en": "Set every seacock half open, not fully open: a ball valve at either end of its travel still holds water in the seat, and that is what splits the casting",
+          "node": "seacocks",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ],
+            "storageAny": [
+              "hauled_winter",
+              "dry_stack",
+              "trailer"
+            ]
+          }
+        },
+        {
+          "code": "wz_seacocks_shut",
+          "order": 260,
+          "en": "Close every seacock except the ones the bilge pump needs",
+          "node": "seacocks",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ],
+            "storageAny": [
+              "afloat_year_round"
+            ]
+          }
+        },
+        {
+          "code": "wz_transducer",
+          "order": 270,
+          "en": "Pull the paddlewheel log and fit the blank",
+          "node": "transducers",
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        },
+        {
+          "code": "wz_rudder",
+          "order": 280,
+          "en": "Check rudder bearing play and write the figure down for comparison",
+          "node": "rudder_bearings",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_sails_off",
+          "order": 290,
+          "en": "Take the sails off and dry them fully before folding",
+          "node": "sail_wash",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "wz_sail_service",
+          "order": 300,
+          "en": "Send anything that needs stitching now, not in April",
+          "node": "sail_service",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "wz_halyards",
+          "order": 310,
+          "en": "Wash the halyards, replace them with messengers, and store them dry",
+          "node": "halyards",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "wz_furler",
+          "order": 320,
+          "en": "Rinse the furler with fresh water and work it through its full travel",
+          "node": "headsail_furler",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ],
+            "extrasAny": [
+              "furler"
+            ]
+          }
+        },
+        {
+          "code": "wz_rig_slack",
+          "order": 330,
+          "en": "Slacken the rig a little if the mast stays stepped",
+          "node": "turnbuckles",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "wz_lines",
+          "order": 340,
+          "en": "Wash and dry the mooring lines and fenders; store them out of sunlight",
+          "node": "mooring_lines"
+        },
+        {
+          "code": "wz_chain",
+          "order": 350,
+          "en": "Wash the chain, and end-for-end it if the working end is worn",
+          "node": "anchor_chain",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "wz_gas_off",
+          "order": 360,
+          "en": "Close the bottle, disconnect it, and check the locker drain is clear",
+          "node": "gas_bottles",
+          "appliesTo": {
+            "extrasAny": [
+              "lpg"
+            ]
+          }
+        },
+        {
+          "code": "wz_fridge",
+          "order": 370,
+          "en": "Empty the fridge and prop the door open",
+          "node": "fridge_seals",
+          "appliesTo": {
+            "extrasAny": [
+              "fridge"
+            ]
+          }
+        },
+        {
+          "code": "wz_soft",
+          "order": 380,
+          "en": "Take ashore every cushion, sail bag and anything else that holds damp",
+          "node": "berths",
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "wz_vent",
+          "order": 390,
+          "en": "Set up ventilation or a dehumidifier; a sealed boat grows mould",
+          "node": "condensation",
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "wz_expiry",
+          "order": 400,
+          "en": "Note every expiry that falls before next season: insurance, liferaft, flares",
+          "node": "insurance"
+        }
+      ]
+    },
+    {
+      "code": "commission",
+      "season": "spring",
+      "en": "Spring commissioning",
+      "items": [
+        {
+          "code": "cm_hoses",
+          "order": 10,
+          "en": "Squeeze every hose below the waterline and check both clamps on each",
+          "node": "hose_clamps",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_seacocks",
+          "order": 20,
+          "en": "Work every seacock, grease it, and close them all before the lift",
+          "node": "seacocks",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_anodes",
+          "order": 30,
+          "en": "Replace anodes at 50% or less, and keep antifouling and grease off them and off their contact faces",
+          "node": "anodes_hull",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_shaft_anode",
+          "order": 40,
+          "en": "Replace the shaft anode",
+          "node": "shaft_anode",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "shaft"
+            ]
+          }
+        },
+        {
+          "code": "cm_saildrive_anode",
+          "order": 50,
+          "en": "Replace the saildrive anode and check the diaphragm date",
+          "node": "saildrive_anode",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "saildrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_antifouling",
+          "order": 60,
+          "en": "Antifoul; mask the anodes and the transducer face",
+          "node": "antifouling",
+          "logs": "record",
+          "appliesTo": {
+            "storageAny": [
+              "hauled_winter",
+              "dry_stack",
+              "trailer"
+            ]
+          }
+        },
+        {
+          "code": "cm_keel_joint",
+          "order": 70,
+          "en": "Look along the keel joint for a crack opening up",
+          "node": "keel_joint",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "cm_rudder",
+          "order": 80,
+          "en": "Compare rudder bearing play with the figure from lay-up",
+          "node": "rudder_bearings",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_gelcoat",
+          "order": 90,
+          "en": "Polish and wax the topsides",
+          "node": "hull_gelcoat",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_drain_plug",
+          "order": 100,
+          "en": "Fit the transom drain plug and pull on it by hand; carry the spare",
+          "node": "drain_plug",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "motor",
+              "rib",
+              "dinghy"
+            ]
+          }
+        },
+        {
+          "code": "cm_transducer",
+          "order": 110,
+          "en": "Refit the paddlewheel; check the blank is out before you launch",
+          "node": "transducers",
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        },
+        {
+          "code": "cm_impeller",
+          "order": 120,
+          "en": "Fit a new impeller and count the blades of the old one",
+          "node": "raw_water_impeller",
+          "logs": "record",
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_oil_check",
+          "order": 130,
+          "en": "Check the oil level and look for water in it",
+          "node": "engine_oil",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_fuel_filter",
+          "order": 140,
+          "en": "Change the fine filter and bleed the fuel system",
+          "node": "fuel_filter_fine",
+          "logs": "record",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_coolant",
+          "order": 150,
+          "en": "Top up coolant and check the antifreeze strength",
+          "node": "coolant",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_belt",
+          "order": 160,
+          "en": "Check belt tension and look for black dust under it",
+          "node": "alternator_belt",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_first_start",
+          "order": 170,
+          "en": "First start: water must show at the exhaust within 15 seconds, or stop",
+          "node": "exhaust_hose",
+          "appliesTo": {
+            "coolingAny": [
+              "raw_water"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "cm_leak_check",
+          "order": 180,
+          "en": "Lift the floorboards while she still hangs in the slings: check every seacock, the log fitting and the stern gland for weeping",
+          "node": "through_hulls",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_bilge_pumps",
+          "order": 190,
+          "en": "Test both bilge pumps and lift the float switch by hand",
+          "node": "bilge_pump_auto",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_bilge_alarm",
+          "order": 200,
+          "en": "Test the high water alarm; it is the one thing that wakes you",
+          "node": "bilge_alarm",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_watermaker_isolate",
+          "order": 210,
+          "en": "Isolate the watermaker before you chlorinate the tanks: free chlorine wrecks the membrane at a few ppm, and it does not recover",
+          "node": "watermaker",
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          }
+        },
+        {
+          "code": "cm_water_sanitise",
+          "order": 220,
+          "en": "Refill and sanitise the fresh water system, then flush it twice",
+          "node": "water_tank_sanitise",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "cm_water_heater",
+          "order": 230,
+          "en": "Bring the calorifier back into circuit and check for leaks",
+          "node": "water_heater",
+          "appliesTo": {
+            "extrasAny": [
+              "fresh_water"
+            ]
+          }
+        },
+        {
+          "code": "cm_heads",
+          "order": 240,
+          "en": "Flush the antifreeze out of the heads and check the joker valve",
+          "node": "heads_pump",
+          "appliesTo": {
+            "extrasAny": [
+              "heads"
+            ]
+          }
+        },
+        {
+          "code": "cm_watermaker",
+          "order": 250,
+          "en": "De-pickle the membrane and run to waste until the taste is clean",
+          "node": "watermaker_membrane",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "watermaker"
+            ]
+          }
+        },
+        {
+          "code": "cm_gas_leak",
+          "order": 260,
+          "en": "Reconnect the bottle and leak-test every joint with soap solution",
+          "node": "gas_leak_test",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "lpg"
+            ]
+          }
+        },
+        {
+          "code": "cm_safety_list",
+          "order": 270,
+          "en": "Run the safety check — the whole list, not the three things you remember",
+          "link": "safety"
+        },
+        {
+          "code": "cm_rig_walk",
+          "order": 280,
+          "en": "Walk the rig: every split pin in place and taped, every terminal clean",
+          "node": "turnbuckles",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "cm_masthead",
+          "order": 290,
+          "en": "Go up, or book someone to; check sheaves, wiring and the wind unit",
+          "node": "masthead",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "cm_halyards",
+          "order": 300,
+          "en": "Pull the halyards back through and check for chafe at the sheaves",
+          "node": "halyards",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "cm_sails_on",
+          "order": 310,
+          "en": "Bend on the sails and pull each reef in on the mooring, not at sea",
+          "node": "mainsail",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "cm_nav_lights",
+          "order": 320,
+          "en": "Test every navigation light, including the ones you never use",
+          "node": "nav_lights",
+          "logs": "record"
+        },
+        {
+          "code": "cm_vhf",
+          "order": 330,
+          "en": "Radio check on VHF, and test the DSC distress button on the test mode",
+          "node": "vhf",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "cm_charts",
+          "order": 340,
+          "en": "Update the charts before the first passage, not during it",
+          "node": "chart_updates",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "instruments"
+            ]
+          }
+        },
+        {
+          "code": "cm_insurance",
+          "order": 350,
+          "en": "Check insurance covers the cruising area you actually plan to use",
+          "node": "insurance"
+        }
+      ]
+    },
+    {
+      "code": "safety",
+      "season": "any",
+      "en": "Safety check",
+      "items": [
+        {
+          "code": "sf_liferaft",
+          "order": 10,
+          "en": "Check the service date, and that the painter is tied to a strong point rather than the rail",
+          "node": "liferaft",
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "sf_liferaft_hru",
+          "order": 20,
+          "en": "Read the date moulded into the side of the hydrostatic release and enter it",
+          "node": "liferaft_hru",
+          "logs": "expiry",
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "sf_grab_bag",
+          "order": 30,
+          "en": "Open the grab bag, check the dates inside, and put it back where it can be grabbed",
+          "node": "grab_bag",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "sf_plan",
+          "order": 40,
+          "en": "Brief the crew: man overboard, fire, flooding, abandon ship — and say where everything is",
+          "node": "emergency_plan",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_lifejackets",
+          "order": 50,
+          "en": "Inspect every jacket: bladder, webbing, crotch strap, whistle, light",
+          "node": "lifejackets",
+          "logs": "record"
+        },
+        {
+          "code": "sf_lj_cylinders",
+          "order": 60,
+          "en": "Weigh every CO2 cylinder on kitchen scales against its stamped gross weight; enter the earliest auto-cartridge date",
+          "node": "lifejacket_cylinders",
+          "logs": "expiry"
+        },
+        {
+          "code": "sf_harnesses",
+          "order": 70,
+          "en": "Pull hard on every stitch line, replace anything sun-bleached, and enter the label date",
+          "node": "harnesses_tethers",
+          "logs": "expiry",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "sf_jackstays",
+          "order": 80,
+          "en": "Check the jackstays end to end and the points they attach to",
+          "node": "jackstays",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "sf_pelican",
+          "order": 90,
+          "en": "Work the lifeline gate hooks; salt seizes them shut",
+          "node": "pelican_hooks",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "sf_mob",
+          "order": 100,
+          "en": "Check the danbuoy light, the horseshoe attachment, and that the sling actually deploys",
+          "node": "mob_equipment",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_epirb",
+          "order": 110,
+          "en": "Self-test the beacon and check it sits in its bracket the right way up",
+          "node": "epirb",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          }
+        },
+        {
+          "code": "sf_epirb_battery",
+          "order": 120,
+          "en": "Check the battery expiry; replacement is a service-centre job, so book it early",
+          "node": "epirb_battery",
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          }
+        },
+        {
+          "code": "sf_epirb_reg",
+          "order": 130,
+          "en": "Confirm the registration and emergency contacts; enter the expiry from the registration certificate",
+          "node": "epirb_registration",
+          "logs": "expiry",
+          "appliesTo": {
+            "extrasAny": [
+              "epirb"
+            ]
+          }
+        },
+        {
+          "code": "sf_sart",
+          "order": 140,
+          "en": "Self-test the SART and enter the battery date from the label on its body",
+          "node": "sart",
+          "logs": "expiry",
+          "appliesTo": {
+            "extrasAny": [
+              "liferaft"
+            ]
+          }
+        },
+        {
+          "code": "sf_flares",
+          "order": 150,
+          "en": "Check every flare is in date, and know where the expired ones can be handed in",
+          "node": "flares"
+        },
+        {
+          "code": "sf_radar_reflector",
+          "order": 160,
+          "en": "Check the reflector is mounted the way its maker specifies, not just tied on",
+          "node": "radar_reflector",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_emerg_antenna",
+          "order": 170,
+          "en": "Check the emergency antenna and that its connector actually fits your set",
+          "node": "emergency_vhf_antenna",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "sf_sound",
+          "order": 180,
+          "en": "Test the horn; check the bell and the whistle are aboard, not ashore",
+          "node": "sound_signals",
+          "logs": "record"
+        },
+        {
+          "code": "sf_extinguishers",
+          "order": 190,
+          "en": "Check every gauge is in the green; enter the earliest date from the neck stamp or the label",
+          "node": "fire_extinguishers",
+          "logs": "expiry"
+        },
+        {
+          "code": "sf_engine_fire",
+          "order": 200,
+          "en": "Enter the date from the cylinder label; check the discharge port is not blocked",
+          "node": "engine_fire_system",
+          "logs": "expiry",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "sf_blower",
+          "order": 210,
+          "en": "Run the blower and feel the outlet; check the ducting has not come adrift",
+          "node": "blower",
+          "logs": "record",
+          "appliesTo": {
+            "engineAny": [
+              "petrol"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "sf_fire_blanket",
+          "order": 220,
+          "en": "Check the blanket is within reach of the stove — and not mounted behind it",
+          "node": "fire_blanket",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "sf_co_smoke",
+          "order": 230,
+          "en": "Test the detectors and enter the sensor date from the back of the unit; the sensor expires, not just the battery",
+          "node": "co_smoke_detector",
+          "logs": "expiry",
+          "appliesTo": {
+            "extrasAny": [
+              "cabin"
+            ]
+          }
+        },
+        {
+          "code": "sf_tiller",
+          "order": 240,
+          "en": "Dig the emergency tiller out, fit it to the rudder stock and steer with it",
+          "node": "emergency_tiller",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_bungs",
+          "order": 250,
+          "en": "Check a tapered bung of the right size hangs on its own seacock, not in a locker",
+          "node": "wooden_bungs",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_damage_control",
+          "order": 260,
+          "en": "Check the damage control kit: soft patch, tape, wedges",
+          "node": "damage_control",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "sf_emergency_tools",
+          "order": 270,
+          "en": "Check the cutting tools are somewhere the crew can find them in the dark",
+          "node": "emergency_tools",
+          "logs": "record"
+        },
+        {
+          "code": "sf_rigging_shears",
+          "order": 280,
+          "en": "Check the rig cutters work, and that everyone aboard knows where they are",
+          "node": "rigging_shears",
+          "logs": "record",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail"
+            ]
+          }
+        },
+        {
+          "code": "sf_first_aid",
+          "order": 290,
+          "en": "Restock the kit and enter the date of whichever medicine expires first",
+          "node": "first_aid",
+          "logs": "expiry"
+        },
+        {
+          "code": "sf_drogue",
+          "order": 300,
+          "en": "Open the drogue out; check the bridle and the points it loads (streamed astern, not from the bow)",
+          "node": "drogue",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "offshore"
+            ]
+          }
+        },
+        {
+          "code": "sf_sea_anchor",
+          "order": 310,
+          "en": "Open the sea anchor out; check the rode, the swivel and the retrieval line",
+          "node": "sea_anchor",
+          "logs": "record",
+          "appliesTo": {
+            "extrasAny": [
+              "offshore"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "predeparture",
+      "season": "every",
+      "en": "Pre-departure check",
+      "items": [
+        {
+          "code": "pd_drain_plug",
+          "order": 10,
+          "en": "Drain plug in and pulled on by hand",
+          "node": "drain_plug",
+          "appliesTo": {
+            "hullAny": [
+              "motor",
+              "rib",
+              "dinghy"
+            ]
+          }
+        },
+        {
+          "code": "pd_seacocks",
+          "order": 20,
+          "en": "Engine and heads intake seacocks open",
+          "node": "seacocks",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "pd_oil",
+          "order": 30,
+          "en": "Oil read off the dipstick and coolant off the expansion tank, not from memory",
+          "node": "engine_oil",
+          "appliesTo": {
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "pd_bilge",
+          "order": 40,
+          "en": "Bilge dry and nothing fouling the float switch",
+          "node": "bilge_float_switch",
+          "appliesTo": {
+            "hullAny": [
+              "monohull_sail",
+              "catamaran_sail",
+              "trimaran_sail",
+              "motor"
+            ]
+          }
+        },
+        {
+          "code": "pd_blower",
+          "order": 50,
+          "en": "Blower run for four minutes, and the bilge sniffed before the starter",
+          "node": "blower",
+          "appliesTo": {
+            "engineAny": [
+              "petrol"
+            ],
+            "driveAny": [
+              "shaft",
+              "saildrive",
+              "sterndrive"
+            ]
+          }
+        },
+        {
+          "code": "pd_fuel",
+          "order": 60,
+          "en": "Fuel for there, back and a third more checked, valves set",
+          "node": "fuel_gauge",
+          "appliesTo": {
+            "engineAny": [
+              "diesel",
+              "petrol"
+            ]
+          }
+        },
+        {
+          "code": "pd_lights",
+          "order": 70,
+          "en": "Navigation lights tested if there is any chance of coming back after dark",
+          "node": "nav_lights"
+        },
+        {
+          "code": "pd_lines",
+          "order": 80,
+          "en": "Lines ready to slip and fenders where they will be needed",
+          "node": "mooring_lines"
+        }
+      ]
+    }
+  ]
+}

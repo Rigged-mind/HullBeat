@@ -1,0 +1,300 @@
+{
+  "_": "SINGLE SOURCE for every colour in HullBeat. Generated consumers: app/src/main/java/app/hullbeat/ui/theme/Color.kt, app/src/main/res/values/colors.xml, the CSS in prototype/index.html, and the palette read by tools/check_contrast.py. Edit here, then run python tools/make_palette.py.",
+  "brand": {
+    "05": "#F2F8F6",
+    "10": "#E6F0ED",
+    "20": "#C2DAD4",
+    "30": "#97C0B7",
+    "40": "#6BA599",
+    "50": "#47897C",
+    "60": "#2E6C60",
+    "70": "#1E5449",
+    "80": "#14403A",
+    "90": "#0E2E29",
+    "95": "#091E1B",
+    "99": "#04120F"
+  },
+  "seed": "brand.80",
+  "schemes": {
+    "light": {
+      "material": {
+        "primary": "#14403A",
+        "onPrimary": "#FFFFFF",
+        "primaryContainer": "#C2DAD4",
+        "onPrimaryContainer": "#0E2E29",
+        "secondary": "#2E6C60",
+        "onSecondary": "#FFFFFF",
+        "secondaryContainer": "#E6F0ED",
+        "onSecondaryContainer": "#0E2E29",
+        "background": "#F7FAF9",
+        "onBackground": "#0B1F1C",
+        "surface": "#FFFFFF",
+        "onSurface": "#0B1F1C",
+        "surfaceVariant": "#E6F0ED",
+        "onSurfaceVariant": "#4A5F5B",
+        "outline": "#6E8781",
+        "outlineVariant": "#D3E0DC",
+        "error": "#B3261E",
+        "onError": "#FFFFFF"
+      },
+      "tokens": {
+        "background": "#F7FAF9",
+        "surface": "#FFFFFF",
+        "surfaceVariant": "#E6F0ED",
+        "onSurface": "#0B1F1C",
+        "primary": "#14403A",
+        "onPrimary": "#FFFFFF",
+        "primaryContainer": "#C2DAD4",
+        "onPrimaryContainer": "#0E2E29",
+        "outline": "#6E8781",
+        "onSurfaceMuted": "#4A5F5B",
+        "divider": "#D3E0DC",
+        "statusOverdue": "#B3261E",
+        "statusDueSoon": "#8A5200",
+        "statusOk": "#4A5F5B",
+        "statusDeferred": "#3D5A6C",
+        "tintOverdue": "#FBE4E2",
+        "tintDueSoon": "#FDF0DC",
+        "tintDeferred": "#E5EDF2"
+      },
+      "isHighContrast": false,
+      "borderWidth": "1px",
+      "cssName": "light",
+      "contrast": {
+        "text": 4.5,
+        "ui": 3.0
+      }
+    },
+    "dark": {
+      "material": {
+        "primary": "#6BA599",
+        "onPrimary": "#04120F",
+        "primaryContainer": "#1E5449",
+        "onPrimaryContainer": "#C2DAD4",
+        "secondary": "#97C0B7",
+        "onSecondary": "#04120F",
+        "secondaryContainer": "#172724",
+        "onSecondaryContainer": "#C2DAD4",
+        "background": "#0A1413",
+        "onBackground": "#E4EDEA",
+        "surface": "#0E1A18",
+        "onSurface": "#E4EDEA",
+        "surfaceVariant": "#172724",
+        "onSurfaceVariant": "#9BB0AB",
+        "outline": "#5C716C",
+        "outlineVariant": "#25332F",
+        "error": "#FF8A7E",
+        "onError": "#04120F"
+      },
+      "tokens": {
+        "background": "#0A1413",
+        "surface": "#0E1A18",
+        "surfaceVariant": "#172724",
+        "onSurface": "#E4EDEA",
+        "primary": "#6BA599",
+        "onPrimary": "#04120F",
+        "primaryContainer": "#1E5449",
+        "onPrimaryContainer": "#C2DAD4",
+        "outline": "#5C716C",
+        "onSurfaceMuted": "#9BB0AB",
+        "divider": "#25332F",
+        "statusOverdue": "#FF8A7E",
+        "statusDueSoon": "#FFB95C",
+        "statusOk": "#9BB0AB",
+        "statusDeferred": "#9EC2D6",
+        "tintOverdue": "#2A1614",
+        "tintDueSoon": "#2A2010",
+        "tintDeferred": "#16242C"
+      },
+      "isHighContrast": false,
+      "borderWidth": "1px",
+      "cssName": "dark",
+      "contrast": {
+        "text": 4.5,
+        "ui": 3.0
+      }
+    },
+    "sunlight": {
+      "material": {
+        "primary": "#0E2E29",
+        "onPrimary": "#FFFFFF",
+        "primaryContainer": "#C2DAD4",
+        "onPrimaryContainer": "#04120F",
+        "secondary": "#0E2E29",
+        "onSecondary": "#FFFFFF",
+        "secondaryContainer": "#F2F8F6",
+        "onSecondaryContainer": "#04120F",
+        "background": "#FFFFFF",
+        "onBackground": "#04120F",
+        "surface": "#FFFFFF",
+        "onSurface": "#04120F",
+        "surfaceVariant": "#F2F8F6",
+        "onSurfaceVariant": "#243B36",
+        "outline": "#3F5651",
+        "outlineVariant": "#6E8781",
+        "error": "#8C1D18",
+        "onError": "#FFFFFF"
+      },
+      "tokens": {
+        "background": "#FFFFFF",
+        "surface": "#FFFFFF",
+        "surfaceVariant": "#F2F8F6",
+        "onSurface": "#04120F",
+        "primary": "#0E2E29",
+        "onPrimary": "#FFFFFF",
+        "primaryContainer": "#C2DAD4",
+        "onPrimaryContainer": "#04120F",
+        "outline": "#3F5651",
+        "onSurfaceMuted": "#243B36",
+        "divider": "#6E8781",
+        "statusOverdue": "#8C1D18",
+        "statusDueSoon": "#6B4000",
+        "statusOk": "#243B36",
+        "statusDeferred": "#22404F",
+        "tintOverdue": "#F7E3E1",
+        "tintDueSoon": "#F7EEDC",
+        "tintDeferred": "#E5EDF2"
+      },
+      "isHighContrast": true,
+      "borderWidth": "2px",
+      "cssName": "sun",
+      "contrast": {
+        "text": 7.0,
+        "ui": 3.0
+      }
+    },
+    "night": {
+      "material": {
+        "primary": "#E8543A",
+        "onPrimary": "#0A0301",
+        "primaryContainer": "#2A0E07",
+        "onPrimaryContainer": "#E8543A",
+        "secondary": "#E8543A",
+        "onSecondary": "#0A0301",
+        "secondaryContainer": "#1C0A06",
+        "onSecondaryContainer": "#E8543A",
+        "background": "#080302",
+        "onBackground": "#E8543A",
+        "surface": "#0F0604",
+        "onSurface": "#E8543A",
+        "surfaceVariant": "#1C0A06",
+        "onSurfaceVariant": "#D14A32",
+        "outline": "#A34329",
+        "outlineVariant": "#2A0F09",
+        "error": "#FF7A55",
+        "onError": "#080302"
+      },
+      "tokens": {
+        "background": "#080302",
+        "surface": "#0F0604",
+        "surfaceVariant": "#1C0A06",
+        "onSurface": "#E8543A",
+        "onSurfaceMuted": "#D14A32",
+        "primary": "#E8543A",
+        "onPrimary": "#0A0301",
+        "primaryContainer": "#2A0E07",
+        "onPrimaryContainer": "#E8543A",
+        "outline": "#A34329",
+        "divider": "#2A0F09",
+        "statusOverdue": "#FF7A55",
+        "statusDueSoon": "#E8543A",
+        "statusOk": "#D14A32",
+        "statusDeferred": "#D14A32",
+        "tintOverdue": "#2E0E07",
+        "tintDueSoon": "#240B05",
+        "tintDeferred": "#0F0503"
+      },
+      "isHighContrast": false,
+      "borderWidth": "1px",
+      "cssName": "night",
+      "_materialDerived": "Roles derived from this scheme's own tokens by tools/make_palette.py DERIVE; edit freely, the generator will not overwrite a mapping that is present.",
+      "contrast": {
+        "text": 4.5,
+        "ui": 3.0
+      },
+      "_contrastNote": "Night is dim by design - the point is the helm's dark adaptation - but it still meets the same AA floors as every other scheme: text 4.5, UI 3.0. A lower threshold was drafted here and removed: the palette already clears 3.0 on its outline (3.24), and a floor set below what the design achieves would let a later edit dim it with no complaint."
+    }
+  },
+  "contrastPairs": [
+    [
+      "onSurface",
+      "surface",
+      "text"
+    ],
+    [
+      "onSurface",
+      "background",
+      "text"
+    ],
+    [
+      "onSurface",
+      "surfaceVariant",
+      "text"
+    ],
+    [
+      "onSurfaceMuted",
+      "surface",
+      "text"
+    ],
+    [
+      "primary",
+      "surface",
+      "text"
+    ],
+    [
+      "onPrimary",
+      "primary",
+      "text"
+    ],
+    [
+      "onPrimaryContainer",
+      "primaryContainer",
+      "text"
+    ],
+    [
+      "statusOverdue",
+      "surface",
+      "text"
+    ],
+    [
+      "statusDueSoon",
+      "surface",
+      "text"
+    ],
+    [
+      "statusOk",
+      "surface",
+      "text"
+    ],
+    [
+      "statusDeferred",
+      "surface",
+      "text"
+    ],
+    [
+      "statusOverdue",
+      "tintOverdue",
+      "text"
+    ],
+    [
+      "statusDueSoon",
+      "tintDueSoon",
+      "text"
+    ],
+    [
+      "statusDeferred",
+      "tintDeferred",
+      "text"
+    ],
+    [
+      "outline",
+      "surface",
+      "ui"
+    ],
+    [
+      "outline",
+      "background",
+      "ui"
+    ]
+  ]
+}

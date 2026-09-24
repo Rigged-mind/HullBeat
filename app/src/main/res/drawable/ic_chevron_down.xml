@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The "this opens a menu" chevron. Tinted at the call site, so the fill is
+  white here and the theme decides what colour it actually is - the same
+  arrangement as every other icon in this project.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M16.59,8.59 L12,13.17 7.41,8.59 6,10 12,16 18,10 Z"
+        android:fillColor="#FFFFFF" />
+</vector>

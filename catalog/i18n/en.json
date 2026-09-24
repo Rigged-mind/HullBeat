@@ -1,0 +1,644 @@
+{
+  "_": "English aliases only. Display names come from catalog.json, so this file has no `components` block.",
+  "_synonyms": "Search-only. Never shown: one canonical name is displayed, many are matched. A wrong alias costs a stray hit, a missing one costs a failed search - so err on the side of adding.",
+  "locale": "en",
+  "catalogVersion": 17,
+  "synonyms": {
+    "anodes_hull": [
+      "zincs",
+      "sacrificial anodes",
+      "hull zincs"
+    ],
+    "shaft_anode": [
+      "shaft zinc",
+      "prop zinc"
+    ],
+    "saildrive_anode": [
+      "saildrive zinc"
+    ],
+    "heat_exchanger_anode": [
+      "pencil zinc",
+      "pencil anode"
+    ],
+    "ob_anodes": [
+      "outboard zincs"
+    ],
+    "water_heater_anode": [
+      "calorifier anode",
+      "magnesium anode"
+    ],
+    "seacocks": [
+      "thru hull valve",
+      "through hull valve",
+      "ball valve",
+      "sea cock"
+    ],
+    "through_hulls": [
+      "thru hulls",
+      "skin fittings",
+      "thruhull"
+    ],
+    "wooden_bungs": [
+      "softwood plugs",
+      "tapered plugs",
+      "emergency plugs"
+    ],
+    "keel_joint": [
+      "keel smile",
+      "keel to hull joint"
+    ],
+    "nonskid": [
+      "non slip",
+      "non-slip",
+      "deck grip"
+    ],
+    "teak_deck": [
+      "teak",
+      "caulking",
+      "deck seams"
+    ],
+    "deck_rails_lifelines": [
+      "guard rails",
+      "pulpit",
+      "pushpit",
+      "stanchions",
+      "guardwires"
+    ],
+    "sprayhood_bimini": [
+      "dodger",
+      "spray hood",
+      "bimini",
+      "canvas",
+      "cockpit enclosure"
+    ],
+    "washboards": [
+      "hatch boards",
+      "drop boards",
+      "companionway boards"
+    ],
+    "bathing_platform": [
+      "swim platform",
+      "swim ladder",
+      "boarding ladder"
+    ],
+    "trim_tabs": [
+      "interceptors",
+      "trim plates"
+    ],
+    "bow_thruster_grates": [
+      "tunnel grate",
+      "thruster grate"
+    ],
+    "steering_cables_sheaves": [
+      "steering chain",
+      "turning sheaves",
+      "idlers",
+      "cable steering"
+    ],
+    "stern_tube": [
+      "cutless bearing",
+      "cutlass bearing",
+      "shaft bearing"
+    ],
+    "stuffing_box": [
+      "packing gland",
+      "shaft seal",
+      "dripless",
+      "PSS",
+      "packing"
+    ],
+    "shaft_bellows": [
+      "shaft seal bellows",
+      "PSS bellows"
+    ],
+    "flex_coupling": [
+      "flexible coupling",
+      "R&D coupling"
+    ],
+    "folding_prop": [
+      "feathering prop",
+      "Gori",
+      "Flexofold",
+      "Maxprop"
+    ],
+    "engine_oil": [
+      "oil change",
+      "lube oil",
+      "motor oil"
+    ],
+    "engine_oil_filter": [
+      "oil filter"
+    ],
+    "raw_water_impeller": [
+      "impeller",
+      "Jabsco",
+      "water pump impeller",
+      "sea water pump"
+    ],
+    "raw_water_strainer": [
+      "sea strainer",
+      "seawater strainer",
+      "basket strainer"
+    ],
+    "fuel_prefilter": [
+      "Racor",
+      "water separator",
+      "primary filter",
+      "separator"
+    ],
+    "fuel_filter_fine": [
+      "secondary filter",
+      "on engine filter"
+    ],
+    "mixing_elbow": [
+      "elbow",
+      "exhaust elbow",
+      "riser",
+      "injection bend"
+    ],
+    "exhaust_hose": [
+      "waterlock",
+      "water lift muffler",
+      "muffler",
+      "wet exhaust"
+    ],
+    "timing_belt": [
+      "cam belt",
+      "cambelt",
+      "timing chain"
+    ],
+    "glow_plugs": [
+      "heater plugs",
+      "preheat plugs"
+    ],
+    "sea_chest": [
+      "seachest",
+      "sea box"
+    ],
+    "dry_exhaust_silencer": [
+      "dry stack",
+      "stack",
+      "dry exhaust"
+    ],
+    "exhaust_bellows": [
+      "expansion joint",
+      "bellows",
+      "compensator"
+    ],
+    "egt_monitoring": [
+      "pyrometer",
+      "EGT gauge",
+      "exhaust temperature"
+    ],
+    "keel_cooling": [
+      "Gridcooler",
+      "Fernstrum",
+      "keel cooler"
+    ],
+    "coolant": [
+      "antifreeze",
+      "glycol"
+    ],
+    "gearbox": [
+      "transmission",
+      "ZF",
+      "Hurth"
+    ],
+    "alternator_belt": [
+      "fan belt",
+      "vee belt",
+      "serpentine belt"
+    ],
+    "gen_enclosure": [
+      "sound shield",
+      "acoustic enclosure",
+      "canopy"
+    ],
+    "watermaker": [
+      "desalinator",
+      "reverse osmosis",
+      "RO",
+      "Spectra"
+    ],
+    "battery_monitor": [
+      "shunt",
+      "BMV",
+      "Victron",
+      "state of charge"
+    ],
+    "solar": [
+      "solar panels",
+      "MPPT",
+      "PV"
+    ],
+    "hydrogenerator": [
+      "hydro generator",
+      "Watt and Sea",
+      "WattandSea",
+      "towed generator"
+    ],
+    "dc_dc_charger": [
+      "DC to DC",
+      "B2B charger",
+      "Orion"
+    ],
+    "bonding_system": [
+      "bonding",
+      "ground bus",
+      "earth bonding",
+      "galvanic bonding"
+    ],
+    "rcd_elcb": [
+      "RCD",
+      "GFCI",
+      "ELCB",
+      "earth leakage"
+    ],
+    "inverter": [
+      "inverter charger",
+      "Multiplus"
+    ],
+    "bilge_alarm": [
+      "high water alarm",
+      "bilge water alarm",
+      "float alarm"
+    ],
+    "heads_pump": [
+      "toilet",
+      "head",
+      "joker valve",
+      "marine toilet"
+    ],
+    "holding_tank": [
+      "black tank",
+      "waste tank",
+      "blackwater"
+    ],
+    "macerator": [
+      "waste pump",
+      "pump out",
+      "deck pumpout"
+    ],
+    "water_pump": [
+      "pressure pump",
+      "fresh water pump",
+      "accumulator"
+    ],
+    "gas_leak_test": [
+      "LPG leak test",
+      "propane leak test",
+      "bubble test"
+    ],
+    "gas_locker_drain": [
+      "propane locker drain",
+      "gas locker vent"
+    ],
+    "headsail_furler": [
+      "roller furling",
+      "furler",
+      "genoa furler",
+      "Furlex",
+      "Profurl"
+    ],
+    "code_zero_furler": [
+      "top down furler",
+      "continuous line furler",
+      "torsion rope"
+    ],
+    "chainplates": [
+      "chain plates",
+      "shroud attachment"
+    ],
+    "mast_step": [
+      "mast partners",
+      "step",
+      "mast foot"
+    ],
+    "wire_terminals": [
+      "swage terminals",
+      "Sta-Lok",
+      "Norseman",
+      "rigging terminals"
+    ],
+    "running_backstays": [
+      "runners",
+      "checkstays",
+      "running backs"
+    ],
+    "inner_forestay": [
+      "baby stay",
+      "solent stay",
+      "cutter stay"
+    ],
+    "mainsheet_traveler": [
+      "traveller",
+      "mainsheet track",
+      "traveler car"
+    ],
+    "tracks_cars": [
+      "genoa track",
+      "jib track",
+      "sheet car"
+    ],
+    "clutches": [
+      "rope clutch",
+      "jammer",
+      "Spinlock"
+    ],
+    "vang": [
+      "kicker",
+      "boom vang",
+      "rod kicker"
+    ],
+    "sail_covers": [
+      "stack pack",
+      "lazy bag",
+      "lazyjacks",
+      "lazy jacks",
+      "mainsail cover"
+    ],
+    "snuffer": [
+      "sock",
+      "spinnaker sock",
+      "squeezer",
+      "ATN"
+    ],
+    "headsail_uv": [
+      "sacrificial strip",
+      "UV strip",
+      "sun strip"
+    ],
+    "windlass": [
+      "anchor winch",
+      "capstan",
+      "gypsy"
+    ],
+    "windlass_clutch": [
+      "gypsy clutch",
+      "friction cone"
+    ],
+    "snubber": [
+      "bridle",
+      "anchor snubber",
+      "chain hook"
+    ],
+    "anchor_bridle_hook": [
+      "chain hook",
+      "chain grab",
+      "Mantus hook"
+    ],
+    "bitter_end": [
+      "chain bitter end",
+      "chain tail"
+    ],
+    "secondary_anchor": [
+      "kedge",
+      "kedge anchor",
+      "storm anchor",
+      "Fortress"
+    ],
+    "liferaft": [
+      "life raft",
+      "raft"
+    ],
+    "lifejackets": [
+      "PFD",
+      "life vest",
+      "life jacket",
+      "buoyancy aid"
+    ],
+    "lifejacket_cylinders": [
+      "gas cylinder",
+      "rearm kit",
+      "auto cartridge"
+    ],
+    "epirb": [
+      "beacon",
+      "PLB",
+      "personal locator"
+    ],
+    "jackstays": [
+      "jacklines",
+      "jack lines",
+      "safety lines"
+    ],
+    "harnesses_tethers": [
+      "tether",
+      "safety harness",
+      "clip on"
+    ],
+    "mob_equipment": [
+      "man overboard",
+      "lifesling",
+      "danbuoy",
+      "horseshoe",
+      "MOB"
+    ],
+    "pelican_hooks": [
+      "gate hooks",
+      "lifeline gate",
+      "senhouse slip"
+    ],
+    "rigging_shears": [
+      "bolt cutter",
+      "rig cutter",
+      "hydraulic cutter",
+      "cable cutter"
+    ],
+    "grab_bag": [
+      "ditch bag",
+      "abandon ship bag"
+    ],
+    "sea_anchor": [
+      "parachute anchor",
+      "para anchor"
+    ],
+    "drogue": [
+      "series drogue",
+      "Jordan drogue",
+      "sea brake"
+    ],
+    "sart": [
+      "AIS SART",
+      "search and rescue transponder"
+    ],
+    "flares": [
+      "pyrotechnics",
+      "parachute flares",
+      "smoke signals"
+    ],
+    "chartplotter": [
+      "plotter",
+      "MFD",
+      "GPS",
+      "Raymarine",
+      "Garmin",
+      "B&G"
+    ],
+    "transducers": [
+      "depth sounder",
+      "sounder",
+      "log",
+      "paddlewheel",
+      "depth transducer"
+    ],
+    "vhf": [
+      "radio",
+      "DSC",
+      "marine radio"
+    ],
+    "ais": [
+      "AIS",
+      "transponder"
+    ],
+    "wind_instrument": [
+      "anemometer",
+      "masthead unit",
+      "wind vane"
+    ],
+    "autopilot": [
+      "auto pilot",
+      "pilot",
+      "self steering"
+    ],
+    "nav_lights": [
+      "navigation lights",
+      "running lights",
+      "steaming light"
+    ],
+    "nmea_network": [
+      "NMEA 2000",
+      "N2K",
+      "SeaTalk",
+      "backbone"
+    ],
+    "diesel_heater": [
+      "Webasto",
+      "Eberspacher",
+      "diesel heating"
+    ],
+    "aircon": [
+      "air con",
+      "AC",
+      "climate",
+      "Webasto marine"
+    ],
+    "ventilation": [
+      "dorade",
+      "dorades",
+      "vents",
+      "mushroom vent"
+    ],
+    "fridge": [
+      "refrigeration",
+      "Isotherm",
+      "Frigoboat",
+      "cold plate"
+    ],
+    "stove_gimbal": [
+      "gimbal",
+      "fiddles",
+      "pot holders"
+    ],
+    "interior_joinery": [
+      "headliner",
+      "cabin sole",
+      "woodwork"
+    ],
+    "tender_hull": [
+      "dinghy",
+      "RIB",
+      "inflatable",
+      "tender"
+    ],
+    "tender_outboard": [
+      "outboard",
+      "dinghy motor",
+      "kicker"
+    ],
+    "davits": [
+      "dinghy davits",
+      "lifting gear"
+    ],
+    "survey": [
+      "surveyor",
+      "pre purchase survey",
+      "condition survey"
+    ],
+    "national_inspection": [
+      "BSS",
+      "ITB",
+      "Revisione",
+      "Bootszeugnis",
+      "safety scheme"
+    ],
+    "radio_licence": [
+      "MMSI",
+      "ship radio license",
+      "call sign"
+    ],
+    "operator_licence": [
+      "ICC",
+      "skipper license",
+      "day skipper"
+    ],
+    "drain_plug": [
+      "drain plug",
+      "garboard plug",
+      "bung",
+      "transom plug",
+      "boat plug"
+    ],
+    "blower": [
+      "blower",
+      "bilge blower",
+      "engine bay fan",
+      "ventilation fan"
+    ],
+    "tubes": [
+      "hypalon",
+      "inflatable collar",
+      "pontoon",
+      "PVC",
+      "sponson",
+      "tube"
+    ],
+    "tube_valves": [
+      "Halkey Roberts",
+      "inflation valve",
+      "valve"
+    ],
+    "mooring_cleats": [
+      "bitts",
+      "bollard",
+      "chock",
+      "cleat",
+      "fairlead",
+      "hawsehole",
+      "mooring pipe",
+      "panama lead",
+      "samson post"
+    ],
+    "safety_padeyes": [
+      "backing plate",
+      "harness point",
+      "jackline anchor",
+      "padeye",
+      "u-bolt"
+    ],
+    "boat_hook": [
+      "boathook",
+      "pike pole"
+    ],
+    "mooring_snubbers": [
+      "dock line snubber",
+      "mooring compensator",
+      "shock absorber"
+    ],
+    "passerelle": [
+      "boarding plank",
+      "gangplank",
+      "gangway"
+    ]
+  }
+}

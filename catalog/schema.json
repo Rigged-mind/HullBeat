@@ -1,0 +1,254 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hullbeat.app/catalog.schema.json",
+  "title": "HullBeat seed catalog",
+  "type": "object",
+  "required": [
+    "version",
+    "profileVocabulary",
+    "categories"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "code": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "snake_case identifier, unique across the whole catalog"
+    },
+    "sched": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "description": "Default interval. Whichever threshold is reached first makes the item due.",
+      "properties": {
+        "days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hours": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "miles": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "appliesTo": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "OR within each key, AND between keys. Empty object = applies to everything.",
+      "properties": {
+        "hullAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "coolingAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rigAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "keelAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "extrasAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "storageAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "enginesMin": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "engineAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "driveAny": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "code",
+        "en",
+        "crit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/code"
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "description": "English fallback name; localised names live in strings.xml as cmp_<code>"
+        },
+        "crit": {
+          "enum": [
+            "high",
+            "med",
+            "low"
+          ],
+          "description": "Tie-breaker when several items are equally overdue"
+        },
+        "sched": {
+          "$ref": "#/definitions/sched"
+        },
+        "verify": {
+          "type": "boolean",
+          "description": "Interval MUST be confirmed against the manufacturer manual; UI shows a caveat"
+        },
+        "perEngine": {
+          "type": "boolean",
+          "description": "Override for a perEngine category: false marks a component shared between engines (a sea chest, not a filter) so it is created once"
+        },
+        "expires": {
+          "type": "boolean",
+          "description": "Carries an explicit user-entered expiry date that overrides the computed schedule"
+        },
+        "reference": {
+          "type": "boolean",
+          "description": "Never becomes due; stored for reference only. Mutually exclusive with sched and expires"
+        },
+        "parent": {
+          "$ref": "#/definitions/code",
+          "description": "Parent component code, must exist in the same category"
+        },
+        "specHints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Suggested fields for the component spec sheet"
+        },
+        "appliesTo": {
+          "$ref": "#/definitions/appliesTo"
+        }
+      }
+    }
+  },
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "generated": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "sailHulls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Convenience list used by the app when filtering sail-only content"
+    },
+    "profileVocabulary": {
+      "type": "object",
+      "required": [
+        "hull",
+        "propulsion",
+        "cooling",
+        "rig",
+        "keel",
+        "storage",
+        "extras"
+      ],
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "sort",
+          "icon",
+          "en",
+          "components"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "$ref": "#/definitions/code"
+          },
+          "sort": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "icon": {
+            "type": "string",
+            "minLength": 1
+          },
+          "en": {
+            "type": "string",
+            "minLength": 1
+          },
+          "perEngine": {
+            "type": "boolean",
+            "description": "Components are duplicated per engine when engines_count > 1"
+          },
+          "alwaysVisible": {
+            "type": "boolean",
+            "description": "Never hidden by the vessel profile filter"
+          },
+          "appliesTo": {
+            "$ref": "#/definitions/appliesTo"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/component"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    app_name is deliberately absent: HullBeat is a proper noun and stays in
+    Latin script in every locale, like any product name. See docs/i18n-uk.md
+    §4 - the glossary row that used to say "freeboard is the app name, do not
+    translate it" now applies to HullBeat instead, and freeboard went back to
+    being a measurement (надводний борт).
+-->
+<resources>
+    <string name="notification_channel_due">Настало обслуговування</string>
+    <string name="notification_channel_due_description">Нагадування, коли робота настала або прострочена.</string>
+    <string name="action_mark_done">Зроблено</string>
+    <string name="action_renew">Продовжити…</string>
+    <string name="due_unknown">термін невідомий</string>
+    <string name="due_unknown_needs_meter">Введіть початкові мотогодини для прогнозу</string>
+    <string name="due_unknown_needs_schedule">Налаштуйте регламент обслуговування</string>
+
+    <string name="snack_logged">Записано</string>
+    <string name="action_undo">Скасувати</string>
+    <string name="snack_deferral_cancelled">Відкладення скасовано</string>
+    <string name="snack_deferred_until">Відкладено до %1$s</string>
+
+    <string name="deferred_until">відкладено до %1$s</string>
+    <string name="deferred_until_reason">%1$s · до %2$s</string>
+
+    <string name="placeholder_boat">Каталог вузлів та паспорти компонентів.</string>
+    <string name="placeholder_log">Судновий журнал, хронологія та пошук.</string>
+    <string name="placeholder_store">Склад запасних частин та локації судна.</string>
+    <string name="summary_overdue">%d прострочено</string>
+    <string name="summary_soon">%d скоро</string>
+    <string name="summary_more">і ще %d</string>
+
+    <!--
+        The description written on a record created from the notification, so
+        the journal can say where the row came from. It is stored, not
+        rendered, which is why it is resolved from resources at write time:
+        an English-locale owner must not find a Ukrainian sentence in their
+        own export.
+    -->
+    <string name="record_from_notification">Виконано зі сповіщення</string>
+
+    <!-- Navigation -->
+    <string name="nav_now">Пульс</string>
+    <string name="nav_boat">Човен</string>
+    <string name="nav_log">Журнал</string>
+    <string name="nav_store">Склад</string>
+
+    <!-- Now Screen -->
+    <string name="departure_check_done_today">Перевірку перед виходом пройдено сьогодні</string>
+    <string name="departure_checklist_title">Вихід у море — перевірка</string>
+    <string name="departure_check_fleet_partial">Вихід у море · пройдено: %s</string>
+    <string name="action_confirm_departure_check">Підтвердити перевірку</string>
+    <string name="action_reset_departure_check">Новий вихід у море</string>
+    <string name="departure_check_all_required">Відмітьте всі пункти для підтвердження</string>
+    <string name="departure_check_empty_list">Не вдалося завантажити список перевірки</string>
+    <string name="action_record_meter">Внести мотогодини</string>
+    <string name="record_meter_title">Внесення мотогодин</string>
+    <string name="meter_reading_saved">Показник збережено</string>
+    <string name="meter_current_reading">Поточний показник</string>
+    <string name="meter_hours_unit">год</string>
+    <string name="meter_decrease_warning">Показник менший за попередній (%.1f год). Зменшення вимкне погодинний прогноз обслуговування.</string>
+    <string name="meter_decrease_confirm">Я розумію, зберегти новий показник</string>
+    <string name="fleet_all">Усі</string>
+    <string name="action_add_vessel">Додати судно…</string>
+    <string name="vessel_select_title">Вибір судна</string>
+    <string name="vessel_status_all_clear">Усе гаразд</string>
+    <string name="cd_select_vessel">Активне судно: %s. Натисніть для вибору або додавання</string>
+    <string name="status_overdue">прострочено</string>
+    <string name="status_soon">скоро</string>
+    <string name="action_cannot_now_defer">Не можу зараз — відкласти</string>
+    <string name="action_cancel_deferral">Скасувати відкладення</string>
+    <string name="all_clear_title">Усе гаразд</string>
+    <!--
+        «Відкладено» — безособова форма на -но, як і «прострочено» вище: вона не
+        узгоджується з числівником (1 відкладено, 2 відкладено, 5 відкладено),
+        тому plurals тут не потрібні — див. i18n-uk.md §8.3.
+    -->
+    <string name="all_clear_with_deferred">Усе гаразд · %1$d відкладено</string>
+    <string name="all_clear_description">Немає термінових робіт на сьогодні.</string>
+    <string name="now_quick_actions">Швидкі дії</string>
+    <string name="now_action_quick_log">Записати ТО</string>
+    <string name="now_action_enter_hours">Мотогодини</string>
+    <string name="now_action_checklists">Чеклісти</string>
+    <string name="now_section_upcoming">Найближчі планові роботи</string>
+    <string name="now_recent_activity">Останній запис у журналі</string>
+    <string name="now_all_journal">Весь журнал ›</string>
+    <string name="now_unrecorded_title">Вузли без записів</string>
+    <string name="now_unrecorded_subtitle">Вкажіть початкові мотогодини або дату останнього обслуговування, щоб активувати регламент.</string>
+    <string name="action_view_nodes">Переглянути</string>
+
+    <!-- Quick Log Sheet -->
+    <string name="quick_log_title">Швидкий запис</string>
+    <string name="field_date">Дата</string>
+    <string name="field_work_type">Вид робіт</string>
+    <string name="field_meter_hours">Мотогодини</string>
+    <string name="field_new_expiry">Новий термін дії</string>
+    <string name="field_cost">Вартість</string>
+    <string name="field_notes">Нотатки</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_previous">Попереднє</string>
+    <string name="action_next">Наступне</string>
+    <string name="service_logged_snackbar">Запис збережено</string>
+
+    <!-- Defer Sheet -->
+    <string name="defer_title">Відкласти регламент</string>
+    <string name="defer_until_label">ДОКИ</string>
+    <string name="defer_reason_label">ЧОМУ (НЕОБОВʼЯЗКОВО)</string>
+    <string name="defer_option_one_month">На місяць</string>
+    <string name="defer_option_haul_out">До підйому</string>
+    <string name="defer_option_spring">До весни</string>
+    <string name="defer_option_pick_date">Обрати дату…</string>
+    <string name="defer_explanation">Пункт зникне з «Пульс» і повернеться сам у вказаний час. Прострочення нікуди не дінеться — воно й далі буде написане на картці.</string>
+    <string name="deferred_snackbar">Відкладено</string>
+
+    <!-- Themes -->
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_sunlight">Яскраве сонце</string>
+    <string name="theme_night">Нічна</string>
+
+    <!-- Component Detail -->
+    <string name="detail_back">Назад</string>
+    <string name="detail_next_service">Наступне ТО</string>
+    <string name="detail_stock">На складі</string>
+    <string name="detail_passport">Паспорт</string>
+    <string name="detail_history">Історія обслуговування</string>
+    <string name="detail_no_spares">Немає привʼязаних деталей на складі.</string>
+    <string name="detail_no_history">Записів обслуговування ще немає.</string>
+    <string name="detail_no_interval">інтервалу немає — обслуговування за станом</string>
+    <string name="detail_not_serviced_yet">ще не обслуговувався · інтервал %s</string>
+    <string name="detail_passport_empty_hint">Паспорт заповнюється один раз і назавжди знімає питання «який фільтр». Номери можна сфотографувати з шильдика.</string>
+    <string name="passport_make">Виробник</string>
+    <string name="passport_model">Модель</string>
+    <string name="passport_serial">Серійний номер</string>
+    <string name="passport_year">Рік</string>
+    <string name="detail_water_advice">Ваша акваторія — %1$s, тому потрібен %2$s.</string>
+    <string name="water_salt">солона вода</string>
+    <string name="water_fresh">прісна вода</string>
+    <string name="water_brackish">змішана вода</string>
+    <string name="anode_zinc">цинковий анод</string>
+    <string name="anode_magnesium">магнієвий анод</string>
+    <string name="anode_aluminum">алюмінієвий анод</string>
+    <string name="spare_in_locker">у %s</string>
+    <string name="spare_no_location">без локації</string>
+    <string name="spare_per_service">%s / заміну</string>
+    <string name="crit_high">Критичний</string>
+    <string name="crit_med">Важливий</string>
+    <string name="crit_low">Звичайний</string>
+
+    <!-- Search & Custom components -->
+    <string name="search_hint">Пошук вузла, деталі або артикула…</string>
+    <string name="search_found_via">знайдено за «%1$s»</string>
+    <string name="search_found_in_spec">знайдено в паспорті</string>
+    <string name="search_found_in_notes">знайдено в нотатках</string>
+    <string name="search_empty">Нічого не знайшлось</string>
+    <string name="create_component_title">Новий власний вузол</string>
+    <string name="create_component_name">Назва вузла</string>
+    <string name="create_component_name_hint">Наприклад, Опріснювач Schenker Zen 30</string>
+    <string name="create_component_category">Категорія</string>
+    <string name="create_component_criticality">Важливість</string>
+    <string name="create_component_notes">Паспортні дані / нотатки</string>
+    <string name="create_component_notes_hint">Артикул, марка, робоча напруга тощо</string>
+    <string name="create_component_action">Створити вузол</string>
+    <string name="create_component_empty_search">Створити вузол «%1$s»</string>
+    <string name="component_rename">Перейменувати</string>
+    <string name="component_rename_title">Власна назва вузла</string>
+    <string name="component_rename_hint">Залиште порожнім для назви з каталогу</string>
+    <string name="add_custom_component">+ Власний вузол</string>
+
+    <!-- First run: the profile every appliesTo rule is judged
+         against. Nothing in the catalog can appear until it is
+         answered, which is why this screen comes before the tabs. -->
+    <string name="setup_title">Ваше судно</string>
+    <string name="setup_subtitle">Дайте відповідь один раз — і каталог складеться сам, лише з тих вузлів, які у вас справді є.</string>
+    <string name="setup_name_label">Назва</string>
+    <string name="setup_default_name">Моє судно</string>
+    <string name="setup_action">Скласти судно</string>
+    <string name="vessel_add_photo">Фото</string>
+    <string name="boat_component_count_suffix">вузлів</string>
+    <string name="action_language">Мова</string>
+    <string name="passport_add_field">+ Додати поле</string>
+    <string name="passport_field_name">Назва поля</string>
+
+    <!-- Work Types -->
+    <string name="work_type_scheduled">Планове</string>
+    <string name="work_type_repair">Ремонт</string>
+    <string name="work_type_inspection">Огляд</string>
+    <string name="work_type_winterization">Консервація</string>
+    <string name="work_type_commissioning">Розконсервація</string>
+    <string name="work_type_haul_out">Підйом на суходіл</string>
+    <string name="work_type_launch">Спуск на воду</string>
+    <string name="work_type_upgrade">Модернізація</string>
+    <string name="work_type_warranty">Гарантія</string>
+    <string name="work_type_pre_sale">Передпродажне</string>
+
+    <!-- Condition Photos -->
+    <string name="detail_photos">Фото стану</string>
+    <string name="detail_add_photo">Фото</string>
+    <string name="detail_add_more_photos">Додати фото</string>
+    <string name="detail_no_photos">Фотографій ще немає. Фіксуйте стан з часом, щоб бачити знос та корозію.</string>
+    <string name="action_change_photo">Змінити фото</string>
+    <string name="action_delete_photo">Видалити фото</string>
+    <string name="dialog_delete_photo_confirm">Видалити це фото?</string>
+    <string name="photo_caption_label">Підпис (необов\'язково)</string>
+    <string name="photo_add_dialog_title">Додати фото стану</string>
+    <string name="picker_gallery">Галерея</string>
+    <string name="picker_files">Файли</string>
+    <string name="vessel_photo_dialog_title">Фото судна</string>
+
+    <!-- Date selection -->
+    <string name="date_today">Сьогодні</string>
+    <string name="date_yesterday">Вчора</string>
+    <string name="date_pick_other">Календар…</string>
+    <string name="date_picker_title">Оберіть дату</string>
+
+    <!-- Service record edit & delete -->
+    <string name="action_edit">Редагувати</string>
+    <string name="action_delete">Видалити</string>
+    <string name="edit_record_title">Редагування запису</string>
+    <string name="action_delete_record">Видалити запис</string>
+    <string name="dialog_delete_record_title">Видалити запис?</string>
+    <string name="dialog_delete_record_message">Запис про обслуговування від %1$s (%2$s) буде остаточно видалено з журналу.</string>
+
+    <!-- Journal screen -->
+    <string name="journal_empty_title">Судновий журнал порожній</string>
+    <string name="journal_empty_desc">Тут фіксуються всі виконані роботи, ТО, ремонти та огляди. Кожне «Зроблено» на екрані «Пульс» або в картці вузла записує сюди подію — з датою, мотогодинами та фото.</string>
+    <string name="journal_all_categories">Усі вузли</string>
+    <string name="journal_spent_total">%1$s %2$s витрачено</string>
+    <string name="journal_gap_after_previous">через %1$s після попереднього</string>
+    <string name="journal_gap_and">і</string>
+    <string name="journal_imported_from">з імпорту · аркуш «%1$s», рядок %2$d</string>
+    <string name="journal_precision_year">відомий лише рік</string>
+    <string name="journal_precision_month">відомий лише місяць</string>
+    <string name="journal_uncataloged_category">код відсутній у каталозі</string>
+
+    <!-- Boat component management & catalog picker -->
+    <string name="boat_search_hint">Пошук вузла на човні…</string>
+    <string name="boat_add_component">+ Додати вузол</string>
+    <string name="catalog_add_title">Додати вузол на човен</string>
+    <string name="catalog_search_hint">Пошук у каталозі…</string>
+    <string name="catalog_already_on_boat">На човні</string>
+    <string name="catalog_action_add">+ Додати</string>
+    <string name="action_hide_from_boat">Приховати з човна</string>
+    <string name="dialog_hide_component_title">Приховати вузол з човна?</string>
+    <string name="dialog_hide_component_message">Вузол «%s» зникне зі списку човна. Всі записи в журналі та історія обслуговування збережуться.</string>
+    <string name="catalog_from_catalog_tab">З каталогу</string>
+    <string name="catalog_custom_tab">Власний вузол</string>
+    <string name="boat_empty_components">На човні ще немає доданих вузлів.</string>
+
+    <!-- Settings & Currency -->
+    <string name="settings_title">Налаштування</string>
+    <string name="settings_currency">Валюта</string>
+    <string name="settings_currency_subtitle">Оберіть валюту для обліку витрат на обслуговування та запчастини</string>
+    <string name="settings_currency_custom">Власна валюта</string>
+    <string name="settings_currency_custom_hint">Символ або код, напр. CAD, CHF, AUD…</string>
+    <string name="settings_theme">Тема оформлення</string>
+    <string name="settings_language">Мова застосунку</string>
+    <string name="currency_uah">Українська гривня (₴)</string>
+    <string name="currency_usd">Долар США ($)</string>
+    <string name="currency_eur">Євро (€)</string>
+    <string name="currency_gbp">Фунт стерлінгів (£)</string>
+    <string name="currency_pln">Польський злотий (zł)</string>
+    <string name="currency_sek">Шведська крона (kr)</string>
+    <string name="currency_nok">Норвезька крона (kr)</string>
+    <string name="currency_try">Турецька ліра (₺)</string>
+    <string name="lang_uk">Українська</string>
+    <string name="lang_en">English</string>
+
+    <!-- Units of measurement -->
+    <string name="settings_units_title">Величини вимірювання</string>
+    <string name="settings_units_subtitle">Налаштування одиниць вимірювання у застосунку</string>
+    <string name="settings_units_preset_metric">Метрична</string>
+    <string name="settings_units_preset_nautical">Морська</string>
+    <string name="settings_unit_length">Розміри та довжина судна</string>
+    <string name="settings_unit_distance">Дистанція та лаг</string>
+    <string name="settings_unit_volume">Об\'єм рідин та танків</string>
+    <string name="settings_unit_pressure">Тиск</string>
+    <string name="settings_unit_temperature">Температура</string>
+    <string name="unit_metres">Метри (м)</string>
+    <string name="unit_feet">Фути (ft)</string>
+    <string name="unit_nautical_miles">Морські милі (NM)</string>
+    <string name="unit_kilometres">Кілометри (км)</string>
+    <string name="unit_statute_miles">Милі (mi)</string>
+    <string name="unit_litres">Літри (л)</string>
+    <string name="unit_gallons_us">Галони США (US gal)</string>
+    <string name="unit_gallons_uk">Імперські галони (UK gal)</string>
+    <string name="unit_bar">Бар (bar)</string>
+    <string name="unit_psi">PSI (psi)</string>
+    <string name="unit_celsius">Цельсій (°C)</string>
+    <string name="unit_fahrenheit">Фаренгейт (°F)</string>
+    <string name="unit_short_m">м</string>
+    <string name="unit_short_ft">ft</string>
+    <string name="unit_short_nm">NM</string>
+    <string name="unit_short_km">км</string>
+    <string name="unit_short_mi">милі</string>
+    <string name="unit_short_l">л</string>
+    <string name="unit_short_gal_us">US gal</string>
+    <string name="unit_short_gal_uk">UK gal</string>
+    <string name="unit_short_bar">бар</string>
+    <string name="unit_short_psi">psi</string>
+    <string name="unit_short_celsius">°C</string>
+    <string name="unit_short_fahrenheit">°F</string>
+
+    <!-- Maintenance notifications -->
+    <string name="settings_notifications_title">Сповіщення про ТО</string>
+    <string name="settings_notifications_subtitle">Щоденна перевірка термінів обслуговування судна</string>
+    <string name="settings_notifications_enabled">Увімкнути нагадування</string>
+    <string name="settings_notifications_advance">Завчасність сповіщення</string>
+    <string name="settings_notifications_days_7">7 днів</string>
+    <string name="settings_notifications_days_14">14 днів</string>
+    <string name="settings_notifications_days_30">30 днів</string>
+
+    <!-- Data & Export -->
+    <string name="settings_data_title">Дані та журнал</string>
+    <string name="settings_data_subtitle">100% локальне офлайн-збереження на цьому пристрої</string>
+    <string name="settings_export_journal">Експорт журналу (CSV)</string>
+    <string name="settings_export_success">Судновий журнал успішно експортовано</string>
+    <string name="settings_export_empty">Немає записів для експорту</string>
+
+    <!-- About -->
+    <string name="settings_about_title">Про HullBeat</string>
+    <string name="settings_about_version">Версія %1$s</string>
+    <string name="settings_about_desc">HullBeat — автономний судновий журнал та планувальник технічного обслуговування для вітрильних і моторних яхт.</string>
+
+    <!-- Store / Spares -->
+    <string name="store_tab_all">Усі деталі</string>
+    <string name="store_tab_tobuy">Докупити</string>
+    <string name="store_tab_locations">Рундуки</string>
+    <string name="store_search_hint">Пошук деталі, артикула, бренду…</string>
+    <string name="store_stat_gone">Немає на борту: %1$d</string>
+    <string name="store_stat_low">Мало: %1$d</string>
+    <string name="store_add_part">Додати деталь</string>
+    <string name="store_edit_part">Редагувати деталь</string>
+    <string name="store_delete_part">Видалити зі складу</string>
+    <string name="store_add_location">Додати рундук</string>
+    <string name="store_edit_location">Редагувати рундук</string>
+    <string name="store_delete_location">Видалити рундук</string>
+    <string name="store_delete_location_confirm">Видалити цей рундук? Деталі в ньому залишаться без прив\'язки до локації.</string>
+    <string name="store_delete_part_confirm">Видалити «%1$s» зі складу?</string>
+    <string name="store_part_name">Назва деталі</string>
+    <string name="store_part_name_hint">напр. Масляний фільтр</string>
+    <string name="store_part_number">Артикул / Part No.</string>
+    <string name="store_part_number_hint">напр. 875812</string>
+    <string name="store_part_mfr">Виробник / Бренд</string>
+    <string name="store_part_mfr_hint">напр. Volvo Penta, Yanmar</string>
+    <string name="store_part_qty">Кількість на борту</string>
+    <string name="store_part_min_qty">Норма на борту</string>
+    <string name="store_part_min_qty_hint">Скільки тримати на борту</string>
+    <string name="store_location_label">Місце зберігання (рундук)</string>
+    <string name="store_no_location">Без рундука</string>
+    <string name="store_new_location_prompt">+ Створити новий рундук…</string>
+    <string name="store_location_name">Назва рундука / відсіку</string>
+    <string name="store_location_name_hint">напр. Моторний відсік, Ахтерпік</string>
+    <string name="store_location_qr">Код наліпки (опціонально)</string>
+    <string name="store_location_qr_hint">напр. R-1, L-A1</string>
+    <string name="store_part_notes">Примітки</string>
+    <string name="store_part_notes_hint">Місце купівлі, сумісність тощо</string>
+    <string name="store_linked_components">Для яких вузлів судна</string>
+    <string name="store_linked_components_hint">Оберіть вузли, до яких пасує деталь</string>
+    <string name="store_filter_components_hint">Пошук вузла судна…</string>
+    <string name="store_empty_title">Склад порожній</string>
+    <string name="store_empty_desc">Додайте перші запасні частини або створіть типові суднові рундуки для зручного обліку.</string>
+    <string name="store_seed_locations_btn">Створити базові рундуки судна</string>
+    <string name="store_tobuy_empty">Усі необхідні запчастини є на борту в достатній кількості.</string>
+    <string name="store_locations_empty">Рундуки ще не додані. Створіть перший рундук або скористайтесь базовими.</string>
+    <string name="store_loc_empty">У цьому рундуку поки немає деталей.</string>
+    <string name="store_qty_badge">%1$s · норма %2$s</string>
+    <string name="store_out_of_stock">НЕМАЄ</string>
+    <string name="store_low_stock">МАЛО</string>
+    <string name="store_default_loc_engine">Моторний відсік</string>
+    <string name="store_default_loc_cockpit">Кокпіт-рундук (ахтерпік)</string>
+    <string name="store_default_loc_chart">Штурманський стіл</string>
+    <string name="store_default_loc_forepeak">Форпік (носовий рундук)</string>
+    <string name="store_default_loc_galley">Камбузний рундук</string>
+    <string name="store_items_count">%1$d шт</string>
+
+    <!-- Import & Rollback -->
+    <string name="settings_import_title">Імпорт історії робіт</string>
+    <string name="settings_import_subtitle">Завантаження записів із таблиці CSV або TSV</string>
+    <string name="settings_import_btn">Імпортувати таблицю (CSV)</string>
+    <string name="import_sheet_title">Імпорт журналу</string>
+    <string name="import_preview_subtitle">Зіставте колонки та перевірте записи</string>
+    <string name="import_file_label">Файл</string>
+    <string name="import_btn_commit">Імпортувати записи</string>
+    <string name="import_history_title">Історія імпортів</string>
+    <string name="import_history_empty">Імпортів ще не було</string>
+    <string name="import_rollback_btn">Скасувати</string>
+    <string name="import_rollback_success">Імпорт скасовано</string>
+    <string name="field_map_date">Дата</string>
+    <string name="field_map_desc">Опис</string>
+    <string name="field_map_work_type">Тип робіт</string>
+    <string name="field_map_hours">Мотогодини</string>
+    <string name="field_map_cost">Вартість</string>
+    <string name="field_map_who">Виконавець</string>
+    <string name="field_map_notes">Нотатки</string>
+    <string name="field_map_component">Вузол</string>
+    <string name="field_map_ignore">Пропустити</string>
+
+    <!-- Backup & Restore -->
+    <string name="settings_backup_title">Резервне копіювання (SAF)</string>
+    <string name="settings_backup_subtitle">Повна копія бази даних на диск або в хмару</string>
+    <string name="settings_backup_create">Створити резервну копію</string>
+    <string name="settings_backup_restore">Відновити з копії</string>
+    <string name="settings_backup_success">Резервну копію успішно створено</string>
+    <string name="settings_backup_failed">Не вдалося створити резервну копію</string>
+    <string name="settings_restore_success">Базу даних успішно відновлено</string>
+    <string name="settings_restore_invalid">Некоректний файл резервної копії</string>
+    <string name="settings_export_store">Експортувати склад і рундуки (CSV)</string>
+    <string name="settings_export_store_empty">Немає рундуків чи деталей для експорту</string>
+    <string name="settings_export_store_success">Склад та рундуки успішно експортовано</string>
+    <string name="settings_export_excel">Експортувати в Excel (.xlsx)</string>
+    <string name="settings_export_excel_success">Таблицю Excel успішно експортовано</string>
+    <string name="settings_export_excel_failed">Не вдалося експортувати файл Excel</string>
+    <string name="settings_export_excel_empty">Немає даних для експорту</string>
+    <string name="excel_sheet_journal">Журнал обслуговування</string>
+    <string name="excel_sheet_store">Склад і рундуки</string>
+    <string name="settings_export_journal_csv">Журнал (CSV)</string>
+    <string name="settings_export_store_csv">Склад (CSV)</string>
+
+    <!-- Boat Passport PDF -->
+    <string name="settings_export_pdf_passport">Експортувати паспорт судна (PDF)</string>
+    <string name="settings_export_pdf_success">Паспорт судна успішно експортовано</string>
+    <string name="settings_export_pdf_failed">Не вдалося створити PDF-документ</string>
+    <string name="pdf_passport_title">Судновий паспорт та досьє ТО</string>
+    <string name="pdf_section_vessel">Специфікація судна</string>
+    <string name="pdf_section_equipment">Реєстр обладнання</string>
+    <string name="pdf_section_equipment_photos">Обладнання</string>
+    <string name="pdf_more_photos">ще %1$d фото</string>
+    <string name="pdf_section_service">Історія обслуговування</string>
+    <string name="pdf_field_summary">Зведення</string>
+    <string name="pdf_field_records_count">Сервісних робіт: %1$d</string>
+    <string name="pdf_field_total_cost">Загальні витрати: %1$s</string>
+    <string name="pdf_field_components_count">Зареєстрованих вузлів: %1$d</string>
+    <string name="pdf_field_make_model">Виробник / Модель</string>
+    <string name="pdf_field_year">Рік побудови</string>
+    <string name="pdf_field_hin">HIN / CIN</string>
+    <string name="pdf_field_length">Довжина</string>
+    <string name="pdf_field_hull">Тип корпусу</string>
+    <string name="pdf_field_engine">Тип двигуна</string>
+    <string name="pdf_field_drive">Тип приводу</string>
+    <string name="pdf_field_fuel">Тип палива</string>
+    <string name="pdf_field_serial">Серійний номер</string>
+    <string name="pdf_field_installed">Встановлено</string>
+    <string name="pdf_footer_page">Сторінка %1$d</string>
+    <string name="pdf_footer_brand">Судновий журнал HullBeat</string>
+    <string name="now_enter_hours">Внести мотогодини</string>
+    <string name="error_photo_save_failed">Не вдалося зберегти фотографію</string>
+    <string name="action_ok">Зрозуміло</string>
+</resources>
