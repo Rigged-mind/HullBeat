@@ -1,8 +1,12 @@
 <p align="center">
+  <img src="design/banner.jpg" alt="HullBeat Banner" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);" />
+</p>
+
+<p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="design/logo/lockup-horizontal-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="design/logo/lockup-horizontal.svg">
-    <img src="design/logo/lockup-horizontal.svg" alt="HullBeat Logo" width="420">
+    <source media="(prefers-color-scheme: dark)" srcset="design/logo/app-icon-lockup-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="design/logo/app-icon-lockup-light.svg">
+    <img src="design/logo/app-icon-lockup-dark.svg" alt="HullBeat Logo" width="360">
   </picture>
 </p>
 
@@ -29,32 +33,41 @@
 
 ## 🌊 Що таке HullBeat простими словами?
 
-Володіння катером чи яхтою — це не лише романтика моря, а й постійний догляд за десятками систем. На борту дуже легко втратити контроль:
-* Чи пора міняти цинкові аноди на корпусі та сейлдвайві від корозії?
-* Скільки років вантам і стоячому такелажу? Коли востаннє змащували палубні лебідки?
-* Чи в нормі донно-забортні крани (кінгстони) та крильчатка помпи (імпелер)?
+Володіння катером чи яхтою — це не лише романтика моря, а й постійний догляд за сотнею деталей і систем. На воді дуже легко щось упустити:
+* Чи пора замінити цинкові аноди на корпусі та сейлдвайві, щоб метал не з'їла електрохімічна корозія?
+* Скільки років стоїть стоячий такелаж, чи в нормі ванти й штаги, і коли востаннє змащували палубні лебідки?
+* У якому стані донно-забортні крани (кінгстони) та крильчатка помпи (імпелер)?
 * Коли востаннє міняли оливу в двигуні та редукторі?
-* Де саме на борту лежить запасний паливний фільтр і скільки їх залишилося?
+* Де саме на борту лежить запасний паливний фільтр і скільки їх залишилося в рундуку?
 
-**HullBeat** — це кишеньковий цифровий боцман і судновий журнал. Він об'єднує всі вузли вашого судна в одну наочну систему, автоматично розраховує регламенти за мотогодинами або днями і вчасно попереджає про все, що вимагає вашої уваги.
+**HullBeat** — це кишеньковий цифровий боцман і судновий журнал. Він об'єднує всі вузли судна в одну наочну систему, автоматично веде підрахунок мотогодин або днів і заздалегідь попереджає капітана про необхідні регламентні роботи.
+
+---
+
+## ⚓ Створено капітаном для себе (З власного морського досвіду)
+
+> **HullBeat народився не в офісі, а на воді — у реальних переходах, на стоянках і під час ремонтів.**  
+> Автор розробляв цей застосунок **в першу чергу під себе і для свого судна**. Це відповідь на реальний щоденний головний біль: незручні розрізнені таблиці Excel, хмарні додатки, які вимагають платних підписок і стають безпорадними щойно у морі зникає зв'язок, та дрібні кнопки на екрані, в які неможливо влучити мокрими пальцями на хвилі. 
+> 
+> Тут усе зроблено так, щоб капітану було **максимально зручно і просто**: без зайвої бюрократії, з великими кнопками під руку в рукавичці та логікою, перевіреною на власному досвіді.
 
 ---
 
 ## 🛡️ Головні переваги
 
 1. **100% Офлайн та абсолютна приватність:**
-   * Працює будь-де: у відкритому морі, на якорі чи в марині без жодного сигналу зв'язку.
-   * Жодних хмар, серверів і реєстрацій — усі дані, записи та фотографії зберігаються **виключно на вашому телефоні**.
-   * У додатку повністю відсутній дозвіл на вихід в інтернет (`INTERNET permission`).
+   * Працює будь-де: у відкритому морі, на віддаленому якорі чи в марині без інтернету.
+   * Жодних хмар, акаунтів чи серверів — усі ваші записи, документи та фотографії зберігаються **виключно на вашому телефоні**.
+   * Додаток повністю позбавлений дозволу на вихід в інтернет (`INTERNET permission`).
 
 2. **Зручний імпорт та експорт історії обслуговування:**
-   * **Гнучкий імпорт:** Швидке перенесення ваших наявних записів із таблиць Excel (.xlsx) або CSV. Розумний аналізатор (`ColumnMapper` / `CsvSniffer`) автоматично визначає стовпчики, формати дат і чистить дані.
-   * **Друк та експорт:** Формування повного паспорта судна та сервісної історії у форматі **Excel** або **PDF** в один дотик — незамінно для страхових компаній, сюрвеєрів чи підтвердження вартості судна при продажу.
+   * **Гнучкий імпорт:** Швидке перенесення ваших наявних записів із таблиць Excel (.xlsx) або CSV. Розумний аналізатор (`ColumnMapper` / `CsvSniffer`) автоматично розпізнає стовпчики, формати дат і чистить дані при переході.
+   * **Друк та експорт:** Створення повного суднового паспорта та хронології обслуговування у форматі **Excel** або **PDF** в один клік — незамінно для страхових компаній, сервісних центрів чи для підтвердження вартості при продажу судна.
 
 3. **Додавання зображень та фотофіксація:**
-   * Можливість прикріпити фотографії до будь-якої сервісної роботи, огляду вузла чи дефекту.
-   * Фотографування лічильника мотогодин для підтвердження показників.
-   * Повнорозмірний перегляд фотографій із підтримкою жестів гортання (swipe), зумом, лічильником знімків та текстовими підписами.
+   * Можливість прикріпити фотографії до будь-якої сервісної роботи, огляду вузла чи поломки.
+   * Фотофіксація лічильників мотогодин для підтвердження показників.
+   * Зручний повнорозмірний переглядач із підтримкою жестів свайпу (гортання), зумом, лічильником знімків та підписами.
 
 ---
 
@@ -80,12 +93,12 @@
 ### 3. Судновий склад запасних частин
 * Облік запасу деталей (фільтри, крильчатки, ремені, свічки, запобіжники).
 * Точна прив'язка до суднових рундуків і схованок (*«Рундук лівого борту»*, *«Ахтерпік»*, *«Штурманський стіл»*).
-* Попередження про критичний залишок деталей перед автономним переходом.
+* Попередження про критичний залишок деталей перед виходом у довгий перехід.
 
 ### 4. Зручний інтерфейс для моря
-* **Цілі дотику від 56 dp:** інтерфейс оптимізовано під реальні морські умови — великі кнопки та проміжки, якими комфортно керувати мокрими руками або в цупких яхтових рукавичках під час хитавиці.
-* **Тема для нічної навігації (Night Navigation):** спеціальна глибока червоно-бурштинова палітра на темному тлі, яка зберігає природну адаптацію очей рульового до темряви під час нічних вахт і не засліплює місток.
-* **Режим «Яскраве сонце» (Sunlight Mode):** підвищений контраст 7:1 із чіткими межами для читання з екрана під прямими променями сонця на відкритій палубі.
+* **Цілі дотику від 56 dp:** інтерфейс розроблено спеціально під морські умови — великі кнопки та комфортні проміжки, якими легко керувати мокрими пальцями або в цупких яхтових рукавичках під час хитавиці.
+* **Тема для нічної навігації (Night Navigation):** спеціальна глибока червоно-бурштинова палітра на ультратемному тлі, яка зберігає природну адаптацію очей рульового до темряви на нічній вахті й не засліплює місток.
+* **Режим «Яскраве сонце» (Sunlight Mode):** підвищений контраст 7:1 із посиленими межами для впевненого читання з екрана під прямим сонцем на відкритій палубі.
 
 ---
 
@@ -100,8 +113,8 @@
 ### Швидкий старт:
 ```powershell
 # 1. Клонувати репозиторій
-git clone https://github.com/Rigged-mind/hull_beat.git
-cd hull_beat
+git clone https://github.com/Rigged-mind/HullBeat.git
+cd HullBeat
 
 # 2. Збірка APK через термінал
 .\gradlew.bat assembleDebug
@@ -118,27 +131,36 @@ cd hull_beat
 
 ## 🌊 What is HullBeat in Plain Words?
 
-Owning a powerboat, sailing yacht, or cruiser is rewarding, but keeping everything seaworthy is demanding. At sea, dozens of critical items compete for your attention:
-* When were the sacrificial zinc anodes on the hull and saildrive last inspected?
-* What is the age of the standing rigging, stays, and turnbuckles? When were the deck winches last serviced?
-* Are the seacocks, through-hulls, and the raw-water pump impeller in reliable condition?
-* When was the engine and transmission oil last changed?
-* Exactly which locker holds the spare fuel filter, and how many are left?
+Owning a boat or yacht is rewarding, but keeping every system seaworthy demands constant vigilance. At sea, dozens of critical items compete for your attention:
+* When were the sacrificial zinc anodes on the hull and saildrive last replaced to prevent galvanic corrosion?
+* What is the true age and tension of the standing rigging, shrouds, and stays? When were the cockpit winches last serviced?
+* Are the seacocks, through-hulls, and the raw-water pump impeller in trustworthy condition?
+* When was the engine and gearbox oil last changed?
+* Exactly which locker holds the spare fuel filter, and how many are left aboard?
 
-**HullBeat** is an offline digital boat logbook and equipment maintenance manager. It unifies all vessel components into a clear, actionable dashboard, computes service intervals by engine hours or calendar dates, and ensures you are ready to cast off with peace of mind.
+**HullBeat** is your digital boatswain and offline maintenance logbook. It brings every vessel system into one coherent, actionable overview, tracks service intervals by engine hours and calendar days, and keeps your boat voyage-ready at all times.
+
+---
+
+## ⚓ Built by a Sailor, for Sailors (Born from Real Experience)
+
+> **HullBeat was not designed in an office — it was forged out on the water, through real passages, anchorages, and shipyard refits.**  
+> The author built this app **first and foremost for himself and his own boat**. It is the direct answer to personal frustration with messy spreadsheets, subscription-heavy cloud apps that stop working the minute you lose cellular coverage offshore, and fiddly small buttons impossible to hit with wet hands or heavy sailing gloves while pitching in a seaway.
+> 
+> Everything here is designed around what is **genuinely convenient and practical for a skipper**: zero friction, oversized touch targets, and a workflow tested by real nautical experience.
 
 ---
 
 ## 🛡️ Key Advantages
 
 1. **100% Offline & Absolute Privacy:**
-   * Works offshore, at anchor, or in remote marinas with zero cellular connectivity.
-   * Zero clouds, zero tracking, no accounts — your vessel data and photos stay **exclusively on your physical device**.
+   * Works offshore, at anchor, or in remote marinas with zero cellular reception.
+   * Zero cloud dependence, zero tracking, no sign-ups — all vessel records and photos stay **exclusively on your physical device**.
    * Completely lacks the Android `INTERNET` permission.
 
 2. **Seamless Maintenance Import & Export:**
-   * **Intelligent Import:** Easily migrate records from your existing Excel (.xlsx) or CSV spreadsheets. The built-in `ColumnMapper` and `CsvSniffer` automatically detect headers, clean data, and parse date formats.
-   * **PDF & Excel Export:** Generate comprehensive vessel passports and dated maintenance histories in **Excel** or **PDF** format with one tap — essential for insurance surveys, mechanics, or resale value verification.
+   * **Intelligent Import:** Effortlessly migrate existing maintenance logs from Excel (.xlsx) or CSV. The built-in `ColumnMapper` and `CsvSniffer` automatically map columns and clean date formats.
+   * **PDF & Excel Export:** Generate comprehensive vessel passports and dated maintenance histories in **Excel** or **PDF** format with one tap — essential for insurance renewals, surveyors, or proving vessel care upon resale.
 
 3. **Full Photo Documentation & Inspection:**
    * Attach high-resolution photos to any service record, component card, or defect report.
@@ -150,7 +172,7 @@ Owning a powerboat, sailing yacht, or cruiser is rewarding, but keeping everythi
 ## ✨ Comprehensive Features
 
 ### 1. The "Pulse" (Now) Command Center
-The core dashboard designed for immediate situational awareness:
+The central dashboard designed for immediate situational awareness:
 * **Live Vessel Readiness:** Instant status showing overdue tasks, upcoming maintenance, and systems in good standing.
 * **Safety Ranking:** Mission-critical items (raw-water impellers, seacocks, engine oil, bilge pumps) automatically float to the top of the list.
 * **Quick 2-Tap Logging:** Tap action buttons directly on the card (`Done`, `Renewed`, `Record`, `Check`). The dynamic bottom sheet requests **only the specific fields needed** to clear the item (e.g., hour reading for engine items; new mandatory expiry date for life rafts, pyrotechnics, and documentation).
@@ -182,8 +204,8 @@ The core dashboard designed for immediate situational awareness:
 
 ```bash
 # Clone repository
-git clone https://github.com/Rigged-mind/hull_beat.git
-cd hull_beat
+git clone https://github.com/Rigged-mind/HullBeat.git
+cd HullBeat
 
 # Assemble debug APK
 ./gradlew assembleDebug
@@ -197,12 +219,12 @@ cd hull_beat
 ## 📁 Repository Structure
 
 ```
-hull_beat/
+HullBeat/
 ├── app/                  # Main Android application (Jetpack Compose, Room, Kotlin)
 │   ├── src/main/java/    # Clean architecture: UI, ViewModels, Database, Importer/Exporter
 │   └── src/test/         # Unit tests covering engines, calculations, and parsers
 ├── catalog/              # Preloaded marine component ontology, checklists, and synonyms
-├── design/               # Design system: vector logos, palette tokens, store assets
+├── design/               # Design system: vector logos, palette tokens, store assets, banner
 ├── docs/                 # Complete architecture, UI guidelines, and engineering specs
 ├── tools/                # Python verification suites, linters, and palette generators
 ├── template/             # Canonical Excel reference template (.xlsx)

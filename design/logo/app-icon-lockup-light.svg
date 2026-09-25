@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 108" width="440" height="108">
+  <defs>
+    <linearGradient id="lGrad2" x1="32" y1="65" x2="62" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0" stop-color="#2E6C60"/>
+      <stop offset="0.5" stop-color="#47897C"/>
+      <stop offset="1.0" stop-color="#6BA599"/>
+    </linearGradient>
+    <linearGradient id="uGrad2" x1="24" y1="60" x2="80" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0" stop-color="#47897C"/>
+      <stop offset="0.5" stop-color="#6BA599"/>
+      <stop offset="1.0" stop-color="#97C0B7"/>
+    </linearGradient>
+    <linearGradient id="hGrad2" x1="34" y1="55" x2="84" y2="45" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0" stop-color="#2E6C60"/>
+      <stop offset="0.3" stop-color="#47897C"/>
+      <stop offset="0.65" stop-color="#6BA599"/>
+      <stop offset="0.9" stop-color="#C2DAD4"/>
+      <stop offset="1.0" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="cGrad2" x1="33" y1="50" x2="65" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0" stop-color="#2E6C60"/>
+      <stop offset="0.5" stop-color="#6BA599"/>
+      <stop offset="1.0" stop-color="#C2DAD4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App Icon Emblem -->
+  <g transform="translate(4, 4)">
+    <rect width="100" height="100" rx="22" fill="#04120F"/>
+    <path d="M32.16,63.71 L34.00,63.23 L36.12,62.96 L39.68,63.02 L41.80,63.37 L43.71,63.84 L45.97,64.60 L50.55,66.37 L53.69,67.13 L55.47,67.33 L58.14,67.33 L61.21,66.78 L59.09,66.72 L56.50,66.24 L53.76,65.35 L47.33,62.61 L45.42,62.00 L42.75,61.45 L39.54,61.38 L37.63,61.66 L34.96,62.41 L33.59,62.96 Z" fill="url(#lGrad2)"/>
+    <path d="M24.30,61.32 L26.14,60.29 L27.65,59.67 L31.27,58.72 L33.80,58.44 L36.53,58.44 L38.17,58.58 L41.80,59.13 L46.10,60.22 L49.59,61.45 L54.58,63.57 L57.32,64.53 L59.91,65.14 L62.51,65.35 L64.70,65.14 L66.00,64.87 L68.94,63.84 L71.33,62.61 L76.39,59.33 L78.99,57.90 L76.66,58.65 L73.11,60.15 L70.58,60.97 L67.78,61.52 L65.11,61.59 L63.20,61.38 L60.94,60.84 L58.75,60.08 L52.53,57.49 L48.22,56.26 L44.80,55.64 L42.07,55.37 L37.08,55.37 L33.52,55.91 L30.45,56.94 L28.67,57.83 L27.17,58.79 L25.66,59.95 Z" fill="url(#uGrad2)"/>
+    <path d="M83.64,44.91 L77.21,45.25 L69.55,45.93 L62.31,46.82 L55.26,48.05 L50.48,49.21 L47.27,50.24 L42.48,52.02 L34.21,55.44 L37.42,54.75 L40.98,54.21 L49.18,51.47 L52.39,50.58 L56.29,49.69 L65.38,48.12 L71.88,47.23 L78.10,46.55 L78.10,46.68 L76.39,47.10 L73.72,48.05 L70.78,49.49 L68.25,51.13 L63.26,54.96 L61.14,56.19 L58.48,57.14 L57.04,57.42 L55.40,57.49 L59.02,58.72 L62.24,59.54 L64.22,59.74 L66.55,59.54 L67.43,59.26 L68.73,58.65 L70.72,57.21 L73.24,54.75 L76.59,51.06 L79.19,48.46 L81.18,46.75 Z" fill="url(#hGrad2)"/>
+    <path d="M33.18,51.54 L36.81,49.76 L41.11,48.05 L46.86,46.27 L51.71,45.11 L55.40,44.50 L57.59,44.36 L61.21,44.50 L64.77,45.04 L63.33,44.29 L61.49,43.54 L60.12,43.13 L58.27,42.79 L54.51,42.72 L51.91,42.92 L48.84,43.40 L47.13,43.40 L46.24,42.99 L44.46,41.42 L43.44,40.87 L42.41,40.60 L40.63,40.60 L39.75,40.74 L39.13,40.94 L40.29,41.08 L41.11,41.49 L42.00,42.45 L42.75,43.95 L43.44,44.84 L40.36,46.27 L38.38,47.44 L35.78,49.28 Z" fill="url(#cGrad2)"/>
+  </g>
+
+  <!-- Wordmark for Light background -->
+  <text x="130" y="68" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" letter-spacing="5" fill="#04120F">HULLBEAT</text>
+</svg>
