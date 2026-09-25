@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-  <strong>Офлайн судновий журнал та планувальник технічного обслуговування для катерів і яхт</strong><br>
-  <strong>Offline Boat Maintenance Logbook & Service Planner for Sail and Motor Vessels</strong>
+  <strong>⚓ HullBeat для Android — Офлайн судновий журнал та планувальник технічного обслуговування катерів і яхт</strong><br>
+  <strong>⚓ HullBeat for Android — Offline Boat Maintenance Logbook & Service Planner for Sail and Motor Vessels</strong>
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@
 * Коли востаннє міняли оливу в двигуні та редукторі?
 * Де саме на борту лежить запасний паливний фільтр і скільки їх залишилося в рундуку?
 
-**HullBeat** — це кишеньковий цифровий боцман і судновий журнал. Він об'єднує всі вузли судна в одну наочну систему, автоматично веде підрахунок мотогодин або днів і заздалегідь попереджає капітана про необхідні регламентні роботи.
+**HullBeat** — це кишеньковий автономний Android-застосунок, цифровий боцман і судновий журнал. Він об'єднує всі вузли судна в одну наочну систему, автоматично веде підрахунок мотогодин або днів і заздалегідь попереджає капітана про необхідні регламентні роботи.
 
 ---
 
@@ -170,7 +170,7 @@ Owning a boat or yacht is rewarding, but keeping every system seaworthy demands 
 * When was the engine and gearbox oil last changed?
 * Exactly which locker holds the spare fuel filter, and how many are left aboard?
 
-**HullBeat** is your digital boatswain and offline maintenance logbook. It brings every vessel system into one coherent, actionable overview, tracks service intervals by engine hours and calendar days, and keeps your boat voyage-ready at all times.
+**HullBeat** is a standalone offline Android application, digital boatswain and boat maintenance logbook. It brings every vessel system into one coherent, actionable overview, tracks service intervals by engine hours and calendar days, and keeps your boat voyage-ready at all times.
 
 ---
 
