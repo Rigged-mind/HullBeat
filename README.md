@@ -75,54 +75,62 @@
 
 ### 1. Головний розділ «Пульс» (Now)
 «Пульс» — це оперативний командний місток вашого судна, де зібрано все найважливіше:
-* **Статус судна в реальному часі:** миттєвий огляд стану — що прострочено, що підходить за строком найближчим часом, а що в нормі.
-* **Пріоритет критичності:** системи першої необхідності (кінгстони, помпа, рівень оливи, кермовий привід) завжди автоматично піднімаються на самий верх списку.
-* **Швидкий запис у 2 дотики:** кнопка дії прямо на картці (`Зроблено`, `Продовжено`, `Записати`, `Готово`). Розумний нижній аркуш запитує **лише ті поля, які потрібні** саме для цього вузла (для мотогодинних — поточні години лічильника; для документів, плоту та піротехніки — обов'язковий новий термін придатності).
-* **Механізм обґрунтованого відкладення робіт (Defer):** опція *«Не можу зараз — відкласти»* (наприклад, «до весняного підйому на берег» або «на 30 днів»). Додаток тимчасово глушить нагадування на переході, зберігаючи факт прострочення для чесної історії. Скасування відкладення — в один клік.
-* **Передрейсовий чекліст безпеки (Pre-departure):** швидка перевірка судна перед віддачею швартовів (закриття люків, трюмна вода, рівень палива, помпи, ходові вогні, рятувальні жилети).
-* **Мультисудновість:** легке перемикання між різними човнами або дингі/тузиком у шапці екрана.
+* **Статус судна в реальному часі:** миттєвий огляд стану — кількість прострочених (`1 прострочено`) та наближених (`0 скоро`) регламентних робіт.
+* **Швидкі дії:** кнопки швидкого доступу прямо під статусом (`Записати ТО`, `Мотогодини`, `Чеклісти`).
+* **Пріоритет критичності:** системи безпеки та життєзабезпечення (рятувальні жилети, кінгстони, помпа) завжди автоматично піднімаються на самий верх списку.
+* **Швидкий запис у 2 дотики:** кнопка дії прямо на картці (`Зроблено`).
+* **Механізм обґрунтованого відкладення робіт (Defer):** опція *«Не можу зараз — відкласти»* (тимчасово глушить нагадування на переході, зберігаючи факт прострочення для чесної історії).
+* **Стрічка найближчих планових робіт:** календарний графік завдань із зазначенням терміну (наприклад, *«Автоматична трюмна помпа — за 28 днів»*).
 
 <p align="center">
-  <img src="docs/screenshots/now-uk.png" alt="Головний екран «Пульс»" width="340" />
+  <img src="docs/screenshots/pulse.png" alt="Головний екран «Пульс»" width="340" />
 </p>
 
-### 2. Судновий журнал робіт та фотофіксація (Journal)
-Повна безперервна історія життя вашого судна:
-* **Хронологічна стрічка робіт:** структурований запис планових ТО, ремонтів, замін та інспекцій із зазначенням дати, напрацювання мотогодин і витрат.
-* **Фотодокази та фіксація дефектів:** прикріплення фотографій деталей, лічильників мотогодин та оглядів безпосередньо до кожного сервісного запису.
-* **Облік витрат за сезон:** швидкий контроль вартості обслуговування судна по категоріях та підсумкових річних витрат.
-* **Зручна фільтрація:** швидкий перегляд за типами подій (*«Планове ТО»*, *«Ремонт»*, *«Інспекція»*) або пошуковим запитом.
+### 2. Передрейсові чеклісти безпеки (Pre-departure Checklists)
+Швидка та надійна перевірка готовності судна перед виходом у море:
+* **Капітанський протокол перевірки:** перевірка кінгстонів двигуна й гальюна, сухості трюму та вільного ходу поплавкового вимикача помпи, ходових навігаційних вогнів, швартових кінців та кранців.
+* **Захист від випадкового старту:** кнопка підтвердження перевірки активується лише тоді, коли відмічено всі обов'язкові пункти безпеки.
 
 <p align="center">
-  <img src="docs/screenshots/journal-uk.png" alt="Судновий журнал робіт" width="340" />
+  <img src="docs/screenshots/checklist.png" alt="Передрейсовий чекліст безпеки" width="340" />
 </p>
 
-### 3. Повне охоплення всіх систем судна (не лише двигун)
-* ⚓ **Корпус і підводна частина:** стан гелькоуту, огляд пера керма, донно-забортна арматура (кінгстони), антифоулінг (необростайка), контроль та заміна жертовних анодів (цинк/алюміній) для захисту від електрохімічної корозії, трюмні помпи та поплавкові датчики.
-* ⛵ **Вітрильне озброєння та такелаж:** стоячий такелаж (ванти, штаги, талрепи), бігучий такелаж (фали, шкоти, топенанти), полотно та шви вітрил (грот, стаксель, генуя, генакер), регулярне розбирання та змащування палубних лебідок, закруток (furling) і блоків.
-* 🪢 **Палуба та якірний пристрій:** брашпіль/якірна лебідка, маркування та знос якірного ланцюга, вертлюги, швартові качки, релінги, леєри та люки.
-* 🔋 **Енергетика, електроніка та навігація:** стан сервісних і стартерних батарей (AGM/LiFePO4), сонячні контролери, інвертори, ходові та якірні вогні, картплотери та автопілот.
-* 🚿 **Сантехніка та життєзабезпечення:** прісна вода, опріснювачі, танки сірих/чорних вод, помпи та клапани морських гальюнів.
-* ⚙️ **Силова установка:** стаціонарні дизелі, підвісні двигуни, сейлдвайви (saildrive) з контролем стану ущільнювальної мембрани, валолінії, дейдвуди, заміна олив, фільтрів та імпелерів забортної води.
-
-### 4. Судновий склад запасних частин (Store)
-* **Облік запасу деталей:** облік кількості деталей (фільтри, крильчатки, ремені, свічки, запобіжники).
-* **Точна прив'язка до рундуків:** швидка навігація по борту (*«Рундук лівого борту (салон)»*, *«Ахтерпік / трюмний відсік»*, *«Штурманський стіл»*).
-* **QR-сканування та пошук:** миттєвий пошук деталі або рундука через сканування смартфона.
-* **Попередження про критичний залишок:** сповіщення про необхідність поповнити запас перед виходом у довгий перехід.
+### 3. Судновий журнал робіт та фотофіксація (Journal)
+Повна безперервна історія життя та сервісу вашого судна:
+* **Хронологічна стрічка робіт:** структурований запис планових ТО, ремонтів та інспекцій із зазначенням дати, напрацювання мотогодин і витрат.
+* **Фотофіксація дефектів та оглядів:** можливість прикріплення фотографій деталей, лічильників та зносу безпосередньо до кожного запису (наприклад, 4 знімки до маркування та огляду якірного ланцюга).
+* **Облік витрат за сезон:** швидкий підсумок кількості робіт та загальної суми витрат за сезони (наприклад, *«35 записів · 2025–2026 · 243 023 ₴ витрачено»*).
+* **Розумна фільтрація:** миттєвий відбір за судном (*«Bug»*, *«Crack»*, *«Maria»*) або категоріями (*«Безпека і аварійне»*, *«Вітрила»*, *«Електроніка»*).
+* **Контроль інтервалів:** автоматичний підрахунок днів, що минули після попереднього обслуговування.
 
 <p align="center">
-  <img src="docs/screenshots/store-uk.png" alt="Судновий склад та рундуки" width="340" />
+  <img src="docs/screenshots/journal.png" alt="Судновий журнал робіт" width="340" />
 </p>
 
-### 5. Зручний інтерфейс для моря
-* **Цілі дотику від 56 dp:** інтерфейс розроблено спеціально під морські умови — великі кнопки та комфортні проміжки, якими легко керувати мокрими пальцями або в цупких яхтових рукавичках під час хитавиці.
+### 4. Паспорт вузлів та технічний стан (Vessel & Components)
+* **Повний паспорт обладнання:** фіксація характеристик вузлів, серійних номерів та артикулів розхідників, щоб назавжди зняти питання «який саме фільтр сюди підходить». Номери та параметри можна сфотографувати прямо з шильдика.
+* **Моніторинг зносу та корозії:** фотофіксація стану вузла з часом для відстеження корозії, стану гелькоуту або пера керма.
+* **Повне охоплення систем судна:** корпус, кіль, перо керма, підводна частина, такелаж, вітрила, якірне обладнання, електроніка та дизелі.
+
+<p align="center">
+  <img src="docs/screenshots/component.png" alt="Паспорт та історія вузла" width="340" />
+</p>
+
+### 5. Судновий склад запасних частин та рундуки (Store)
+* **Облік кількості деталей:** точний облік запасних фільтрів, кінців, крильчаток забортних помп та ременів.
+* **Точна прив'язка до суднових локацій:** розподіл деталей за рундуками (*«Afterpeak»*, *«Двигун»*, *«Рундук лівого борту»*).
+* **Швидке коригування залишків:** кнопки `[-]` та `[+]` прямо на картці деталі для зміни кількості в один дотик.
+* **Попередження про критичний залишок:** мітка `МАЛО` (наприклад, коли на борту 6 шт. при нормі 13), що сигналізує про необхідність докупити розхідники перед виходом.
+* **Швидкий пошук:** миттєвий пошук за назвою деталі, брендом (*Motul*) або артикулом.
+
+<p align="center">
+  <img src="docs/screenshots/store.png" alt="Судновий склад та рундуки" width="340" />
+</p>
+
+### 6. Зручний інтерфейс для моря
+* **Цілі дотику від 56 dp:** великі кнопки та комфортні проміжки, якими легко керувати мокрими пальцями або в цупких яхтових рукавичках під час хитавиці.
 * **Тема для нічної навігації (Night Navigation):** спеціальна глибока червоно-бурштинова палітра на ультратемному тлі, яка зберігає природну адаптацію очей рульового до темряви на нічній вахті й не засліплює місток.
 * **Режим «Яскраве сонце» (Sunlight Mode):** підвищений контраст 7:1 із посиленими межами для впевненого читання з екрана під прямим сонцем на відкритій палубі.
-
-<p align="center">
-  <img src="docs/screenshots/night-uk.png" alt="Тема для нічної навігації" width="340" />
-</p>
 
 ---
 
@@ -205,46 +213,54 @@ The central dashboard designed for immediate situational awareness:
 * **Multi-Vessel Support:** Switch between your cruising boat, tender, or dinghy in seconds.
 
 <p align="center">
-  <img src="docs/screenshots/now-en.png" alt="Pulse Command Center Screen" width="340" />
+  <img src="docs/screenshots/pulse.png" alt="Pulse Command Center Screen" width="340" />
 </p>
 
-### 2. Maintenance Log & Photo Documentation (Journal)
+### 2. Pre-Departure Safety Checklists
+Rigorous, rapid pre-voyage safety verification before slipping lines:
+* **Skipper's Inspection Protocol:** Engine & marine head seacocks verified open, bilge dry and pump float switch checked for free travel, navigation lights tested, mooring lines set and fenders rigged.
+* **Departure Verification Guard:** The confirmation button unlocks only when all mission-critical safety checklist items are inspected and checked.
+
+<p align="center">
+  <img src="docs/screenshots/checklist.png" alt="Pre-Departure Safety Checklist" width="340" />
+</p>
+
+### 3. Maintenance Journal, Photo Documentation & Costs (Journal)
 Continuous, tamper-proof history of your vessel's upkeep:
 * **Chronological Service Timeline:** Clean log of scheduled maintenance, refits, repairs, and inspections with dates, engine hour marks, and parts used.
-* **Photo Proof & Defect Logging:** Attach photos of parts, wear patterns, hour meters, and surveyor inspections directly to each log entry.
-* **Seasonal Cost & Expense Tracking:** Overview of total service spend and breakdown across jobs to keep track of maintenance budgets.
-* **Fast Category Filtering:** Filter entries instantly by event type (*"Scheduled"*, *"Repair"*, *"Inspection"*) or live search.
+* **Photo Proof & Defect Logging:** Attach multiple photos of parts, wear patterns, hour meters, and surveyor inspections directly to each log entry (e.g. 4 photos attached to anchor chain service).
+* **Seasonal Cost & Expense Tracking:** Overview of total service spend and breakdown across jobs to keep track of maintenance budgets (e.g. *«35 records · 2025–2026 · 243,023 ₴ spent»*).
+* **Smart Filtering:** Filter entries instantly by vessel (*«Bug»*, *«Crack»*, *«Maria»*) or system categories (*«Safety & Emergency»*, *«Sails»*, *«Electrical»*).
+* **Interval Tracking:** Automatic calculation of days elapsed since the prior service event.
 
 <p align="center">
-  <img src="docs/screenshots/journal-en.png" alt="Maintenance Journal Screen" width="340" />
+  <img src="docs/screenshots/journal.png" alt="Maintenance Journal Screen" width="340" />
 </p>
 
-### 3. Complete Vessel Systems Coverage (Far Beyond Engines)
-* ⚓ **Hull & Underwater Gear:** Gelcoat inspections, rudder stock and bearing play, seacocks, through-hulls, antifouling condition, cathodic protection (zinc/aluminum sacrificial anodes), bilge pumps, and float switches.
-* ⛵ **Sails & Rigging:** Standing rigging (shrouds, stays, turnbuckles, swage fittings), running rigging (halyards, sheets, outhauls), sail cloth and seam inspections (mainsail, jib, genoa, spinnaker), deck winch servicing and pawl lubrication, furling gear.
-* 🪢 **Deck & Ground Tackle:** Windlass maintenance, anchor chain wear and marking, swivels, mooring cleats, stanchions, lifelines, and deck hatches.
-* 🔋 **Electrical & Navigation:** House and starter battery banks (AGM / LiFePO4), solar charge controllers, inverters, navigation lights, chartplotters, and autopilots.
-* 🚿 **Plumbing & Domestic Systems:** Fresh water pressure pumps, watermakers, holding tanks, and marine toilet (head) valve servicing.
-* ⚙️ **Propulsion Systems:** Inboard diesels, outboards, saildrives (diaphragm seal monitoring), shafts, stuffing boxes/dripless seals, fluid changes, and raw-water impellers.
-
-### 4. On-board Spare Parts Inventory (Store)
-* **Track Spare Parts Stock:** Monitor stock levels of mission-critical consumables (fuel and oil filters, raw-water impellers, alternator belts, fuses).
-* **Precise Locker Assignments:** Logical boat locker mapping (*"Port salon locker"*, *"Lazarette / Aft locker"*, *"Nav station drawer"*).
-* **QR & Barcode Scanning:** Fast part identification and locker audits using your smartphone camera.
-* **Low Stock Alerts:** Automatic warnings when part counts fall below safe voyaging minimums.
+### 4. Component Passport & Technical History (Vessel)
+* **Comprehensive Equipment Passport:** Permanent record of component specs, serial numbers, part numbers, and nameplate photos to eliminate guesswork when ordering spares.
+* **Wear & Corrosion Visual Tracking:** Photo logging over time to track keel condition, gelcoat crazing, rudder stock play, or cathodic wear.
+* **Full Systems Coverage:** Keel, rudder, hull, through-hulls, standing and running rigging, sails, ground tackle, electronics, and propulsion.
 
 <p align="center">
-  <img src="docs/screenshots/store-en.png" alt="Spare Parts Store Screen" width="340" />
+  <img src="docs/screenshots/component.png" alt="Component Passport & Technical History" width="340" />
 </p>
 
-### 5. Marine-Optimized User Interface
+### 5. On-board Spare Parts & Locker Inventory (Store)
+* **Track Spare Parts Stock:** Monitor stock levels of mission-critical consumables (fuel and oil filters, rigging lines, raw-water impellers, alternator belts).
+* **Precise Locker Assignments:** Logical boat locker mapping (*"Afterpeak"*, *"Engine compartment"*, *"Port salon locker"*).
+* **Quick Stock Stepper:** Dedicated `[-]` and `[+]` buttons right on the component card for instant count adjustments.
+* **Low Stock Alerts:** Prominent `LOW` badge (e.g. when 6 items remain aboard against a recommended minimum of 13) to prevent sailing short of essential spares.
+* **Fast Search:** Instant lookup by part name, brand (*Motul*), or OEM part number.
+
+<p align="center">
+  <img src="docs/screenshots/store.png" alt="Spare Parts Store Screen" width="340" />
+</p>
+
+### 6. Marine-Optimized User Interface
 * **Touch Targets ≥ 56 dp:** Engineered for challenging conditions at sea — oversized touch targets and generous spacing ensure reliable operation with wet hands or heavy sailing gloves while pitching.
 * **Night Navigation Theme:** Deep red-amber palette on an ultra-dark background designed to preserve night vision at the helm during night passages.
 * **Sunlight Mode:** High-contrast 7:1 ratio with reinforced borders for direct midday sun reading on an open cockpit display.
-
-<p align="center">
-  <img src="docs/screenshots/night-en.png" alt="Night Navigation Theme Screen" width="340" />
-</p>
 
 ---
 
