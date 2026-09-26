@@ -323,6 +323,7 @@
     <string name="settings_about_title">Про HullBeat</string>
     <string name="settings_about_version">Версія %1$s</string>
     <string name="settings_about_desc">HullBeat — автономний судновий журнал та планувальник технічного обслуговування для вітрильних і моторних яхт.</string>
+    <string name="settings_about_github">Репозиторій GitHub</string>
 
     <!-- Store / Spares -->
     <string name="store_tab_all">Усі деталі</string>

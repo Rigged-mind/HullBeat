@@ -321,6 +321,7 @@
     <string name="settings_about_title">About HullBeat</string>
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_desc">HullBeat is an offline-first ship\'s log and maintenance planner designed for sailboats and motor yachts.</string>
+    <string name="settings_about_github">GitHub repository</string>
 
     <!-- Store / Spares -->
     <string name="store_tab_all">All spares</string>
