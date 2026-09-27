@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="design/banner.jpg" alt="HullBeat Banner" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);" />
+  <img src="design/banner-header.jpg" alt="HullBeat Banner" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);" />
 </p>
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="design/logo/app-icon-lockup-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="design/logo/app-icon-lockup-light.svg">
-    <img src="design/logo/app-icon-lockup-dark.svg" alt="HullBeat Logo" width="360">
+    <source media="(prefers-color-scheme: dark)" srcset="design/logo/hullbeat-lockup-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="design/logo/hullbeat-lockup-light.svg">
+    <img src="design/logo/hullbeat-lockup-dark.svg" alt="HullBeat Logo" width="360">
   </picture>
 </p>
 
