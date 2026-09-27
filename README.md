@@ -4,9 +4,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="design/logo/hullbeat-lockup-dark.svg?v=2">
-    <source media="(prefers-color-scheme: light)" srcset="design/logo/hullbeat-lockup-light.svg?v=2">
-    <img src="design/logo/hullbeat-lockup-dark.svg?v=2" alt="HullBeat Logo" width="360">
+    <source media="(prefers-color-scheme: dark)" srcset="design/logo/hullbeat-lockup-dark.svg?v=3">
+    <source media="(prefers-color-scheme: light)" srcset="design/logo/hullbeat-lockup-light.svg?v=3">
+    <img src="design/logo/hullbeat-lockup-dark.svg?v=3" alt="HullBeat Logo" width="360">
   </picture>
 </p>
 
