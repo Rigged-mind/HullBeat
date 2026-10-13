@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Launch screen below Android 12, which has no SplashScreen API: the window
-  background itself, laid out like the system one on 12+ - icon in the
-  middle, wordmark at the bottom, on the icon's own colour.
+  background itself, the same emblem as on 12+ centred on the icon's colour.
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/ic_launcher_background" />
     <item
-        android:width="160dp"
-        android:height="160dp"
+        android:width="288dp"
+        android:height="288dp"
         android:gravity="center"
-        android:drawable="@drawable/ic_launcher_foreground" />
-    <item
-        android:width="200dp"
-        android:height="80dp"
-        android:bottom="48dp"
-        android:gravity="bottom|center_horizontal"
-        android:drawable="@drawable/splash_wordmark" />
+        android:drawable="@drawable/splash_icon" />
 </layer-list>
