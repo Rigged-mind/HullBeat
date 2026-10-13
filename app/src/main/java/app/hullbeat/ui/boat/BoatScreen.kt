@@ -232,7 +232,7 @@ fun BoatScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Розділи застосунку",
+                        text = stringResource(R.string.icons_overview_sections),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
@@ -240,7 +240,7 @@ fun BoatScreen(
                     IconButton(onClick = { showAllIconsOverview = false }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_close),
-                            contentDescription = "Закрити",
+                            contentDescription = stringResource(R.string.action_close),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -286,13 +286,6 @@ fun BoatScreen(
                     }
                 }
 
-                Text(
-                    text = "Категорії вузлів (21)",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-
                 val allCategoryCodes = listOf(
                     "hull", "drivetrain", "engine_main",
                     "genset", "fuel", "elec_dc",
@@ -301,6 +294,15 @@ fun BoatScreen(
                     "ground_tackle", "safety", "nav",
                     "hvac", "galley", "tender",
                     "trailer", "documents", "other"
+                )
+
+                // The count comes from the list, not a literal "(21)" that
+                // would go stale the day a category is added.
+                Text(
+                    text = stringResource(R.string.icons_overview_categories, allCategoryCodes.size),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 LazyVerticalGrid(

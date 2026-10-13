@@ -152,6 +152,10 @@ private suspend fun exportPassport(context: Context, requestedVesselId: Long?, u
             footerPage = context.getString(R.string.pdf_footer_page),
             compiledBy = context.getString(R.string.pdf_compiled_by),
             currency = AppPreferences.getCurrency(context),
+            hoursUnit = context.getString(R.string.meter_hours_unit),
+            // The locale these strings were resolved in, so the numbers
+            // match the language of the words around them.
+            locale = context.resources.configuration.locales[0],
         )
 
         // Codes become words here, where a Context exists.

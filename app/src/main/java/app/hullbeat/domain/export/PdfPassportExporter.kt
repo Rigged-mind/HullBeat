@@ -18,7 +18,10 @@ import app.hullbeat.ui.components.decodeSampledBitmapFromUri
 import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.time.LocalDate
+import java.util.Locale
 import kotlin.text.StringBuilder
 
 /**
@@ -125,7 +128,41 @@ data class PassportLabels(
      */
     val compiledBy: String = "Compiled by owner via HullBeat",
     val currency: String = "",
+    /** Unit after engine hours, from R.string.meter_hours_unit ("год", "Std.", "h"). */
+    val hoursUnit: String = "h",
+    /**
+     * Language the document is written in. Numbers follow it - "12,5" in a
+     * Ukrainian, German or Spanish passport, "12.5" in an English one - so
+     * the caller passes the locale of the strings it resolved, not the
+     * phone's. Numbers in a document that disagree with its words read as a
+     * careless translation.
+     */
+    val locale: Locale = Locale.getDefault(),
 )
+
+/**
+ * An amount as people in [locale] write it, thousands split by a plain space:
+ * "1 234,56" (uk, de, es), "1 234.56" (en); whole sums without decimals.
+ *
+ * The first version formatted with the locale and then replaced every ','
+ * with a space, meant for the grouping comma of English. In every locale
+ * whose DECIMAL mark is a comma that ate the decimal: 1234.56 came out as
+ * "1 234 56" in Ukrainian and "1.234 56" in German and Spanish.
+ *
+ * A plain space, not the locale's own grouping character: Ukrainian's is a
+ * no-break space, and this text is drawn glyph by glyph onto a PDF canvas.
+ */
+internal fun formatAmount(value: Double, locale: Locale): String {
+    val symbols = DecimalFormatSymbols.getInstance(locale).apply { groupingSeparator = ' ' }
+    val pattern = if (value % 1.0 == 0.0) "#,##0" else "#,##0.00"
+    return DecimalFormat(pattern, symbols).format(value)
+}
+
+/** Engine hours: "1234" or "1234,5" / "1234.5" by [locale], no grouping. */
+internal fun formatHours(value: Double, locale: Locale): String {
+    val pattern = if (value % 1.0 == 0.0) "0" else "0.0"
+    return DecimalFormat(pattern, DecimalFormatSymbols.getInstance(locale)).format(value)
+}
 
 object PdfPassportExporter {
 
@@ -590,11 +627,7 @@ object PdfPassportExporter {
         pdf.c.drawText(m2, pdf.leftMargin + colW + 12f, yText, paint)
 
         // Metric 3: Total cost
-        val costFormatted = if (data.totalCost % 1.0 == 0.0) {
-            String.format(java.util.Locale.getDefault(), "%,d", data.totalCost.toLong()).replace(',', ' ')
-        } else {
-            String.format(java.util.Locale.getDefault(), "%,.2f", data.totalCost).replace(',', ' ')
-        }
+        val costFormatted = formatAmount(data.totalCost, labels.locale)
         val costWithCurrency = if (labels.currency.isNotBlank()) "$costFormatted ${labels.currency}" else costFormatted
         val m3 = String.format(labels.fieldTotalCost, costWithCurrency)
         pdf.c.drawText(m3, pdf.leftMargin + (colW * 2) + 12f, yText, paint)
@@ -846,19 +879,11 @@ object PdfPassportExporter {
             // Details line (Hours, Cost, Performed By)
             val detailsList = mutableListOf<String>()
             if (rec.meterHours != null) {
-                val formattedHours = if (rec.meterHours % 1.0 == 0.0) {
-                    "${rec.meterHours.toLong()} h"
-                } else {
-                    String.format(java.util.Locale.US, "%.1f h", rec.meterHours)
-                }
+                val formattedHours = "${formatHours(rec.meterHours, labels.locale)} ${labels.hoursUnit}"
                 detailsList.add("${labels.colHours}: $formattedHours")
             }
             if (rec.cost != null) {
-                val formattedCost = if (rec.cost % 1.0 == 0.0) {
-                    String.format(java.util.Locale.getDefault(), "%,d", rec.cost.toLong()).replace(',', ' ')
-                } else {
-                    String.format(java.util.Locale.getDefault(), "%,.2f", rec.cost).replace(',', ' ')
-                }
+                val formattedCost = formatAmount(rec.cost, labels.locale)
                 val costStr = if (labels.currency.isNotBlank()) "$formattedCost ${labels.currency}" else formattedCost
                 detailsList.add("${labels.colCost}: $costStr")
             }

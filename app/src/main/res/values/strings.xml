@@ -266,6 +266,9 @@
     <string name="currency_try">Turkish Lira (₺)</string>
     <string name="lang_uk">Українська</string>
     <string name="lang_en">English</string>
+    <!-- Every language is named in its own words, in every locale. -->
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_es">Español</string>
 
     <!-- Units of measurement -->
     <string name="settings_units_title">Units of measurement</string>
@@ -385,14 +388,14 @@
     <string name="import_file_label">File</string>
     <string name="import_btn_commit">Import records</string>
     <string name="import_btn_commit_with_issues">Review &amp; import</string>
-    <string name="import_issues_banner_title">%d rows have issues</string>
+    <!-- import_issues_banner_title, import_skip_dialog_subtitle and
+         import_skip_dialog_confirm are <plurals>: "%d rows have" read
+         "1 rows have", and in Ukrainian "1 рядків". -->
     <string name="import_issues_banner_subtitle">Unrecognized dates or components will be skipped upon import</string>
     <string name="import_skip_dialog_title">Skipping problematic rows</string>
-    <string name="import_skip_dialog_subtitle">%d rows have unparsed fields and will not be imported:</string>
     <string name="import_issue_date">unrecognized date «%s»</string>
     <string name="import_issue_component">unknown component «%s»</string>
     <string name="import_issue_row">Row %1$d: %2$s</string>
-    <string name="import_skip_dialog_confirm">Import %1$d of %2$d rows</string>
     <string name="import_skip_dialog_cancel">Cancel</string>
     <string name="import_history_title">Import history</string>
     <string name="import_history_empty">No imports yet</string>
@@ -463,4 +466,9 @@
     <string name="drawer_switch_vessel">Switch vessel</string>
     <string name="state_expanded">Expanded</string>
     <string name="state_collapsed">Collapsed</string>
+    <string name="action_close">Close</string>
+
+    <!-- Icon overview, opened by searching "icons" on the Boat tab. -->
+    <string name="icons_overview_sections">App sections</string>
+    <string name="icons_overview_categories">Component categories (%d)</string>
 </resources>

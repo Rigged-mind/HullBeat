@@ -4,6 +4,7 @@ import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
+import app.hullbeat.R
 
 /**
  * Per-app language, without dragging in AppCompat.
@@ -21,6 +22,10 @@ object AppLanguage {
 
     const val UK = "uk"
     const val EN = "en"
+    // Drafted, not shipped: see catalog/i18n/ui/. Named here so the picker can
+    // label them the day they join SUPPORTED.
+    const val DE = "de"
+    const val ES = "es"
 
     /**
      * The languages a person can pick, in the order a picker lists them.
@@ -81,6 +86,18 @@ object AppLanguage {
 
     /** What the button shows: the language it will switch TO. */
     fun glyph(context: Context): String = label(next(context))
+
+    /**
+     * The language's own name ("Deutsch", "Español"), the same in every locale.
+     * Spelled out rather than looked up as "lang_$tag": a resource resolved by
+     * name is invisible to the shrinker and disappears from a release build.
+     */
+    fun nameRes(tag: String): Int = when (tag) {
+        UK -> R.string.lang_uk
+        DE -> R.string.lang_de
+        ES -> R.string.lang_es
+        else -> R.string.lang_en
+    }
 
     /** Short label for a tag. Ukraine's code is UA; the language's is uk. */
     fun label(tag: String): String = if (tag == UK) "UA" else tag.uppercase()

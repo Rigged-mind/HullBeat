@@ -143,8 +143,9 @@ fun ImportSheet(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        text = stringResource(
-                            R.string.import_skip_dialog_subtitle,
+                        text = context.resources.getQuantityString(
+                            R.plurals.import_skip_dialog_subtitle,
+                            a.issues.size,
                             a.issues.size,
                         ),
                         style = MaterialTheme.typography.bodyMedium,
@@ -218,9 +219,12 @@ fun ImportSheet(
                     },
                     shape = RoundedCornerShape(8.dp),
                 ) {
+                    // Two numbers, one plural: the noun follows the total
+                    // ("з 21 рядка", "of 1 row"), so the total picks the form.
                     Text(
-                        stringResource(
-                            R.string.import_skip_dialog_confirm,
+                        context.resources.getQuantityString(
+                            R.plurals.import_skip_dialog_confirm,
+                            a.totalRows,
                             a.validCount,
                             a.totalRows,
                         )
@@ -356,7 +360,11 @@ fun ImportSheet(
                         ) {
                             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(
-                                    text = stringResource(R.string.import_issues_banner_title, a.issues.size),
+                                    text = context.resources.getQuantityString(
+                                        R.plurals.import_issues_banner_title,
+                                        a.issues.size,
+                                        a.issues.size,
+                                    ),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onErrorContainer,

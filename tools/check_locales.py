@@ -70,6 +70,19 @@ def main():
             problems.append(f"{name} does not offer '{tag}', which is translated")
         for tag in sorted(set(tags) - shipped):
             problems.append(f"{name} offers '{tag}', which has no values-{tag}/strings.xml")
+    # The settings picker labels each language with AppLanguage.nameRes, whose
+    # fallback is lang_en: a newly released tag with no branch there would sit
+    # in the picker as a second "English".
+    if supported:
+        kotlin = io.open(APP_LANGUAGE, encoding="utf-8").read()
+        base = io.open(os.path.join(locales.values_dir(""), "strings.xml"),
+                       encoding="utf-8").read()
+        for tag in supported:
+            if f'name="lang_{tag}"' not in base:
+                problems.append(f"values/strings.xml has no lang_{tag} for the picker")
+            if tag != "en" and f"R.string.lang_{tag}" not in kotlin:
+                problems.append(f"AppLanguage.nameRes has no branch for '{tag}' - "
+                                "the picker would label it English")
     if config and supported and config[0] != supported[0]:
         problems.append(f"default differs: locales_config.xml starts with "
                         f"'{config[0]}', AppLanguage.SUPPORTED with '{supported[0]}'")
