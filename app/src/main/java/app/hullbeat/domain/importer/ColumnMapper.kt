@@ -2,6 +2,7 @@ package app.hullbeat.domain.importer
 
 import app.hullbeat.R
 import app.hullbeat.data.db.DatePrecision
+import java.text.Normalizer
 import java.time.LocalDate
 
 enum class TargetField(val titleRes: Int) {
@@ -18,50 +19,79 @@ enum class TargetField(val titleRes: Int) {
 
 object ColumnMapper {
 
-    private val DATE_SYNONYMS = listOf(
+    private val COMBINING_MARKS = Regex("\\p{Mn}+")
+    private val NON_WORD = Regex("[^\\p{L}\\p{N}]+")
+
+    /**
+     * A synonym this short is matched as a whole word, never as a substring.
+     * "h" is a fine header for engine hours on its own, but as a substring it
+     * claimed "Mechanic", "Mechaniker", "Fecha" and "Beschreibung" for the
+     * engine-hours column - every one of them a header that has an h in it.
+     */
+    private const val WHOLE_WORD_MAX = 3
+
+    /**
+     * ES and DE aliases below are a draft, pending review by a native-speaking
+     * sailor (catalog/i18n/ marks the catalog terms `check` for the same
+     * reason). A wrong one here only costs a column the owner re-maps by hand.
+     * They are written without accents because headers and synonyms go
+     * through the same [words] folding.
+     */
+    private val DATE_SYNONYMS = syn(
         "date", "datum", "when", "day",
-        "\u0434\u0430\u0442\u0430", "\u0434\u0435\u043d\u044c", "\u0447\u0430\u0441"
+        "\u0434\u0430\u0442\u0430", "\u0434\u0435\u043d\u044c", "\u0447\u0430\u0441",
+        "fecha", "dia", "tag", "wann"
     )
 
-    private val DESC_SYNONYMS = listOf(
+    private val DESC_SYNONYMS = syn(
         "task", "description", "work", "job", "service", "maintenance", "action",
         "\u043e\u043f\u0438\u0441", "\u0440\u043e\u0431\u043e\u0442\u0430",
-        "\u0440\u043e\u0431\u043e\u0442\u0438", "\u0437\u0430\u0432\u0434\u0430\u043d\u043d\u044f"
+        "\u0440\u043e\u0431\u043e\u0442\u0438", "\u0437\u0430\u0432\u0434\u0430\u043d\u043d\u044f",
+        "descripcion", "trabajo", "tarea", "servicio", "mantenimiento",
+        "beschreibung", "arbeit", "taetigkeit", "tatigkeit", "wartung", "aufgabe", "massnahme"
     )
 
-    private val WORK_TYPE_SYNONYMS = listOf(
+    private val WORK_TYPE_SYNONYMS = syn(
         "worktype", "type", "kind", "category",
-        "\u0442\u0438\u043f", "\u0432\u0438\u0434", "\u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u044f"
+        "\u0442\u0438\u043f", "\u0432\u0438\u0434", "\u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u044f",
+        "tipo", "clase", "categoria", "art", "typ", "kategorie", "arbeitsart", "wartungsart"
     )
 
-    private val HOURS_SYNONYMS = listOf(
+    private val HOURS_SYNONYMS = syn(
         "hours", "hrs", "h", "engine hours", "eng hrs", "meter", "motohours",
         "\u0433\u043e\u0434\u0438\u043d\u0438", "\u043c\u043e\u0442\u043e\u0433\u043e\u0434\u0438\u043d\u0438",
-        "\u043c\u043e\u0442\u043e\u0447\u0430\u0441\u0438", "\u0433\u043e\u0434"
+        "\u043c\u043e\u0442\u043e\u0447\u0430\u0441\u0438", "\u0433\u043e\u0434",
+        "horas", "horometro", "contador", "stunden", "zahlerstand", "zaehlerstand"
     )
 
-    private val COST_SYNONYMS = listOf(
+    private val COST_SYNONYMS = syn(
         "cost", "price", "amount", "total", "sum", "expense",
         "\u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044c", "\u0446\u0456\u043d\u0430",
-        "\u0441\u0443\u043c\u0430", "\u0432\u0438\u0442\u0440\u0430\u0442\u0438"
+        "\u0441\u0443\u043c\u0430", "\u0432\u0438\u0442\u0440\u0430\u0442\u0438",
+        "coste", "costo", "precio", "importe", "kosten", "preis", "betrag", "summe", "gesamt"
     )
 
-    private val PERFORMED_BY_SYNONYMS = listOf(
+    private val PERFORMED_BY_SYNONYMS = syn(
         "by", "who", "vendor", "mechanic", "yard", "technician", "performed by",
         "\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c", "\u0445\u0442\u043e",
-        "\u043c\u0430\u0439\u0441\u0442\u0435\u0440", "\u0441\u0435\u0440\u0432\u0456\u0441"
+        "\u043c\u0430\u0439\u0441\u0442\u0435\u0440", "\u0441\u0435\u0440\u0432\u0456\u0441",
+        "realizadopor", "hechopor", "mecanico", "taller", "tecnico", "quien", "proveedor",
+        "durchgefuhrtvon", "mechaniker", "werft", "techniker", "wer", "firma"
     )
 
-    private val NOTES_SYNONYMS = listOf(
+    private val NOTES_SYNONYMS = syn(
         "notes", "remarks", "comments", "anmerkungen", "info",
         "\u043d\u043e\u0442\u0430\u0442\u043a\u0438", "\u043f\u0440\u0438\u043c\u0456\u0442\u043a\u0438",
-        "\u043a\u043e\u043c\u0435\u043d\u0442\u0430\u0440\u0456"
+        "\u043a\u043e\u043c\u0435\u043d\u0442\u0430\u0440\u0456",
+        "notas", "observaciones", "comentarios", "bemerkungen", "notizen", "kommentar", "hinweis"
     )
 
-    private val COMPONENT_SYNONYMS = listOf(
+    private val COMPONENT_SYNONYMS = syn(
         "component", "system", "part", "equipment", "item",
         "\u0432\u0443\u0437\u043e\u043b", "\u0430\u0433\u0440\u0435\u0433\u0430\u0442",
-        "\u0434\u0435\u0442\u0430\u043b\u044c", "\u0441\u0438\u0441\u0442\u0435\u043c\u0430"
+        "\u0434\u0435\u0442\u0430\u043b\u044c", "\u0441\u0438\u0441\u0442\u0435\u043c\u0430",
+        "componente", "sistema", "pieza", "equipo", "elemento",
+        "komponente", "bauteil", "teil", "ausrustung", "gerat"
     )
 
     fun suggestMapping(headers: List<String>, sampleRows: List<List<String>>): Map<Int, TargetField> {
@@ -70,8 +100,7 @@ object ColumnMapper {
 
         // 1. First pass: exact header matching
         headers.forEachIndexed { index, header ->
-            val norm = normalize(header)
-            val matchedField = matchHeader(norm)
+            val matchedField = matchHeader(Header(words(header)))
             if (matchedField != null && matchedField !in assignedFields) {
                 mapping[index] = matchedField
                 assignedFields.add(matchedField)
@@ -100,21 +129,43 @@ object ColumnMapper {
         return mapping
     }
 
-    private fun normalize(str: String): String {
-        return str.lowercase().replace(Regex("[^a-z0-9\u0400-\u04ff]"), "")
+    /**
+     * Words of a header or a synonym: letters and digits of any script, lower
+     * case, accents folded and ß spelled ss - so "Descripción", "descripcion"
+     * and "DESCRIPCION" are one header. The old filter kept only a-z and
+     * Cyrillic, which dropped the ó from "Descripción" and the ü from
+     * "Ausrüstung" and left words no synonym could match.
+     */
+    private fun words(str: String): List<String> =
+        Normalizer.normalize(str.lowercase().replace("\u00df", "ss"), Normalizer.Form.NFD)
+            .replace(COMBINING_MARKS, "")
+            .split(NON_WORD)
+            .filter { it.isNotEmpty() }
+
+    /** A synonym is stored the way a header's words are compared: joined. */
+    private fun syn(vararg phrases: String): List<String> =
+        phrases.map { words(it).joinToString("") }
+
+    private class Header(val words: List<String>) {
+        val joined = words.joinToString("")
     }
 
-    private fun matchHeader(header: String): TargetField? {
-        if (header.isEmpty()) return null
+    private fun List<String>.matches(header: Header): Boolean = any { synonym ->
+        if (synonym.length <= WHOLE_WORD_MAX) synonym in header.words
+        else header.joined.contains(synonym)
+    }
+
+    private fun matchHeader(header: Header): TargetField? {
+        if (header.words.isEmpty()) return null
         return when {
-            DATE_SYNONYMS.any { header.contains(it) } -> TargetField.DATE
-            HOURS_SYNONYMS.any { header.contains(it) } -> TargetField.HOURS
-            COST_SYNONYMS.any { header.contains(it) } -> TargetField.COST
-            WORK_TYPE_SYNONYMS.any { header.contains(it) } -> TargetField.WORK_TYPE
-            PERFORMED_BY_SYNONYMS.any { header.contains(it) } -> TargetField.PERFORMED_BY
-            NOTES_SYNONYMS.any { header.contains(it) } -> TargetField.NOTES
-            COMPONENT_SYNONYMS.any { header.contains(it) } -> TargetField.COMPONENT
-            DESC_SYNONYMS.any { header.contains(it) } -> TargetField.DESCRIPTION
+            DATE_SYNONYMS.matches(header) -> TargetField.DATE
+            HOURS_SYNONYMS.matches(header) -> TargetField.HOURS
+            COST_SYNONYMS.matches(header) -> TargetField.COST
+            WORK_TYPE_SYNONYMS.matches(header) -> TargetField.WORK_TYPE
+            PERFORMED_BY_SYNONYMS.matches(header) -> TargetField.PERFORMED_BY
+            NOTES_SYNONYMS.matches(header) -> TargetField.NOTES
+            COMPONENT_SYNONYMS.matches(header) -> TargetField.COMPONENT
+            DESC_SYNONYMS.matches(header) -> TargetField.DESCRIPTION
             else -> null
         }
     }

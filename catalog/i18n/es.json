@@ -1,0 +1,3100 @@
+{
+  "_": "Spanish (Spain) terminology for the seed catalog. Format: code -> [term, confidence].",
+  "_status": "draft",
+  "_draft": "Draft: nothing here reaches the app until a native-speaking sailor has reviewed it and this _status line is removed. make_strings.py writes the review list only.",
+  "_reviewPriority": [
+    {
+      "question": "Safety lines: «líneas de vida» (jackstays along the deck) and «líneas de anclaje» (the tether from the harness) sit next to each other in the safety list. Clear enough, or should the tether be «cabo de anclaje» / «cabo de seguridad»?",
+      "keys": [
+        "cmp:jackstays",
+        "cmp:harnesses_tethers",
+        "chk:chk_sf_jackstays",
+        "chk:chk_sf_harnesses"
+      ]
+    },
+    {
+      "question": "«inversor» means both the gearbox and the DC-AC inverter. The drafts say «Inversor-reductor» and «Inversor de corriente», and the search alias «inversor» finds both. Is that how Spanish owners tell them apart?",
+      "keys": [
+        "cmp:gearbox",
+        "cmp:inverter",
+        "syn:gearbox",
+        "syn:inverter"
+      ]
+    },
+    {
+      "question": "ITB and ITV are Spanish institutions. Are these labels acceptable for Spanish-speaking owners elsewhere, or should the main label be neutral with ITB only as an example?",
+      "keys": [
+        "cmp:national_inspection",
+        "cmp:trailer_documents",
+        "hint:Scheme (ITB/BSS/Revisione/Bootszeugnis)"
+      ]
+    },
+    {
+      "question": "«patente» or «antifouling»: which should be the name shown, and which only a search alias?",
+      "keys": [
+        "cmp:antifouling",
+        "chk:chk_cm_antifouling",
+        "syn:antifouling"
+      ]
+    },
+    {
+      "question": "«turbina» as a search alias for the raw-water impeller: common on Spanish boats, or confusing next to the turbocharger («turbo»)?",
+      "keys": [
+        "syn:raw_water_impeller",
+        "cmp:raw_water_impeller",
+        "cmp:turbo"
+      ]
+    }
+  ],
+  "_confidence": {
+    "ok": "settled term, confirmed by a native-speaking sailor",
+    "check": "draft or contested - a native-speaking sailor must confirm before release",
+    "descr": "no established term exists; descriptive form of our own"
+  },
+  "_policy": "docs/i18n-uk.md (register: as said on the water, not as in a dictionary)",
+  "locale": "es",
+  "catalogVersion": 27,
+  "categories": {
+    "hull": [
+      "Casco y obra viva",
+      "check"
+    ],
+    "drivetrain": [
+      "Transmisión y propulsión",
+      "check"
+    ],
+    "engine_main": [
+      "Motor principal",
+      "check"
+    ],
+    "genset": [
+      "Generador",
+      "check"
+    ],
+    "fuel": [
+      "Sistema de combustible",
+      "check"
+    ],
+    "elec_dc": [
+      "Electricidad 12/24 V",
+      "check"
+    ],
+    "elec_ac": [
+      "Electricidad 230/120 V",
+      "check"
+    ],
+    "plumbing": [
+      "Sentina y agua",
+      "check"
+    ],
+    "gas": [
+      "Instalación de gas",
+      "check"
+    ],
+    "standing_rig": [
+      "Jarcia firme",
+      "check"
+    ],
+    "running_rig": [
+      "Arboladura y jarcia de labor",
+      "check"
+    ],
+    "sails": [
+      "Velas",
+      "check"
+    ],
+    "ground_tackle": [
+      "Fondeo y amarre",
+      "check"
+    ],
+    "safety": [
+      "Seguridad y emergencia",
+      "check"
+    ],
+    "nav": [
+      "Navegación y electrónica",
+      "check"
+    ],
+    "hvac": [
+      "Calefacción, ventilación y climatización",
+      "check"
+    ],
+    "galley": [
+      "Cocina e interior",
+      "check"
+    ],
+    "tender": [
+      "Auxiliar y fueraborda",
+      "check"
+    ],
+    "trailer": [
+      "Remolque",
+      "check"
+    ],
+    "documents": [
+      "Documentación",
+      "check"
+    ],
+    "other": [
+      "Otros",
+      "check"
+    ]
+  },
+  "components": {
+    "hull_gelcoat": [
+      "Casco y gelcoat",
+      "check"
+    ],
+    "antifouling": [
+      "Antifouling (patente)",
+      "check"
+    ],
+    "hull_cleaning": [
+      "Limpieza de fondos",
+      "check"
+    ],
+    "osmosis_check": [
+      "Control de ósmosis y humedad",
+      "check"
+    ],
+    "keel": [
+      "Quilla",
+      "check"
+    ],
+    "keel_bolts": [
+      "Pernos de quilla",
+      "check"
+    ],
+    "keel_joint": [
+      "Unión quilla-casco",
+      "check"
+    ],
+    "lifting_keel": [
+      "Quilla elevable / orza",
+      "check"
+    ],
+    "keel_lift_cable": [
+      "Cable de izado de la quilla y winche",
+      "check"
+    ],
+    "skeg": [
+      "Skeg del timón",
+      "check"
+    ],
+    "keel_bulb": [
+      "Bulbo de quilla",
+      "check"
+    ],
+    "transom": [
+      "Espejo de popa",
+      "check"
+    ],
+    "through_hulls": [
+      "Pasacascos",
+      "check"
+    ],
+    "seacocks": [
+      "Grifos de fondo",
+      "check"
+    ],
+    "raw_water_hoses": [
+      "Mangueras de agua de mar",
+      "check"
+    ],
+    "hose_clamps": [
+      "Abrazaderas",
+      "check"
+    ],
+    "wooden_bungs": [
+      "Espiches de madera",
+      "check"
+    ],
+    "anodes_hull": [
+      "Ánodos del casco",
+      "check"
+    ],
+    "rudder": [
+      "Pala del timón",
+      "check"
+    ],
+    "rudder_bearings": [
+      "Cojinetes y mecha del timón",
+      "check"
+    ],
+    "steering_quadrant": [
+      "Sector del timón y transmisión",
+      "check"
+    ],
+    "emergency_tiller": [
+      "Caña de emergencia",
+      "check"
+    ],
+    "steering_system": [
+      "Sistema de gobierno (cables / hidráulico)",
+      "check"
+    ],
+    "steering_cables_sheaves": [
+      "Guardines, cadenas y poleas de reenvío",
+      "check"
+    ],
+    "hatches_portlights": [
+      "Escotillas y portillos",
+      "check"
+    ],
+    "washboards": [
+      "Tambucho, tablas de cierre y candado",
+      "check"
+    ],
+    "deck": [
+      "Cubierta y superestructura",
+      "check"
+    ],
+    "teak_deck": [
+      "Cubierta de teca y calafateado",
+      "check"
+    ],
+    "nonskid": [
+      "Antideslizante de cubierta",
+      "check"
+    ],
+    "sprayhood_bimini": [
+      "Lonas (capota, bimini, fundas)",
+      "check"
+    ],
+    "deck_rails_lifelines": [
+      "Guardamancebos, candeleros, púlpito y balcón de popa",
+      "check"
+    ],
+    "rubbing_strake": [
+      "Cintón",
+      "check"
+    ],
+    "bowsprit": [
+      "Bauprés",
+      "check"
+    ],
+    "bathing_platform": [
+      "Plataforma de baño y escalera",
+      "check"
+    ],
+    "bow_thruster_grates": [
+      "Rejillas del túnel de la hélice de proa",
+      "check"
+    ],
+    "trim_tabs": [
+      "Flaps y sistema hidráulico",
+      "check"
+    ],
+    "keel_cooling": [
+      "Refrigeración por quilla (escape seco)",
+      "check"
+    ],
+    "drain_plug": [
+      "Tapón de achique del espejo",
+      "check"
+    ],
+    "tubes": [
+      "Flotadores y costuras",
+      "check"
+    ],
+    "tube_valves": [
+      "Válvulas y presión de los flotadores",
+      "check"
+    ],
+    "prop_shaft": [
+      "Eje de la hélice",
+      "check"
+    ],
+    "stern_tube": [
+      "Bocina y cojinete cutless",
+      "check"
+    ],
+    "stuffing_box": [
+      "Prensaestopas / cierre de eje",
+      "check"
+    ],
+    "shaft_bellows": [
+      "Cambio del fuelle del cierre de eje",
+      "check"
+    ],
+    "shaft_anode": [
+      "Ánodo del eje",
+      "check"
+    ],
+    "p_bracket": [
+      "Arbotante",
+      "check"
+    ],
+    "flex_coupling": [
+      "Acoplamiento flexible",
+      "check"
+    ],
+    "saildrive": [
+      "Saildrive",
+      "check"
+    ],
+    "saildrive_oil": [
+      "Aceite del saildrive",
+      "check"
+    ],
+    "saildrive_diaphragm": [
+      "Membrana de goma del saildrive",
+      "check"
+    ],
+    "saildrive_anode": [
+      "Ánodo del saildrive",
+      "check"
+    ],
+    "sterndrive": [
+      "Cola (dentrofueraborda)",
+      "check"
+    ],
+    "sterndrive_bellows": [
+      "Fuelles de la cola",
+      "check"
+    ],
+    "sterndrive_oil": [
+      "Aceite de la cola",
+      "check"
+    ],
+    "propeller": [
+      "Hélice",
+      "check"
+    ],
+    "folding_prop": [
+      "Hélice plegable / abatible",
+      "check"
+    ],
+    "thruster": [
+      "Hélice de proa / popa",
+      "check"
+    ],
+    "thruster_anode": [
+      "Ánodo y túnel de la hélice de maniobra",
+      "check"
+    ],
+    "engine_oil": [
+      "Aceite del motor",
+      "check"
+    ],
+    "engine_oil_filter": [
+      "Filtro de aceite",
+      "check"
+    ],
+    "oil_analysis": [
+      "Análisis de aceite",
+      "check"
+    ],
+    "fuel_prefilter": [
+      "Prefiltro de combustible / separador de agua",
+      "check"
+    ],
+    "fuel_filter_fine": [
+      "Filtro fino de combustible",
+      "check"
+    ],
+    "injectors": [
+      "Inyectores",
+      "check"
+    ],
+    "injection_pump": [
+      "Bomba de inyección",
+      "check"
+    ],
+    "lift_pump": [
+      "Bomba de alimentación de combustible",
+      "check"
+    ],
+    "raw_water_impeller": [
+      "Impulsor de la bomba de agua salada",
+      "check"
+    ],
+    "raw_water_strainer": [
+      "Filtro de agua salada",
+      "check"
+    ],
+    "heat_exchanger": [
+      "Intercambiador de calor",
+      "check"
+    ],
+    "heat_exchanger_anode": [
+      "Ánodo del intercambiador",
+      "check"
+    ],
+    "coolant": [
+      "Refrigerante (circuito cerrado)",
+      "check"
+    ],
+    "thermostat": [
+      "Termostato",
+      "check"
+    ],
+    "mixing_elbow": [
+      "Codo de escape (mezclador)",
+      "check"
+    ],
+    "exhaust_hose": [
+      "Manguera de escape y waterlock",
+      "check"
+    ],
+    "anti_siphon": [
+      "Válvula antisifón",
+      "check"
+    ],
+    "alternator_belt": [
+      "Correa del motor (alternador, bomba)",
+      "check"
+    ],
+    "air_filter": [
+      "Filtro de aire",
+      "check"
+    ],
+    "turbo": [
+      "Turbo / intercooler",
+      "check"
+    ],
+    "valve_clearance": [
+      "Reglaje de válvulas",
+      "check"
+    ],
+    "compression_test": [
+      "Prueba de compresión",
+      "check"
+    ],
+    "engine_mounts": [
+      "Soportes del motor y alineación",
+      "check"
+    ],
+    "alternator": [
+      "Alternador",
+      "check"
+    ],
+    "starter_motor": [
+      "Motor de arranque",
+      "check"
+    ],
+    "engine_sensors": [
+      "Sensores y alarmas (temperatura, presión de aceite)",
+      "check"
+    ],
+    "engine_wiring": [
+      "Mazo de cables y conexiones del motor",
+      "check"
+    ],
+    "gearbox": [
+      "Inversor-reductor",
+      "check"
+    ],
+    "gearbox_oil": [
+      "Aceite del inversor",
+      "check"
+    ],
+    "throttle_cables": [
+      "Cables de acelerador y cambio",
+      "check"
+    ],
+    "kill_switch": [
+      "Cordón de parada (hombre al agua)",
+      "check"
+    ],
+    "ob_gearcase_oil": [
+      "Aceite de la cola del fueraborda",
+      "check"
+    ],
+    "ob_spark_plugs": [
+      "Bujías del fueraborda",
+      "check"
+    ],
+    "ob_anodes": [
+      "Ánodos del fueraborda",
+      "check"
+    ],
+    "ob_tilt_trim": [
+      "Trim y basculación del fueraborda",
+      "check"
+    ],
+    "ob_flush": [
+      "Enjuague del fueraborda con agua dulce",
+      "check"
+    ],
+    "timing_belt": [
+      "Correa / cadena de distribución",
+      "check"
+    ],
+    "glow_plugs": [
+      "Bujías de precalentamiento",
+      "check"
+    ],
+    "exhaust_blanket": [
+      "Manta térmica del escape",
+      "check"
+    ],
+    "sea_chest": [
+      "Caja de toma de mar",
+      "check"
+    ],
+    "dry_exhaust_silencer": [
+      "Silenciador y chimenea del escape seco",
+      "check"
+    ],
+    "exhaust_bellows": [
+      "Compensador de dilatación del escape",
+      "check"
+    ],
+    "egt_monitoring": [
+      "Control de temperatura de gases de escape",
+      "check"
+    ],
+    "blower": [
+      "Extractor de la cámara del motor",
+      "check"
+    ],
+    "gen_oil": [
+      "Generador: aceite y filtro",
+      "check"
+    ],
+    "gen_fuel_filter": [
+      "Filtro de combustible del generador",
+      "check"
+    ],
+    "gen_impeller": [
+      "Impulsor del generador",
+      "check"
+    ],
+    "gen_coolant": [
+      "Refrigerante del generador",
+      "check"
+    ],
+    "gen_exhaust": [
+      "Escape y codo del generador",
+      "check"
+    ],
+    "gen_belt": [
+      "Correa del generador",
+      "check"
+    ],
+    "gen_windings": [
+      "Alternador del grupo: bobinado, escobillas, rodamientos",
+      "check"
+    ],
+    "gen_control": [
+      "Panel de control y arranque automático",
+      "check"
+    ],
+    "gen_enclosure": [
+      "Cabina insonorizada del generador",
+      "check"
+    ],
+    "fuel_tank": [
+      "Depósito de combustible",
+      "check"
+    ],
+    "fuel_polishing": [
+      "Filtrado de combustible / biocida",
+      "check"
+    ],
+    "fuel_tank_inspection": [
+      "Registro de inspección y sumidero del depósito",
+      "check"
+    ],
+    "fuel_hoses": [
+      "Mangueras de combustible",
+      "check"
+    ],
+    "fuel_vent": [
+      "Respiradero del depósito y apagallamas",
+      "check"
+    ],
+    "fuel_filler": [
+      "Boca de llenado y junta",
+      "check"
+    ],
+    "fuel_gauge": [
+      "Sensor y medidor de nivel de combustible",
+      "check"
+    ],
+    "fuel_valves": [
+      "Llaves de paso y colector de combustible",
+      "check"
+    ],
+    "portable_tanks": [
+      "Depósitos portátiles",
+      "check"
+    ],
+    "fuel_tank_drain": [
+      "Grifo de purga del depósito",
+      "check"
+    ],
+    "fuel_return_cooler": [
+      "Enfriador del retorno de combustible",
+      "check"
+    ],
+    "house_batteries": [
+      "Baterías de servicio",
+      "check"
+    ],
+    "start_battery": [
+      "Batería de arranque",
+      "check"
+    ],
+    "battery_terminals": [
+      "Bornes y cajas de baterías",
+      "check"
+    ],
+    "battery_bms": [
+      "BMS / equilibrado de litio",
+      "check"
+    ],
+    "charger": [
+      "Cargador de baterías",
+      "check"
+    ],
+    "solar": [
+      "Paneles solares y MPPT",
+      "check"
+    ],
+    "wind_gen": [
+      "Aerogenerador",
+      "check"
+    ],
+    "inverter": [
+      "Inversor de corriente",
+      "check"
+    ],
+    "battery_monitor": [
+      "Monitor de baterías / shunt",
+      "check"
+    ],
+    "main_switches": [
+      "Desconectadores y barras de distribución",
+      "check"
+    ],
+    "dc_panel": [
+      "Cuadro eléctrico y fusibles (12/24 V)",
+      "check"
+    ],
+    "dc_wiring": [
+      "Cableado y terminales (12/24 V)",
+      "check"
+    ],
+    "galvanic_isolator": [
+      "Aislador galvánico",
+      "check"
+    ],
+    "interior_lighting": [
+      "Iluminación interior",
+      "check"
+    ],
+    "dc_dc_charger": [
+      "Cargador DC-DC",
+      "check"
+    ],
+    "bonding_system": [
+      "Sistema de equipotencialidad y barra de masa",
+      "check"
+    ],
+    "hydrogenerator": [
+      "Hidrogenerador",
+      "check"
+    ],
+    "shore_cable": [
+      "Cable de conexión a pantalán y clavija",
+      "check"
+    ],
+    "shore_inlet": [
+      "Toma de corriente de pantalán",
+      "check"
+    ],
+    "rcd_elcb": [
+      "Prueba del diferencial",
+      "check"
+    ],
+    "isolation_transformer": [
+      "Transformador de aislamiento",
+      "check"
+    ],
+    "ac_outlets": [
+      "Enchufes y toma de tierra (230/120 V)",
+      "check"
+    ],
+    "bilge_pump_auto": [
+      "Bomba de achique automática",
+      "check"
+    ],
+    "bilge_float_switch": [
+      "Interruptor de flotador de sentina",
+      "check"
+    ],
+    "bilge_pump_manual": [
+      "Bomba de achique manual",
+      "check"
+    ],
+    "bilge_emergency_pump": [
+      "Bomba de achique de emergencia de alto caudal",
+      "check"
+    ],
+    "bilge_hoses": [
+      "Mangueras de achique y válvulas antirretorno",
+      "check"
+    ],
+    "bilge_alarm": [
+      "Alarma de nivel alto de sentina",
+      "check"
+    ],
+    "bilge_cleanliness": [
+      "Limpieza de sentina",
+      "check"
+    ],
+    "water_tank": [
+      "Depósito de agua dulce",
+      "check"
+    ],
+    "water_tank_sanitise": [
+      "Limpieza y desinfección del depósito de agua",
+      "check"
+    ],
+    "water_pump": [
+      "Grupo de presión y acumulador",
+      "check"
+    ],
+    "water_filter": [
+      "Filtro de agua / esterilizador UV",
+      "check"
+    ],
+    "water_pipes": [
+      "Tuberías y racores de agua",
+      "check"
+    ],
+    "galley_foot_pump": [
+      "Bomba de pie de la cocina",
+      "check"
+    ],
+    "water_heater": [
+      "Calentador de agua (termo)",
+      "check"
+    ],
+    "water_heater_anode": [
+      "Ánodo del calentador",
+      "check"
+    ],
+    "watermaker": [
+      "Potabilizadora",
+      "check"
+    ],
+    "watermaker_prefilters": [
+      "Prefiltros de la potabilizadora",
+      "check"
+    ],
+    "watermaker_membrane": [
+      "Membrana y conservación de la potabilizadora",
+      "check"
+    ],
+    "raw_water_pump_deck": [
+      "Bomba de baldeo (agua de mar)",
+      "check"
+    ],
+    "heads_pump": [
+      "Bomba del WC y válvula joker",
+      "check"
+    ],
+    "heads_hoses": [
+      "Mangueras sanitarias",
+      "check"
+    ],
+    "holding_tank": [
+      "Depósito de aguas negras",
+      "check"
+    ],
+    "macerator": [
+      "Macerador y toma de vaciado en cubierta",
+      "check"
+    ],
+    "shower_sump": [
+      "Sumidero y bomba de la ducha",
+      "check"
+    ],
+    "drains_scuppers": [
+      "Desagües e imbornales",
+      "check"
+    ],
+    "gas_bottles": [
+      "Bombonas de gas y cofre",
+      "check"
+    ],
+    "gas_regulator": [
+      "Regulador de gas",
+      "check"
+    ],
+    "gas_hoses": [
+      "Mangueras de gas",
+      "check"
+    ],
+    "gas_solenoid": [
+      "Electroválvula de corte de gas",
+      "check"
+    ],
+    "gas_detector": [
+      "Detector de gas",
+      "check"
+    ],
+    "gas_leak_test": [
+      "Prueba de estanqueidad del gas (manómetro)",
+      "check"
+    ],
+    "gas_locker_drain": [
+      "Desagüe del cofre de gas",
+      "check"
+    ],
+    "mast": [
+      "Mástil",
+      "check"
+    ],
+    "mast_step": [
+      "Carlinga y fogonadura",
+      "check"
+    ],
+    "spreaders": [
+      "Crucetas",
+      "check"
+    ],
+    "masthead": [
+      "Tope de palo, roldanas y herrajes",
+      "check"
+    ],
+    "mast_wiring": [
+      "Cableado del mástil y conducto",
+      "check"
+    ],
+    "shrouds": [
+      "Obenques (altos, bajos, intermedios)",
+      "check"
+    ],
+    "forestay": [
+      "Estay de proa",
+      "check"
+    ],
+    "backstay": [
+      "Backstay (estay de popa)",
+      "check"
+    ],
+    "turnbuckles": [
+      "Tensores y pasadores",
+      "check"
+    ],
+    "chainplates": [
+      "Cadenotes",
+      "check"
+    ],
+    "wire_terminals": [
+      "Terminales de jarcia (prensados / mecánicos)",
+      "check"
+    ],
+    "rig_replacement": [
+      "Sustitución completa de la jarcia firme",
+      "check"
+    ],
+    "mast_climb_inspection": [
+      "Revisión de la jarcia en altura",
+      "check"
+    ],
+    "headsail_furler": [
+      "Enrollador de génova",
+      "check"
+    ],
+    "inner_forestay": [
+      "Estay de trinqueta / babystay",
+      "check"
+    ],
+    "running_backstays": [
+      "Burdas volantes / checkstays",
+      "check"
+    ],
+    "boom": [
+      "Botavara y pinzote",
+      "check"
+    ],
+    "vang": [
+      "Contra (trapa)",
+      "check"
+    ],
+    "spinnaker_pole": [
+      "Tangón de spinnaker / de génova",
+      "check"
+    ],
+    "halyards": [
+      "Drizas",
+      "check"
+    ],
+    "sheets": [
+      "Escotas",
+      "check"
+    ],
+    "control_lines": [
+      "Cabos de rizo, amantillo y cunningham",
+      "check"
+    ],
+    "blocks": [
+      "Poleas",
+      "check"
+    ],
+    "clutches": [
+      "Mordazas (stoppers)",
+      "check"
+    ],
+    "tracks_cars": [
+      "Carriles y carros de génova",
+      "check"
+    ],
+    "winches": [
+      "Winches",
+      "check"
+    ],
+    "winch_handles": [
+      "Manivelas de winche y soportes",
+      "check"
+    ],
+    "mainsheet_traveler": [
+      "Carro y barra de escota mayor",
+      "check"
+    ],
+    "code_zero_furler": [
+      "Enrollador de Code Zero (cabo sin fin)",
+      "check"
+    ],
+    "mainsail": [
+      "Vela mayor",
+      "check"
+    ],
+    "main_battens": [
+      "Sables y carros de sable",
+      "check"
+    ],
+    "reefing": [
+      "Sistema de rizos",
+      "check"
+    ],
+    "headsail": [
+      "Vela de proa / génova",
+      "check"
+    ],
+    "headsail_uv": [
+      "Banda de protección UV",
+      "check"
+    ],
+    "spinnaker": [
+      "Spinnaker / gennaker",
+      "check"
+    ],
+    "snuffer": [
+      "Calcetín",
+      "check"
+    ],
+    "storm_sails": [
+      "Tormentín y vela de capa",
+      "check"
+    ],
+    "sail_covers": [
+      "Funda de botavara / lazy bag y lazy jacks",
+      "check"
+    ],
+    "sail_service": [
+      "Revisión en la velería",
+      "check"
+    ],
+    "sail_wash": [
+      "Lavado y almacenaje en seco de las velas",
+      "check"
+    ],
+    "primary_anchor": [
+      "Ancla principal",
+      "check"
+    ],
+    "secondary_anchor": [
+      "Anclote / ancla secundaria",
+      "check"
+    ],
+    "anchor_chain": [
+      "Cadena del ancla",
+      "check"
+    ],
+    "chain_end_for_end": [
+      "Invertir la cadena del ancla",
+      "check"
+    ],
+    "chain_markings": [
+      "Marcas de longitud de la cadena",
+      "check"
+    ],
+    "anchor_swivel": [
+      "Giratorio y grilletes del ancla",
+      "check"
+    ],
+    "bitter_end": [
+      "Amarre del chicote de la cadena",
+      "check"
+    ],
+    "windlass": [
+      "Molinete",
+      "check"
+    ],
+    "windlass_contactor": [
+      "Contactor y mandos del molinete",
+      "check"
+    ],
+    "windlass_manual": [
+      "Manivela de emergencia del molinete",
+      "check"
+    ],
+    "anchor_locker": [
+      "Pozo de anclas y desagüe",
+      "check"
+    ],
+    "snubber": [
+      "Gaza de fondeo / brida",
+      "check"
+    ],
+    "mooring_cleats": [
+      "Cornamusas, guías y bitas",
+      "check"
+    ],
+    "boat_hook": [
+      "Bichero",
+      "check"
+    ],
+    "mooring_snubbers": [
+      "Amortiguadores de amarre",
+      "check"
+    ],
+    "passerelle": [
+      "Pasarela",
+      "check"
+    ],
+    "mooring_lines": [
+      "Amarras y springs",
+      "check"
+    ],
+    "fenders": [
+      "Defensas y tablas de defensas",
+      "check"
+    ],
+    "windlass_clutch": [
+      "Embrague y cono de fricción del molinete",
+      "check"
+    ],
+    "anchor_bridle_hook": [
+      "Gancho de cadena de la brida",
+      "check"
+    ],
+    "safety_padeyes": [
+      "Cáncamos de seguridad y contraplacas",
+      "check"
+    ],
+    "liferaft": [
+      "Balsa salvavidas",
+      "check"
+    ],
+    "liferaft_hru": [
+      "Zafa hidrostática de la balsa",
+      "check"
+    ],
+    "lifejackets": [
+      "Chalecos salvavidas",
+      "check"
+    ],
+    "lifejacket_cylinders": [
+      "Botellas de CO2 y pastillas de disparo",
+      "check"
+    ],
+    "harnesses_tethers": [
+      "Arneses y líneas de anclaje",
+      "check"
+    ],
+    "jackstays": [
+      "Líneas de vida y puntos de anclaje",
+      "check"
+    ],
+    "mob_equipment": [
+      "Equipo de hombre al agua (percha IOR, herradura, lifesling)",
+      "check"
+    ],
+    "epirb": [
+      "Radiobaliza (EPIRB / PLB)",
+      "check"
+    ],
+    "epirb_battery": [
+      "Batería de la radiobaliza",
+      "check"
+    ],
+    "epirb_registration": [
+      "Registro de la radiobaliza y contactos",
+      "check"
+    ],
+    "flares": [
+      "Bengalas y pirotecnia",
+      "check"
+    ],
+    "grab_bag": [
+      "Bolsa de abandono (grab bag)",
+      "check"
+    ],
+    "fire_extinguishers": [
+      "Extintores",
+      "check"
+    ],
+    "engine_fire_system": [
+      "Sistema automático de extinción de la cámara del motor",
+      "check"
+    ],
+    "fire_blanket": [
+      "Manta ignífuga",
+      "check"
+    ],
+    "co_smoke_detector": [
+      "Detectores de CO y humo",
+      "check"
+    ],
+    "first_aid": [
+      "Botiquín",
+      "check"
+    ],
+    "emergency_tools": [
+      "Herramientas de corte de emergencia (cizalla, sierra)",
+      "check"
+    ],
+    "damage_control": [
+      "Kit de control de vías de agua",
+      "check"
+    ],
+    "radar_reflector": [
+      "Reflector de radar",
+      "check"
+    ],
+    "sart": [
+      "Respondedor SART / AIS-SART",
+      "check"
+    ],
+    "sound_signals": [
+      "Señales acústicas (bocina, campana, silbato)",
+      "check"
+    ],
+    "drogue": [
+      "Ancla de retención (por popa)",
+      "check"
+    ],
+    "sea_anchor": [
+      "Ancla de capa (paracaídas)",
+      "check"
+    ],
+    "emergency_plan": [
+      "Instrucciones de seguridad y plan de emergencia",
+      "check"
+    ],
+    "emergency_vhf_antenna": [
+      "Antena VHF de emergencia",
+      "check"
+    ],
+    "pelican_hooks": [
+      "Ganchos pelícano de los guardamancebos",
+      "check"
+    ],
+    "rigging_shears": [
+      "Cizalla de emergencia para jarcia",
+      "check"
+    ],
+    "chartplotter": [
+      "Plóter",
+      "check"
+    ],
+    "chart_updates": [
+      "Actualización de cartas",
+      "check"
+    ],
+    "paper_charts": [
+      "Cartas de papel y derroteros",
+      "check"
+    ],
+    "radar": [
+      "Radar",
+      "check"
+    ],
+    "ais": [
+      "Transpondedor AIS",
+      "check"
+    ],
+    "vhf": [
+      "VHF y LSD",
+      "check"
+    ],
+    "vhf_antenna": [
+      "Antena VHF y cable coaxial",
+      "check"
+    ],
+    "handheld_vhf": [
+      "VHF portátil y batería",
+      "check"
+    ],
+    "satcom": [
+      "Comunicación por satélite / Starlink",
+      "check"
+    ],
+    "ssb": [
+      "Radio BLU / onda corta",
+      "check"
+    ],
+    "transducers": [
+      "Transductores de sonda y corredera",
+      "check"
+    ],
+    "wind_instrument": [
+      "Anemómetro y sensor de tope de palo",
+      "check"
+    ],
+    "compass": [
+      "Compás magnético y tablilla de desvíos",
+      "check"
+    ],
+    "autopilot": [
+      "Piloto automático",
+      "check"
+    ],
+    "autopilot_drive": [
+      "Unidad de potencia del piloto automático",
+      "check"
+    ],
+    "nmea_network": [
+      "Red de instrumentos y conectores",
+      "check"
+    ],
+    "nav_lights": [
+      "Luces de navegación",
+      "check"
+    ],
+    "anchor_light": [
+      "Luz de fondeo y luz de tope",
+      "check"
+    ],
+    "deck_light": [
+      "Foco de cubierta y proyector",
+      "check"
+    ],
+    "nav_instruments": [
+      "Prismáticos, barómetro, reloj",
+      "check"
+    ],
+    "diesel_heater": [
+      "Calefacción diésel",
+      "check"
+    ],
+    "heater_exhaust": [
+      "Escape y conductos de la calefacción",
+      "check"
+    ],
+    "solid_fuel_stove": [
+      "Estufa de combustible sólido / queroseno y chimenea",
+      "check"
+    ],
+    "aircon": [
+      "Aire acondicionado",
+      "check"
+    ],
+    "aircon_pump": [
+      "Bomba de agua salada y filtro del aire acondicionado",
+      "check"
+    ],
+    "stove": [
+      "Cocina y horno",
+      "check"
+    ],
+    "stove_gimbal": [
+      "Cardán y barandillas de la cocina",
+      "check"
+    ],
+    "fridge": [
+      "Nevera y congelador",
+      "check"
+    ],
+    "fridge_seals": [
+      "Nevera: juntas, aislamiento, desagüe",
+      "check"
+    ],
+    "sink_taps": [
+      "Fregadero, grifos, filtro",
+      "check"
+    ],
+    "interior_joinery": [
+      "Carpintería interior, techo y panas",
+      "check"
+    ],
+    "condensation": [
+      "Aislamiento y control de condensación",
+      "check"
+    ],
+    "ventilation": [
+      "Ventilación, manguerotes dorade, ventiladores",
+      "check"
+    ],
+    "berths": [
+      "Literas, colchones y ventilación inferior",
+      "check"
+    ],
+    "doors_catches": [
+      "Puertas, pestillos, bisagras, trancas",
+      "check"
+    ],
+    "washing_machine": [
+      "Lavadora y lavavajillas",
+      "check"
+    ],
+    "entertainment": [
+      "Audio, TV, antena",
+      "check"
+    ],
+    "tender_hull": [
+      "Casco y flotadores de la auxiliar",
+      "check"
+    ],
+    "tender_valves": [
+      "Válvulas y presión de la auxiliar",
+      "check"
+    ],
+    "tender_repair_kit": [
+      "Kit de reparación, pegamento, hinchador, remos",
+      "check"
+    ],
+    "tender_outboard": [
+      "Fueraborda de la auxiliar",
+      "check"
+    ],
+    "davits": [
+      "Pescantes y aparejo de izado",
+      "check"
+    ],
+    "tender_security": [
+      "Estiba, funda y antirrobo de la auxiliar",
+      "check"
+    ],
+    "tender_registration": [
+      "Matrícula de la auxiliar",
+      "check"
+    ],
+    "trailer_bearings": [
+      "Rodamientos de las ruedas",
+      "check"
+    ],
+    "trailer_brakes": [
+      "Frenos y líquido de frenos",
+      "check"
+    ],
+    "trailer_tires": [
+      "Neumáticos y rueda de repuesto",
+      "check"
+    ],
+    "trailer_lights": [
+      "Luces y conector",
+      "check"
+    ],
+    "trailer_winch": [
+      "Torno y cincha",
+      "check"
+    ],
+    "trailer_rollers": [
+      "Rodillos, apoyo de quilla y patines",
+      "check"
+    ],
+    "trailer_coupling": [
+      "Enganche, cable de seguridad, rueda jockey",
+      "check"
+    ],
+    "trailer_frame": [
+      "Chasis: corrosión y soldaduras",
+      "check"
+    ],
+    "trailer_documents": [
+      "Matrícula e ITV del remolque",
+      "check"
+    ],
+    "registration": [
+      "Matrícula / pabellón",
+      "check"
+    ],
+    "insurance": [
+      "Seguro",
+      "check"
+    ],
+    "radio_licence": [
+      "Licencia de estación de barco y MMSI",
+      "check"
+    ],
+    "operator_licence": [
+      "Titulación náutica (ICC, operador VHF)",
+      "check"
+    ],
+    "national_inspection": [
+      "Inspección técnica (ITB)",
+      "check"
+    ],
+    "marina_contract": [
+      "Contrato de amarre / invernaje",
+      "check"
+    ],
+    "vat_customs": [
+      "Estado del IVA y documentos de aduana",
+      "check"
+    ],
+    "ce_certificate": [
+      "Certificado CE y manuales",
+      "check"
+    ],
+    "survey": [
+      "Última peritación",
+      "check"
+    ],
+    "warranties": [
+      "Garantías",
+      "check"
+    ],
+    "ships_log": [
+      "Cuaderno de bitácora",
+      "check"
+    ]
+  },
+  "checklists": {
+    "chk_winterize": [
+      "Invernaje",
+      "check"
+    ],
+    "chk_wz_engine_oil": [
+      "Cambiar aceite y filtro del motor antes del invernaje, no en primavera",
+      "check"
+    ],
+    "chk_wz_gearbox_oil": [
+      "Cambiar el aceite del inversor",
+      "check"
+    ],
+    "chk_wz_saildrive_oil": [
+      "Cambiar el aceite del saildrive y comprobar si tiene agua",
+      "check"
+    ],
+    "chk_wz_fuel_prefilter": [
+      "Cambiar el prefiltro y purgar el agua del vaso decantador",
+      "check"
+    ],
+    "chk_wz_fuel_full": [
+      "Llenar el depósito hasta un 95 % y añadir estabilizador o biocida",
+      "check"
+    ],
+    "chk_wz_raw_flush": [
+      "Enjuagar el circuito de agua salada con agua dulce",
+      "check"
+    ],
+    "chk_wz_raw_antifreeze": [
+      "Aspirar anticongelante por el circuito de agua salada hasta que salga por el escape",
+      "check"
+    ],
+    "chk_wz_coolant_check": [
+      "Comprobar la concentración de anticongelante en el circuito cerrado",
+      "check"
+    ],
+    "chk_wz_impeller_out": [
+      "Desmontar el impulsor, lavarlo, engrasarlo con silicona y guardarlo en una bolsa junto a la bomba; poner un aviso en el puesto de gobierno para que nadie arranque el motor",
+      "check"
+    ],
+    "chk_wz_stuffing_box": [
+      "Engrasar el prensaestopas o comprobar la fecha del fuelle del cierre seco",
+      "check"
+    ],
+    "chk_wz_ob_flush": [
+      "Enjuagar el fueraborda, nebulizar los cilindros y dejar consumir el combustible del carburador",
+      "check"
+    ],
+    "chk_wz_ob_gearcase": [
+      "Cambiar el aceite de la cola; un aceite lechoso indica un retén dañado",
+      "check"
+    ],
+    "chk_wz_water_drain": [
+      "Vaciar depósitos y tuberías o llenarlos con anticongelante apto para agua potable",
+      "check"
+    ],
+    "chk_wz_water_heater": [
+      "Vaciar el calentador y aislarlo con un bypass",
+      "check"
+    ],
+    "chk_wz_heads": [
+      "Cerrar el grifo de fondo de entrada del WC, meter la manguera de entrada en propilenglicol rosa y bombearlo por la taza hasta el depósito",
+      "check"
+    ],
+    "chk_wz_holding": [
+      "Vaciar y enjuagar el depósito de aguas negras",
+      "check"
+    ],
+    "chk_wz_bilge": [
+      "Achicar la sentina hasta dejarla seca y limpiarla; el agua que quede se congela",
+      "check"
+    ],
+    "chk_wz_watermaker": [
+      "Conservar la membrana (pickling)",
+      "check"
+    ],
+    "chk_wz_batteries": [
+      "Cargar a fondo; después llevarlas a tierra o dejarlas con un cargador de mantenimiento",
+      "check"
+    ],
+    "chk_wz_terminals": [
+      "Limpiar y engrasar los bornes",
+      "check"
+    ],
+    "chk_wz_switches": [
+      "Desconectar todo salvo la bomba de achique si el barco se queda a flote",
+      "check"
+    ],
+    "chk_wz_shore": [
+      "Revisar el cable y la toma de pantalán por si hay daños de calor antes de dejarlos con tensión todo el invierno",
+      "check"
+    ],
+    "chk_wz_wash": [
+      "Limpiar el casco a presión nada más sacarlo, antes de que se seque la incrustación",
+      "check"
+    ],
+    "chk_wz_anodes_note": [
+      "Fotografiar los ánodos y anotar cuánto queda",
+      "check"
+    ],
+    "chk_wz_seacocks_open": [
+      "Dejar todos los grifos de fondo semiabiertos, no del todo: una válvula de bola en cualquiera de sus extremos retiene agua en el asiento, y eso es lo que revienta el cuerpo",
+      "check"
+    ],
+    "chk_wz_seacocks_shut": [
+      "Cerrar todos los grifos de fondo salvo los que necesita la bomba de achique",
+      "check"
+    ],
+    "chk_wz_transducer": [
+      "Extraer la rueda de paletas de la corredera y colocar el tapón ciego",
+      "check"
+    ],
+    "chk_wz_rudder": [
+      "Comprobar la holgura de los cojinetes del timón y anotar el valor para compararlo",
+      "check"
+    ],
+    "chk_wz_sails_off": [
+      "Desenvergar las velas y secarlas del todo antes de plegarlas",
+      "check"
+    ],
+    "chk_wz_sail_service": [
+      "Llevar ahora a la velería lo que haya que coser, no en abril",
+      "check"
+    ],
+    "chk_wz_halyards": [
+      "Lavar las drizas, sustituirlas por guías y guardarlas secas",
+      "check"
+    ],
+    "chk_wz_furler": [
+      "Enjuagar el enrollador con agua dulce y girarlo en todo su recorrido",
+      "check"
+    ],
+    "chk_wz_rig_slack": [
+      "Aflojar un poco la jarcia si el mástil se queda arbolado",
+      "check"
+    ],
+    "chk_wz_lines": [
+      "Lavar y secar amarras y defensas; guardarlas lejos del sol",
+      "check"
+    ],
+    "chk_wz_chain": [
+      "Lavar la cadena e invertirla si el extremo de trabajo está gastado",
+      "check"
+    ],
+    "chk_wz_gas_off": [
+      "Cerrar la bombona, desconectarla y comprobar que el desagüe del cofre está libre",
+      "check"
+    ],
+    "chk_wz_fridge": [
+      "Vaciar la nevera y dejar la puerta abierta",
+      "check"
+    ],
+    "chk_wz_soft": [
+      "Llevar a tierra cojines, sacos de velas y todo lo que retenga humedad",
+      "check"
+    ],
+    "chk_wz_vent": [
+      "Dejar ventilación o un deshumidificador; un barco cerrado a cal y canto cría moho",
+      "check"
+    ],
+    "chk_wz_expiry": [
+      "Anotar todo lo que caduca antes de la próxima temporada: seguro, balsa, bengalas",
+      "check"
+    ],
+    "chk_commission": [
+      "Puesta a punto de primavera",
+      "check"
+    ],
+    "chk_cm_hoses": [
+      "Apretar cada manguera bajo la flotación y comprobar las dos abrazaderas de cada una",
+      "check"
+    ],
+    "chk_cm_seacocks": [
+      "Accionar cada grifo de fondo, engrasarlo y cerrarlos todos antes de la botadura",
+      "check"
+    ],
+    "chk_cm_anodes": [
+      "Cambiar los ánodos gastados al 50 % o más, sin patente ni grasa sobre ellos ni sobre sus superficies de contacto",
+      "check"
+    ],
+    "chk_cm_shaft_anode": [
+      "Cambiar el ánodo del eje",
+      "check"
+    ],
+    "chk_cm_saildrive_anode": [
+      "Cambiar el ánodo del saildrive y comprobar la fecha de la membrana",
+      "check"
+    ],
+    "chk_cm_antifouling": [
+      "Dar patente; enmascarar los ánodos y la cara del transductor",
+      "check"
+    ],
+    "chk_cm_keel_joint": [
+      "Revisar la unión quilla-casco en busca de una grieta que se abra",
+      "check"
+    ],
+    "chk_cm_rudder": [
+      "Comparar la holgura del timón con el valor anotado en el invernaje",
+      "check"
+    ],
+    "chk_cm_gelcoat": [
+      "Pulir y encerar el francobordo",
+      "check"
+    ],
+    "chk_cm_drain_plug": [
+      "Poner el tapón de achique del espejo y tirar de él a mano; llevar uno de repuesto",
+      "check"
+    ],
+    "chk_cm_transducer": [
+      "Volver a colocar la rueda de paletas; comprobar que se ha quitado el tapón ciego antes de botar",
+      "check"
+    ],
+    "chk_cm_impeller": [
+      "Montar un impulsor nuevo y contar las paletas del viejo",
+      "check"
+    ],
+    "chk_cm_oil_check": [
+      "Comprobar el nivel de aceite y si tiene agua",
+      "check"
+    ],
+    "chk_cm_fuel_filter": [
+      "Cambiar el filtro fino y purgar el sistema de combustible",
+      "check"
+    ],
+    "chk_cm_coolant": [
+      "Rellenar refrigerante y comprobar la concentración de anticongelante",
+      "check"
+    ],
+    "chk_cm_belt": [
+      "Comprobar la tensión de la correa y si hay polvo negro debajo",
+      "check"
+    ],
+    "chk_cm_first_start": [
+      "Primer arranque: el agua debe salir por el escape en 15 segundos; si no, parar",
+      "check"
+    ],
+    "chk_cm_leak_check": [
+      "Levantar las panas mientras el barco sigue en las eslingas: revisar si gotean los grifos de fondo, el pasacascos de la corredera y el prensaestopas",
+      "check"
+    ],
+    "chk_cm_bilge_pumps": [
+      "Probar las dos bombas de achique y levantar a mano el flotador",
+      "check"
+    ],
+    "chk_cm_bilge_alarm": [
+      "Probar la alarma de nivel alto de sentina; es lo único que te despierta",
+      "check"
+    ],
+    "chk_cm_watermaker_isolate": [
+      "Aislar la potabilizadora antes de clorar los depósitos: el cloro libre destruye la membrana con unas pocas ppm y no se recupera",
+      "check"
+    ],
+    "chk_cm_water_sanitise": [
+      "Llenar y desinfectar el sistema de agua dulce y luego enjuagarlo dos veces",
+      "check"
+    ],
+    "chk_cm_water_heater": [
+      "Volver a conectar el calentador al circuito y revisar si hay fugas",
+      "check"
+    ],
+    "chk_cm_heads": [
+      "Enjuagar el anticongelante del WC y revisar la válvula joker",
+      "check"
+    ],
+    "chk_cm_watermaker": [
+      "Desconservar la membrana y desechar el agua producida hasta que sepa limpia",
+      "check"
+    ],
+    "chk_cm_gas_leak": [
+      "Conectar la bombona y comprobar cada unión con agua jabonosa",
+      "check"
+    ],
+    "chk_cm_safety_list": [
+      "Hacer la revisión de seguridad completa, no solo las tres cosas que se recuerdan",
+      "check"
+    ],
+    "chk_cm_rig_walk": [
+      "Revisar la jarcia: cada pasador en su sitio y encintado, cada terminal limpio",
+      "check"
+    ],
+    "chk_cm_masthead": [
+      "Subir al palo o encargarlo: revisar roldanas, cableado y sensor de viento",
+      "check"
+    ],
+    "chk_cm_halyards": [
+      "Volver a pasar las drizas y revisar rozaduras en las roldanas",
+      "check"
+    ],
+    "chk_cm_sails_on": [
+      "Envergar las velas y probar cada rizo en el amarre, no en el mar",
+      "check"
+    ],
+    "chk_cm_nav_lights": [
+      "Probar todas las luces de navegación, también las que nunca se usan",
+      "check"
+    ],
+    "chk_cm_vhf": [
+      "Hacer una prueba de radio VHF y probar el botón de socorro LSD en modo de prueba",
+      "check"
+    ],
+    "chk_cm_charts": [
+      "Actualizar las cartas antes de la primera travesía, no durante ella",
+      "check"
+    ],
+    "chk_cm_insurance": [
+      "Comprobar que el seguro cubre la zona de navegación que realmente se va a usar",
+      "check"
+    ],
+    "chk_safety": [
+      "Revisión de seguridad",
+      "check"
+    ],
+    "chk_sf_liferaft": [
+      "Comprobar la fecha de revisión y que la boza está firme a un punto resistente, no al guardamancebos",
+      "check"
+    ],
+    "chk_sf_liferaft_hru": [
+      "Leer la fecha grabada en el lateral de la zafa hidrostática y anotarla",
+      "check"
+    ],
+    "chk_sf_grab_bag": [
+      "Abrir la bolsa de abandono, revisar las fechas de dentro y dejarla a mano",
+      "check"
+    ],
+    "chk_sf_plan": [
+      "Instruir a la tripulación: hombre al agua, incendio, vía de agua, abandono del barco, y decir dónde está cada cosa",
+      "check"
+    ],
+    "chk_sf_lifejackets": [
+      "Revisar cada chaleco: cámara, cinchas, perneras, silbato, luz",
+      "check"
+    ],
+    "chk_sf_lj_cylinders": [
+      "Pesar cada botella de CO2 en una báscula de cocina y compararla con el peso bruto grabado; anotar la fecha más próxima de las pastillas de disparo",
+      "check"
+    ],
+    "chk_sf_harnesses": [
+      "Tirar fuerte de cada costura, cambiar lo que esté descolorido por el sol y anotar la fecha de la etiqueta",
+      "check"
+    ],
+    "chk_sf_jackstays": [
+      "Revisar las líneas de vida de punta a punta y sus puntos de anclaje",
+      "check"
+    ],
+    "chk_sf_pelican": [
+      "Accionar los ganchos pelícano de la puerta del guardamancebos; la sal los agarrota",
+      "check"
+    ],
+    "chk_sf_mob": [
+      "Comprobar la luz de la percha IOR, la sujeción de la herradura y que el lifesling se despliega de verdad",
+      "check"
+    ],
+    "chk_sf_epirb": [
+      "Hacer el autotest de la radiobaliza y comprobar que está bien colocada en su soporte",
+      "check"
+    ],
+    "chk_sf_epirb_battery": [
+      "Comprobar la caducidad de la batería; el cambio se hace en un servicio técnico, así que pedir cita con antelación",
+      "check"
+    ],
+    "chk_sf_epirb_reg": [
+      "Confirmar el registro y los contactos de emergencia; anotar la caducidad del certificado de registro",
+      "check"
+    ],
+    "chk_sf_sart": [
+      "Hacer el autotest del SART y anotar la fecha de la batería de la etiqueta",
+      "check"
+    ],
+    "chk_sf_flares": [
+      "Comprobar que ninguna bengala está caducada y saber dónde se entregan las caducadas",
+      "check"
+    ],
+    "chk_sf_radar_reflector": [
+      "Comprobar que el reflector está montado como indica el fabricante, no simplemente atado",
+      "check"
+    ],
+    "chk_sf_emerg_antenna": [
+      "Revisar la antena de emergencia y que su conector encaja de verdad en la radio de a bordo",
+      "check"
+    ],
+    "chk_sf_sound": [
+      "Probar la bocina; comprobar que la campana y el silbato están a bordo y no en casa",
+      "check"
+    ],
+    "chk_sf_extinguishers": [
+      "Comprobar que cada manómetro está en verde; anotar la fecha más próxima del cuello o la etiqueta",
+      "check"
+    ],
+    "chk_sf_engine_fire": [
+      "Anotar la fecha de la etiqueta de la botella; comprobar que la boquilla de descarga no está tapada",
+      "check"
+    ],
+    "chk_sf_blower": [
+      "Poner en marcha el extractor y notar la salida con la mano; comprobar que el conducto no se ha soltado",
+      "check"
+    ],
+    "chk_sf_fire_blanket": [
+      "Comprobar que la manta ignífuga está al alcance de la cocina, y no detrás de ella",
+      "check"
+    ],
+    "chk_sf_co_smoke": [
+      "Probar los detectores y anotar la fecha del sensor de la parte trasera; caduca el sensor, no solo la pila",
+      "check"
+    ],
+    "chk_sf_tiller": [
+      "Sacar la caña de emergencia, montarla en la mecha y gobernar con ella",
+      "check"
+    ],
+    "chk_sf_bungs": [
+      "Comprobar que junto a cada grifo de fondo cuelga un espiche cónico del tamaño adecuado, no en una taquilla",
+      "check"
+    ],
+    "chk_sf_damage_control": [
+      "Revisar el kit de vías de agua: parche blando, cinta, cuñas",
+      "check"
+    ],
+    "chk_sf_emergency_tools": [
+      "Comprobar que las herramientas de corte están donde la tripulación las encuentre a oscuras",
+      "check"
+    ],
+    "chk_sf_rigging_shears": [
+      "Comprobar que la cizalla corta y que todos a bordo saben dónde está",
+      "check"
+    ],
+    "chk_sf_first_aid": [
+      "Reponer el botiquín y anotar la fecha del medicamento que caduque antes",
+      "check"
+    ],
+    "chk_sf_drogue": [
+      "Desplegar el ancla de retención; revisar la brida y los puntos que carga (se larga por popa, no por proa)",
+      "check"
+    ],
+    "chk_sf_sea_anchor": [
+      "Desplegar el ancla de capa; revisar el cabo, el giratorio y el cabo de recuperación",
+      "check"
+    ],
+    "chk_predeparture": [
+      "Antes de zarpar",
+      "check"
+    ],
+    "chk_pd_drain_plug": [
+      "Tapón de achique puesto y comprobado a mano",
+      "check"
+    ],
+    "chk_pd_seacocks": [
+      "Grifos de fondo del motor y del WC abiertos",
+      "check"
+    ],
+    "chk_pd_oil": [
+      "Aceite leído en la varilla y refrigerante en el vaso de expansión, no de memoria",
+      "check"
+    ],
+    "chk_pd_bilge": [
+      "Sentina seca y nada que bloquee el flotador",
+      "check"
+    ],
+    "chk_pd_blower": [
+      "Extractor en marcha cuatro minutos y sentina olida antes de arrancar",
+      "check"
+    ],
+    "chk_pd_fuel": [
+      "Combustible para ir, volver y un tercio más comprobado; llaves en posición",
+      "check"
+    ],
+    "chk_pd_lights": [
+      "Luces de navegación probadas si hay alguna posibilidad de volver de noche",
+      "check"
+    ],
+    "chk_pd_lines": [
+      "Amarras listas para largar y defensas donde vayan a hacer falta",
+      "check"
+    ]
+  },
+  "specHints": {
+    "Actuator type": [
+      "Tipo de actuador",
+      "check"
+    ],
+    "Alarm threshold (°C)": [
+      "Umbral de alarma (°C)",
+      "check"
+    ],
+    "Anode part no": [
+      "Ref. del ánodo",
+      "check"
+    ],
+    "Application date": [
+      "Fecha de aplicación",
+      "check"
+    ],
+    "Batten count": [
+      "Número de sables",
+      "check"
+    ],
+    "Battery expiry": [
+      "Caducidad de la batería",
+      "check"
+    ],
+    "Bearing kit": [
+      "Kit de cojinetes",
+      "check"
+    ],
+    "Bearing part no": [
+      "Ref. del cojinete",
+      "check"
+    ],
+    "Bellows part no": [
+      "Ref. del fuelle",
+      "check"
+    ],
+    "Belt or chain": [
+      "Correa o cadena",
+      "check"
+    ],
+    "Belt part no": [
+      "Ref. de la correa",
+      "check"
+    ],
+    "Belt size": [
+      "Medida de la correa",
+      "check"
+    ],
+    "Blades": [
+      "Palas",
+      "check"
+    ],
+    "Bolt count": [
+      "Número de pernos",
+      "check"
+    ],
+    "Bottle size": [
+      "Tamaño de la bombona",
+      "check"
+    ],
+    "Bulb types": [
+      "Tipos de bombilla",
+      "check"
+    ],
+    "Burner count": [
+      "Número de fuegos",
+      "check"
+    ],
+    "CCA": [
+      "Corriente de arranque en frío (CCA)",
+      "check"
+    ],
+    "CFM": [
+      "Caudal (CFM)",
+      "check"
+    ],
+    "Cable part no": [
+      "Ref. del cable",
+      "check"
+    ],
+    "Call sign": [
+      "Indicativo de llamada",
+      "check"
+    ],
+    "Capacity": [
+      "Capacidad",
+      "check"
+    ],
+    "Capacity (Ah)": [
+      "Capacidad (Ah)",
+      "check"
+    ],
+    "Capacity (L)": [
+      "Capacidad (l)",
+      "check"
+    ],
+    "Chemistry": [
+      "Tecnología (AGM / gel / LiFePO₄)",
+      "check"
+    ],
+    "Cloth": [
+      "Tejido",
+      "check"
+    ],
+    "Coats": [
+      "Número de manos",
+      "check"
+    ],
+    "Colour": [
+      "Color",
+      "check"
+    ],
+    "Compressor model": [
+      "Modelo de compresor",
+      "check"
+    ],
+    "Connector type": [
+      "Tipo de conector",
+      "check"
+    ],
+    "Contents list": [
+      "Lista de contenido",
+      "check"
+    ],
+    "Controller model": [
+      "Modelo de controlador",
+      "check"
+    ],
+    "Coolant capacity (L)": [
+      "Capacidad de refrigerante (l)",
+      "check"
+    ],
+    "Coolant spec": [
+      "Especificación del refrigerante",
+      "check"
+    ],
+    "Cooler make": [
+      "Fabricante del enfriador",
+      "check"
+    ],
+    "Count": [
+      "Cantidad",
+      "check"
+    ],
+    "Counts": [
+      "Cantidades",
+      "check"
+    ],
+    "Cruising area": [
+      "Zona de navegación",
+      "check"
+    ],
+    "Cylinder size": [
+      "Tamaño de la botella",
+      "check"
+    ],
+    "DOT date": [
+      "Fecha DOT",
+      "check"
+    ],
+    "Date": [
+      "Fecha",
+      "check"
+    ],
+    "Date stamped on hose": [
+      "Fecha impresa en la manguera",
+      "check"
+    ],
+    "Diameter": [
+      "Diámetro",
+      "check"
+    ],
+    "Diaphragm kit part no": [
+      "Ref. del kit de membrana",
+      "check"
+    ],
+    "Drive type": [
+      "Tipo de transmisión",
+      "check"
+    ],
+    "Duct condition": [
+      "Estado de los conductos",
+      "check"
+    ],
+    "Earliest medicine expiry": [
+      "Caducidad del medicamento más próximo",
+      "check"
+    ],
+    "Element W": [
+      "Resistencia (W)",
+      "check"
+    ],
+    "Element part no": [
+      "Ref. del elemento",
+      "check"
+    ],
+    "Exhaust gap": [
+      "Holgura de escape",
+      "check"
+    ],
+    "Expansion tank pressure": [
+      "Presión del vaso de expansión",
+      "check"
+    ],
+    "Expiry": [
+      "Caducidad",
+      "check"
+    ],
+    "Expiry date": [
+      "Fecha de caducidad",
+      "check"
+    ],
+    "Filter part no": [
+      "Ref. del filtro",
+      "check"
+    ],
+    "Fitted date": [
+      "Fecha de montaje",
+      "check"
+    ],
+    "Fitted year": [
+      "Año de montaje",
+      "check"
+    ],
+    "Flow (l/min)": [
+      "Caudal (l/min)",
+      "check"
+    ],
+    "Fluid spec": [
+      "Especificación del líquido",
+      "check"
+    ],
+    "Fuel type": [
+      "Tipo de combustible",
+      "check"
+    ],
+    "Fuse": [
+      "Fusible",
+      "check"
+    ],
+    "Fuse rating": [
+      "Amperaje del fusible",
+      "check"
+    ],
+    "Gap": [
+      "Separación",
+      "check"
+    ],
+    "Gasket part no": [
+      "Ref. de la junta",
+      "check"
+    ],
+    "Gearcase oil": [
+      "Aceite de la cola",
+      "check"
+    ],
+    "Gelcoat colour": [
+      "Color del gelcoat",
+      "check"
+    ],
+    "Glow plug part no": [
+      "Ref. de la bujía de precalentamiento",
+      "check"
+    ],
+    "Grade": [
+      "Grado",
+      "check"
+    ],
+    "Grease type": [
+      "Tipo de grasa",
+      "check"
+    ],
+    "Gypsy size": [
+      "Medida del barbotén",
+      "check"
+    ],
+    "Handheld VHF": [
+      "VHF portátil",
+      "check"
+    ],
+    "Height": [
+      "Altura",
+      "check"
+    ],
+    "Hex ID": [
+      "Hex ID",
+      "check"
+    ],
+    "Impeller part no": [
+      "Ref. del impulsor",
+      "check"
+    ],
+    "Install date": [
+      "Fecha de instalación",
+      "check"
+    ],
+    "Insurer": [
+      "Aseguradora",
+      "check"
+    ],
+    "Intake gap": [
+      "Holgura de admisión",
+      "check"
+    ],
+    "Key size": [
+      "Medida de la chaveta",
+      "check"
+    ],
+    "Last replaced": [
+      "Último cambio",
+      "check"
+    ],
+    "Length": [
+      "Longitud",
+      "check"
+    ],
+    "Lengths": [
+      "Longitudes",
+      "check"
+    ],
+    "Litres used": [
+      "Litros usados",
+      "check"
+    ],
+    "MMSI": [
+      "MMSI",
+      "check"
+    ],
+    "Make": [
+      "Fabricante",
+      "check"
+    ],
+    "Maker": [
+      "Fabricante",
+      "check"
+    ],
+    "Material": [
+      "Material",
+      "check"
+    ],
+    "Material (Zn / Al / Mg)": [
+      "Material (Zn / Al / Mg)",
+      "check"
+    ],
+    "Membrane part no": [
+      "Ref. de la membrana",
+      "check"
+    ],
+    "Micron": [
+      "Filtración (µm)",
+      "check"
+    ],
+    "Model": [
+      "Modelo",
+      "check"
+    ],
+    "Models": [
+      "Modelos",
+      "check"
+    ],
+    "Mount part no": [
+      "Ref. del soporte",
+      "check"
+    ],
+    "Next check": [
+      "Próxima revisión",
+      "check"
+    ],
+    "Next service due": [
+      "Próximo mantenimiento",
+      "check"
+    ],
+    "Number of chambers": [
+      "Número de cámaras",
+      "check"
+    ],
+    "Official number": [
+      "Número de matrícula",
+      "check"
+    ],
+    "Oil grade": [
+      "Viscosidad del aceite",
+      "check"
+    ],
+    "Oil quantity": [
+      "Cantidad de aceite",
+      "check"
+    ],
+    "Oil type": [
+      "Tipo de aceite",
+      "check"
+    ],
+    "Opening temp": [
+      "Temperatura de apertura",
+      "check"
+    ],
+    "Output (A)": [
+      "Corriente de salida (A)",
+      "check"
+    ],
+    "Packing size": [
+      "Sección de la empaquetadura",
+      "check"
+    ],
+    "Paint brand": [
+      "Marca de pintura",
+      "check"
+    ],
+    "Panel W": [
+      "Potencia del panel (W)",
+      "check"
+    ],
+    "Part number": [
+      "Referencia",
+      "check"
+    ],
+    "Pawl spring part no": [
+      "Ref. del muelle del trinquete",
+      "check"
+    ],
+    "Pitch": [
+      "Paso",
+      "check"
+    ],
+    "Plug type": [
+      "Tipo de bujía",
+      "check"
+    ],
+    "Policy no": [
+      "Número de póliza",
+      "check"
+    ],
+    "Polish product": [
+      "Producto de pulido",
+      "check"
+    ],
+    "Pre-filter micron": [
+      "Filtración del prefiltro (µm)",
+      "check"
+    ],
+    "Pressure": [
+      "Presión",
+      "check"
+    ],
+    "Pressure switch": [
+      "Presostato",
+      "check"
+    ],
+    "Probe part no": [
+      "Ref. de la sonda",
+      "check"
+    ],
+    "Propeller size": [
+      "Medida de la hélice",
+      "check"
+    ],
+    "Quantity": [
+      "Cantidad",
+      "check"
+    ],
+    "Quantity (L)": [
+      "Cantidad (l)",
+      "check"
+    ],
+    "Refrigerant": [
+      "Refrigerante",
+      "check"
+    ],
+    "Registered to": [
+      "Titular",
+      "check"
+    ],
+    "Registry": [
+      "Puerto de matrícula",
+      "check"
+    ],
+    "Rigger": [
+      "Aparejador",
+      "check"
+    ],
+    "Run time before start": [
+      "Tiempo de ventilación antes de arrancar",
+      "check"
+    ],
+    "Sailmaker": [
+      "Velero",
+      "check"
+    ],
+    "Scheme (ITB/BSS/Revisione/Bootszeugnis)": [
+      "Régimen (ITB / BSS / Revisione / Bootszeugnis)",
+      "check"
+    ],
+    "Screen part no": [
+      "Ref. de la malla",
+      "check"
+    ],
+    "Seal part numbers": [
+      "Ref. de las juntas",
+      "check"
+    ],
+    "Section": [
+      "Perfil",
+      "check"
+    ],
+    "Sensor expiry": [
+      "Caducidad del sensor",
+      "check"
+    ],
+    "Serial": [
+      "Número de serie",
+      "check"
+    ],
+    "Service kit": [
+      "Kit de mantenimiento",
+      "check"
+    ],
+    "Service kit part no": [
+      "Ref. del kit de mantenimiento",
+      "check"
+    ],
+    "Shear pin part no": [
+      "Ref. del pasador de seguridad",
+      "check"
+    ],
+    "Sheave count": [
+      "Número de roldanas",
+      "check"
+    ],
+    "Signaling mirror": [
+      "Espejo de señales",
+      "check"
+    ],
+    "Silencer make": [
+      "Fabricante del silenciador",
+      "check"
+    ],
+    "Size": [
+      "Medida",
+      "check"
+    ],
+    "Size %": [
+      "Tamaño (%)",
+      "check"
+    ],
+    "Sizes": [
+      "Medidas",
+      "check"
+    ],
+    "Socket size": [
+      "Medida de la llave de vaso",
+      "check"
+    ],
+    "Software version": [
+      "Versión de software",
+      "check"
+    ],
+    "Spare aboard?": [
+      "¿Repuesto a bordo?",
+      "check"
+    ],
+    "Spares aboard": [
+      "Repuestos a bordo",
+      "check"
+    ],
+    "Stack insulation type": [
+      "Aislamiento de la chimenea",
+      "check"
+    ],
+    "Surveyor": [
+      "Perito",
+      "check"
+    ],
+    "Thread size": [
+      "Rosca",
+      "check"
+    ],
+    "Torque": [
+      "Par de apriete",
+      "check"
+    ],
+    "Torque spec": [
+      "Par de apriete especificado",
+      "check"
+    ],
+    "Tube material": [
+      "Material de los flotadores (PVC / Hypalon)",
+      "check"
+    ],
+    "Type": [
+      "Tipo",
+      "check"
+    ],
+    "Type (A/B)": [
+      "Tipo (A / B)",
+      "check"
+    ],
+    "Types": [
+      "Tipos",
+      "check"
+    ],
+    "Water": [
+      "Agua",
+      "check"
+    ],
+    "Weight (kg)": [
+      "Peso (kg)",
+      "check"
+    ],
+    "Wire dia": [
+      "Diámetro del cable",
+      "check"
+    ],
+    "Working pressure": [
+      "Presión de trabajo",
+      "check"
+    ],
+    "Year": [
+      "Año",
+      "check"
+    ]
+  },
+  "profile": {
+    "axis_cooling": [
+      "Refrigeración del motor",
+      "check"
+    ],
+    "axis_drive": [
+      "Transmisión",
+      "check"
+    ],
+    "axis_engine": [
+      "Motor",
+      "check"
+    ],
+    "axis_extras": [
+      "Qué lleva a bordo",
+      "check"
+    ],
+    "axis_hull": [
+      "Tipo de casco",
+      "check"
+    ],
+    "axis_keel": [
+      "Quilla",
+      "check"
+    ],
+    "axis_rig": [
+      "Aparejo",
+      "check"
+    ],
+    "axis_storage": [
+      "Dónde pasa el invierno",
+      "check"
+    ],
+    "axis_water": [
+      "Agua",
+      "check"
+    ],
+    "opt_cooling_keel_cooled": [
+      "Refrigeración por quilla, escape seco",
+      "check"
+    ],
+    "opt_cooling_raw_water": [
+      "Refrigeración por agua de mar",
+      "check"
+    ],
+    "opt_drive_none": [
+      "Sin transmisión",
+      "check"
+    ],
+    "opt_drive_outboard": [
+      "Fueraborda",
+      "check"
+    ],
+    "opt_drive_saildrive": [
+      "Saildrive",
+      "check"
+    ],
+    "opt_drive_shaft": [
+      "Línea de eje",
+      "check"
+    ],
+    "opt_drive_sterndrive": [
+      "Cola (dentrofueraborda)",
+      "check"
+    ],
+    "opt_engine_diesel": [
+      "Diésel",
+      "check"
+    ],
+    "opt_engine_electric": [
+      "Eléctrico",
+      "check"
+    ],
+    "opt_engine_none": [
+      "Sin motor",
+      "check"
+    ],
+    "opt_engine_petrol": [
+      "Gasolina",
+      "check"
+    ],
+    "opt_extras_aircon": [
+      "Aire acondicionado",
+      "check"
+    ],
+    "opt_extras_ais": [
+      "AIS",
+      "check"
+    ],
+    "opt_extras_autopilot": [
+      "Piloto automático",
+      "check"
+    ],
+    "opt_extras_cabin": [
+      "Camarote",
+      "check"
+    ],
+    "opt_extras_davits": [
+      "Pescantes",
+      "check"
+    ],
+    "opt_extras_epirb": [
+      "Radiobaliza EPIRB",
+      "check"
+    ],
+    "opt_extras_fresh_water": [
+      "Sistema de agua dulce",
+      "check"
+    ],
+    "opt_extras_fridge": [
+      "Nevera o congelador",
+      "check"
+    ],
+    "opt_extras_furler": [
+      "Enrollador de génova",
+      "check"
+    ],
+    "opt_extras_genset": [
+      "Generador",
+      "check"
+    ],
+    "opt_extras_heads": [
+      "WC marino",
+      "check"
+    ],
+    "opt_extras_heater": [
+      "Calefacción",
+      "check"
+    ],
+    "opt_extras_holding_tank": [
+      "Depósito de aguas negras",
+      "check"
+    ],
+    "opt_extras_hydrogenerator": [
+      "Hidrogenerador",
+      "check"
+    ],
+    "opt_extras_instruments": [
+      "Instrumentos",
+      "check"
+    ],
+    "opt_extras_inverter": [
+      "Inversor de corriente",
+      "check"
+    ],
+    "opt_extras_liferaft": [
+      "Balsa salvavidas",
+      "check"
+    ],
+    "opt_extras_lpg": [
+      "Instalación de gas",
+      "check"
+    ],
+    "opt_extras_offshore": [
+      "Navegación de altura",
+      "check"
+    ],
+    "opt_extras_passerelle": [
+      "Pasarela",
+      "check"
+    ],
+    "opt_extras_radar": [
+      "Radar",
+      "check"
+    ],
+    "opt_extras_shore_power": [
+      "Toma de corriente de pantalán",
+      "check"
+    ],
+    "opt_extras_solar": [
+      "Paneles solares",
+      "check"
+    ],
+    "opt_extras_tender": [
+      "Auxiliar",
+      "check"
+    ],
+    "opt_extras_thruster": [
+      "Hélice de proa o popa",
+      "check"
+    ],
+    "opt_extras_trailer": [
+      "Remolque",
+      "check"
+    ],
+    "opt_extras_watermaker": [
+      "Potabilizadora",
+      "check"
+    ],
+    "opt_extras_wind_gen": [
+      "Aerogenerador",
+      "check"
+    ],
+    "opt_extras_windlass": [
+      "Molinete",
+      "check"
+    ],
+    "opt_hull_catamaran_sail": [
+      "Catamarán de vela",
+      "check"
+    ],
+    "opt_hull_dinghy": [
+      "Bote o auxiliar",
+      "check"
+    ],
+    "opt_hull_monohull_sail": [
+      "Monocasco de vela",
+      "check"
+    ],
+    "opt_hull_motor": [
+      "Barco a motor",
+      "check"
+    ],
+    "opt_hull_rib": [
+      "Semirrígida (RIB)",
+      "check"
+    ],
+    "opt_hull_trimaran_sail": [
+      "Trimarán de vela",
+      "check"
+    ],
+    "opt_keel_bilge": [
+      "Quillas de pantoque",
+      "check"
+    ],
+    "opt_keel_centreboard": [
+      "Orza abatible",
+      "check"
+    ],
+    "opt_keel_daggerboard": [
+      "Orza de deriva",
+      "check"
+    ],
+    "opt_keel_fin": [
+      "Quilla de aleta",
+      "check"
+    ],
+    "opt_keel_lifting": [
+      "Quilla elevable",
+      "check"
+    ],
+    "opt_keel_long": [
+      "Quilla corrida",
+      "check"
+    ],
+    "opt_keel_none": [
+      "Sin quilla",
+      "check"
+    ],
+    "opt_rig_cat_rig": [
+      "Aparejo de una vela (cat)",
+      "check"
+    ],
+    "opt_rig_cutter": [
+      "Cúter",
+      "check"
+    ],
+    "opt_rig_junk": [
+      "Aparejo de junco",
+      "check"
+    ],
+    "opt_rig_ketch": [
+      "Queche",
+      "check"
+    ],
+    "opt_rig_none": [
+      "Sin aparejo",
+      "check"
+    ],
+    "opt_rig_schooner": [
+      "Goleta",
+      "check"
+    ],
+    "opt_rig_sloop": [
+      "Balandro",
+      "check"
+    ],
+    "opt_rig_yawl": [
+      "Yol",
+      "check"
+    ],
+    "opt_storage_afloat_year_round": [
+      "A flote todo el año",
+      "check"
+    ],
+    "opt_storage_dry_stack": [
+      "Marina seca",
+      "check"
+    ],
+    "opt_storage_hauled_winter": [
+      "En seco durante el invierno",
+      "check"
+    ],
+    "opt_storage_trailer": [
+      "En remolque",
+      "check"
+    ],
+    "opt_water_brackish": [
+      "Salobre",
+      "check"
+    ],
+    "opt_water_fresh": [
+      "Dulce",
+      "check"
+    ],
+    "opt_water_salt": [
+      "Salada",
+      "check"
+    ]
+  },
+  "synonyms": {
+    "antifouling": [
+      "patente",
+      "pintura antiincrustante",
+      "antiincrustante",
+      "autopulimentable",
+      "matriz dura"
+    ],
+    "seacocks": [
+      "grifo de fondo",
+      "válvula de fondo",
+      "llave de fondo",
+      "válvula de bola"
+    ],
+    "through_hulls": [
+      "pasacascos",
+      "toma de mar"
+    ],
+    "raw_water_impeller": [
+      "impulsor",
+      "rodete",
+      "turbina",
+      "bomba de agua salada",
+      "Jabsco"
+    ],
+    "raw_water_strainer": [
+      "filtro de agua salada",
+      "filtro de refrigeración"
+    ],
+    "stuffing_box": [
+      "prensaestopas",
+      "cierre de eje",
+      "bocina seca",
+      "retén de eje",
+      "empaquetadura",
+      "PSS"
+    ],
+    "anodes_hull": [
+      "ánodo de sacrificio",
+      "zinc",
+      "ánodo"
+    ],
+    "shaft_anode": [
+      "zinc del eje"
+    ],
+    "fuel_prefilter": [
+      "prefiltro",
+      "separador de agua",
+      "decantador",
+      "Racor",
+      "filtro primario"
+    ],
+    "mixing_elbow": [
+      "codo de escape",
+      "codo mezclador"
+    ],
+    "exhaust_hose": [
+      "waterlock",
+      "vaso de escape",
+      "manguera de escape"
+    ],
+    "gearbox": [
+      "inversor",
+      "reductora",
+      "caja de cambios"
+    ],
+    "alternator_belt": [
+      "correa",
+      "correa del alternador",
+      "correa de la bomba"
+    ],
+    "windlass": [
+      "molinete",
+      "molinete de ancla",
+      "cabrestante",
+      "barbotén"
+    ],
+    "winches": [
+      "winche",
+      "winch",
+      "winche autoadrizante"
+    ],
+    "halyards": [
+      "driza",
+      "driza de mayor",
+      "driza de génova",
+      "driza de spi"
+    ],
+    "sheets": [
+      "escota",
+      "escota de mayor",
+      "escota de génova"
+    ],
+    "control_lines": [
+      "amantillo",
+      "cabo de rizo",
+      "cunningham"
+    ],
+    "vang": [
+      "contra",
+      "trapa",
+      "contra rígida",
+      "kicker"
+    ],
+    "boom": [
+      "botavara",
+      "pinzote"
+    ],
+    "deck_rails_lifelines": [
+      "guardamancebos",
+      "candelero",
+      "púlpito",
+      "balcón de popa"
+    ],
+    "jackstays": [
+      "línea de vida",
+      "jackline",
+      "cinta de seguridad"
+    ],
+    "harnesses_tethers": [
+      "arnés",
+      "línea de anclaje",
+      "cabo de seguridad"
+    ],
+    "liferaft": [
+      "balsa",
+      "balsa salvavidas"
+    ],
+    "epirb": [
+      "radiobaliza",
+      "baliza",
+      "EPIRB",
+      "PLB"
+    ],
+    "flares": [
+      "bengalas",
+      "cohetes",
+      "señales fumígenas",
+      "pirotecnia"
+    ],
+    "drogue": [
+      "ancla de retención",
+      "drogue",
+      "cono de frenado"
+    ],
+    "sea_anchor": [
+      "ancla de capa",
+      "ancla paracaídas",
+      "paracaídas de mar"
+    ],
+    "washboards": [
+      "tablas de cierre",
+      "tablas de entrada",
+      "tambucho"
+    ],
+    "holding_tank": [
+      "depósito de aguas negras",
+      "tanque de aguas negras"
+    ],
+    "heads_pump": [
+      "WC",
+      "inodoro marino",
+      "bomba del WC"
+    ],
+    "bilge_pump_auto": [
+      "bomba de achique",
+      "bomba de sentina"
+    ],
+    "watermaker": [
+      "potabilizadora",
+      "desalinizadora",
+      "ósmosis inversa"
+    ],
+    "vhf": [
+      "VHF",
+      "radio",
+      "emisora",
+      "LSD",
+      "DSC"
+    ],
+    "chartplotter": [
+      "plóter",
+      "plotter",
+      "GPS",
+      "MFD"
+    ],
+    "mooring_cleats": [
+      "cornamusa",
+      "bita",
+      "guía"
+    ],
+    "fenders": [
+      "defensa",
+      "tabla de defensas"
+    ],
+    "mooring_lines": [
+      "amarra",
+      "cabo de amarre",
+      "spring"
+    ],
+    "house_batteries": [
+      "batería de servicio",
+      "baterías de servicio"
+    ],
+    "inverter": [
+      "inversor",
+      "inversor de corriente"
+    ],
+    "shore_cable": [
+      "cable de pantalán",
+      "toma de corriente",
+      "enchufe de pantalán"
+    ],
+    "gas_bottles": [
+      "bombona",
+      "butano",
+      "propano"
+    ],
+    "headsail_furler": [
+      "enrollador",
+      "enrollador de génova",
+      "Furlex"
+    ],
+    "sail_covers": [
+      "lazy bag",
+      "lazy jacks",
+      "funda de mayor"
+    ],
+    "snuffer": [
+      "calcetín",
+      "manga de spi"
+    ]
+  }
+}

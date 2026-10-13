@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DRAFT - see strings.xml in this folder. German: one, other. -->
+<resources>
+    <plurals name="toast_jobs_saved">
+        <item quantity="one">%d Arbeit gespeichert</item>
+        <item quantity="other">%d Arbeiten gespeichert</item>
+    </plurals>
+
+    <plurals name="checklist_will_log">
+        <item quantity="one">%d Haken schreibt einen Eintrag und setzt das Intervall zurück</item>
+        <item quantity="other">%d Haken schreiben Einträge und setzen ihre Intervalle zurück</item>
+    </plurals>
+
+    <plurals name="checklist_not_applicable">
+        <item quantity="one">%d Punkt gilt nicht für dieses Boot</item>
+        <item quantity="other">%d Punkte gelten nicht für dieses Boot</item>
+    </plurals>
+
+    <plurals name="checklist_skipped">
+        <item quantity="one">%d Punkt übersprungen</item>
+        <item quantity="other">%d Punkte übersprungen</item>
+    </plurals>
+
+    <plurals name="due_overdue_days">
+        <item quantity="one">%d Tag überfällig</item>
+        <item quantity="other">%d Tage überfällig</item>
+    </plurals>
+
+    <plurals name="due_in_hours">
+        <item quantity="one">in %d Motorstunde</item>
+        <item quantity="other">in %d Motorstunden</item>
+    </plurals>
+
+    <plurals name="onboarding_seeded">
+        <item quantity="one">%d Wartungspunkt angelegt</item>
+        <item quantity="other">%d Wartungspunkte angelegt</item>
+    </plurals>
+
+    <plurals name="boat_nodes">
+        <item quantity="one">%d Komponente</item>
+        <item quantity="other">%d Komponenten</item>
+    </plurals>
+
+    <plurals name="boat_categories_in">
+        <item quantity="one">in %d Kategorie</item>
+        <item quantity="other">in %d Kategorien</item>
+    </plurals>
+
+    <plurals name="boat_categories">
+        <item quantity="one">%d Kategorie</item>
+        <item quantity="other">%d Kategorien</item>
+    </plurals>
+
+    <plurals name="boat_categories_dead">
+        <item quantity="one">%d Kategorie trifft nicht zu</item>
+        <item quantity="other">%d Kategorien treffen nicht zu</item>
+    </plurals>
+
+    <plurals name="log_records">
+        <item quantity="one">%d Eintrag</item>
+        <item quantity="other">%d Einträge</item>
+    </plurals>
+
+    <plurals name="log_gap_days">
+        <item quantity="one">%d Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
+
+    <plurals name="log_gap_hours">
+        <item quantity="one">%d Motorstunde</item>
+        <item quantity="other">%d Motorstunden</item>
+    </plurals>
+
+    <plurals name="log_photos">
+        <item quantity="one">%d Foto</item>
+        <item quantity="other">%d Fotos</item>
+    </plurals>
+
+    <plurals name="store_qty">
+        <item quantity="one">%d Stk.</item>
+        <item quantity="other">%d Stk.</item>
+    </plurals>
+
+    <plurals name="store_items">
+        <item quantity="one">%d Teil</item>
+        <item quantity="other">%d Teile</item>
+    </plurals>
+
+    <plurals name="store_locations_in">
+        <item quantity="one">in %d Stauraum</item>
+        <item quantity="other">in %d Stauräumen</item>
+    </plurals>
+
+    <plurals name="due_in_days">
+        <item quantity="one">in %d Tag</item>
+        <item quantity="other">in %d Tagen</item>
+    </plurals>
+
+    <plurals name="boat_own_nodes">
+        <item quantity="one">davon %d eigene</item>
+        <item quantity="other">davon %d eigene</item>
+    </plurals>
+
+    <plurals name="now_needs_meter">
+        <item quantity="one">%d Komponente wartet auf die ersten Motorstunden</item>
+        <item quantity="other">%d Komponenten warten auf die ersten Motorstunden</item>
+    </plurals>
+
+    <plurals name="now_needs_first_record">
+        <item quantity="one">%d Komponente hat noch keine Wartungshistorie</item>
+        <item quantity="other">%d Komponenten haben noch keine Wartungshistorie</item>
+    </plurals>
+
+    <plurals name="snack_logged_photos_failed">
+        <item quantity="one">Eingetragen, aber %d Foto konnte nicht gespeichert werden</item>
+        <item quantity="other">Eingetragen, aber %d Fotos konnten nicht gespeichert werden</item>
+    </plurals>
+
+    <plurals name="departure_check_chip">
+        <item quantity="one">Check vor dem Auslaufen · %d Punkt</item>
+        <item quantity="other">Check vor dem Auslaufen · %d Punkte</item>
+    </plurals>
+
+    <plurals name="store_stat_items">
+        <item quantity="one">%d Teil</item>
+        <item quantity="other">%d Teile</item>
+    </plurals>
+
+    <plurals name="store_stat_lockers">
+        <item quantity="one">in %d Stauraum</item>
+        <item quantity="other">in %d Stauräumen</item>
+    </plurals>
+
+    <plurals name="import_rows_count">
+        <item quantity="one">%d Zeile</item>
+        <item quantity="other">%d Zeilen</item>
+    </plurals>
+
+    <plurals name="import_success_toast">
+        <item quantity="one">%d Eintrag importiert</item>
+        <item quantity="other">%d Einträge importiert</item>
+    </plurals>
+
+    <!-- Added on main after 44e7713 -->
+    <plurals name="settings_backup_skipped_files">
+        <item quantity="one">Sicherung erstellt, aber %d Anhang konnte nicht aufgenommen werden (Datei nicht verfügbar)</item>
+        <item quantity="other">Sicherung erstellt, aber %d Anhänge konnten nicht aufgenommen werden (Dateien nicht verfügbar)</item>
+    </plurals>
+
+    <plurals name="import_skipped_rows">
+        <item quantity="one">%d Zeile übersprungen</item>
+        <item quantity="other">%d Zeilen übersprungen</item>
+    </plurals>
+
+    <plurals name="import_issues_banner_title">
+        <item quantity="one">%d Zeile mit Fehlern</item>
+        <item quantity="other">%d Zeilen mit Fehlern</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_subtitle">
+        <item quantity="one">%d Zeile enthält nicht erkannte Felder und wird nicht importiert:</item>
+        <item quantity="other">%d Zeilen enthalten nicht erkannte Felder und werden nicht importiert:</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_confirm">
+        <item quantity="one">%1$d von %2$d Zeile importieren</item>
+        <item quantity="other">%1$d von %2$d Zeilen importieren</item>
+    </plurals>
+</resources>

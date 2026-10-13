@@ -23,12 +23,12 @@ import os
 import sys
 from xml.etree import ElementTree
 
-RES = os.path.join("app", "src", "main", "res")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import locales
+
+RES = locales.RES
 # CLDR quantity categories that must be present, per locale.
-REQUIRED = {
-    "": {"one", "other"},
-    "uk": {"one", "few", "many", "other"},
-}
+REQUIRED = locales.PLURAL_FORMS
 
 
 def load(locale):
@@ -48,7 +48,18 @@ def load(locale):
 def main():
     failed = []
     sets = {}
-    for locale, required in REQUIRED.items():
+    shipped = [""] + locales.resource_locales()
+    # A locale on disk with no rule here would have its plurals checked
+    # against nothing - the silent pass this script exists to prevent.
+    for locale in shipped:
+        if locale not in REQUIRED:
+            print(f"    values-{locale}: no CLDR plural rule recorded in "
+                  f"tools/locales.py PLURAL_FORMS - add it before shipping")
+            failed.append(locale)
+    for locale in shipped:
+        required = REQUIRED.get(locale)
+        if required is None:
+            continue
         data, path = load(locale)
         if data is None:
             print(f"    MISSING FILE: {path}")
@@ -66,7 +77,7 @@ def main():
                 failed.append(name)
         print(f"{path:44} {len(data)} plurals")
 
-    if len(sets) == len(REQUIRED):
+    if "" in sets:
         base = set(sets[""])
         for locale, data in sets.items():
             if locale and set(data) != base:

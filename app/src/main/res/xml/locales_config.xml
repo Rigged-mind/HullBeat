@@ -11,6 +11,9 @@
     the manifest for what is absent from it.
 
     The first entry is the default when nothing else matches.
+
+    Keep in step with AppLanguage.SUPPORTED and the values-<tag> folders:
+    tools/check_locales.py fails when the three disagree.
 -->
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
     <locale android:name="uk" />

@@ -32,14 +32,19 @@ object SynonymsLoader {
         }
 
     /**
-     * Returns combined synonyms for both UK and EN locales for cross-lingual search.
+     * Synonyms from every locale in the asset, for cross-lingual search: an
+     * owner reading the app in English still types "Impeller" or "rodete".
+     *
+     * This used to read `uk` and `en` by name, so a third locale's aliases
+     * would have shipped in the asset and matched nothing. UK and EN still
+     * come first, in their old order, so the index body of an existing
+     * install does not change; any other locale follows in tag order.
      */
     fun synonymsFor(context: Context, catalogCode: String?): List<String> {
         if (catalogCode == null) return emptyList()
         val baseCode = catalogCode.substringBefore('#')
         val all = get(context)
-        val ukSyns = all["uk"]?.get(baseCode) ?: emptyList()
-        val enSyns = all["en"]?.get(baseCode) ?: emptyList()
-        return (ukSyns + enSyns).distinct()
+        val order = listOf("uk", "en") + (all.keys - setOf("uk", "en")).sorted()
+        return order.flatMap { all[it]?.get(baseCode).orEmpty() }.distinct()
     }
 }

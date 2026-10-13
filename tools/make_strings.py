@@ -16,6 +16,7 @@ import sys
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import locales
 import profile_labels
 
 CATALOG = os.path.join("catalog", "catalog.json")
@@ -89,6 +90,61 @@ def profile_keys():
     rows += [("opt_%s_%s" % (axis, value), en, uk)
              for (axis, value), (en, uk) in sorted(profile_labels.VALUES.items())]
     return rows
+
+
+def profile_terms(locale, glossary, profile):
+    """(resource name, term, confidence) for the vessel profile in one locale.
+
+    The Ukrainian lives in profile_labels.py beside the English, as it always
+    has. Every other locale keeps it where its sailor-reviewer will look: a
+    `profile` block in catalog/i18n/<locale>.json, `key -> [term, confidence]`.
+
+    The loop below used to take the Ukrainian column for EVERY locale file, so
+    a German glossary would have shipped `axis_hull` as «Тип корпусу».
+    """
+    if locale == "uk":
+        return [(key, uk, "check") for key, _, uk in profile]
+    block = glossary.get("profile") or {}
+    return [(key, block[key][0], block[key][1])
+            for key, _, _ in profile if key in block]
+
+
+def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profile,
+                    missing=()):
+    """catalog/i18n/<locale>-review.md for a locale whose reviewer reads English.
+
+    The Ukrainian review file is written in Ukrainian and leaves checklist
+    lines to uk-checklists-review.md, which make_checklists.py produces. No
+    such file exists for any other locale, so here the checklist lines are
+    listed too - otherwise a German reviewer would never see them - and
+    every row carries its English source, not only categories and components.
+    """
+    en_by_key = {f"cat_{c}": e for c, e in cats}
+    en_by_key.update({f"cmp_{c}": e for c, e in comps})
+    en_by_key.update({f"chk_{c}": e for c, e in checks})
+    en_by_key.update({f"hint_{slug}": e for slug, e, _ in hints})
+    en_by_key.update({key: e for key, e, _ in profile})
+
+    review = sorted(k for k, c in confidence.items() if c != "ok")
+    out = os.path.join("catalog", "i18n", f"{locale}-review.md")
+    lines = [f"# Terms to review - {locale}\n",
+             f"\n{len(review)} of {len(terms)} need confirmation from someone "
+             "who sails and maintains a boat in this language. `check` is a "
+             "contested or borrowed term; `descr` means no settled term exists "
+             "and the wording is descriptive.\n",
+             "\nOne question for each: **is this what it is called on the water?**\n",
+             (f"\n{len(missing)} more keys have no draft yet and are not "
+              "listed.\n" if missing else "")]
+    lines += locales.review_priority(locale)
+    lines += ["\n## All terms\n",
+             "\n| Key | English | Draft | Status | Correction |\n"
+             "|---|---|---|---|---|\n"]
+    for key in review:
+        en = en_by_key.get(key, "").replace("|", "\\|")
+        lines.append(f"| `{key}` | {en} | **{terms[key]}** | "
+                     f"{confidence[key]} | |\n")
+    io.open(out, "w", encoding="utf-8", newline="\n").writelines(lines)
+    print(f"    review list -> {out}  ({len(review)} terms)")
 
 
 def hint_slug(label):
@@ -182,6 +238,15 @@ def main():
         # the catalog), so an empty components block is normal, not an error.
         aliases_only = not glossary.get("components")
 
+        # A glossary marked "_status": "draft" is still being translated or
+        # reviewed. Its review list is written and its keys are checked, but
+        # nothing of it reaches the app: no values-<locale> folder, because
+        # that folder ships to every phone set to the language the moment it
+        # is merged, and no search aliases, because synonyms.json ships to
+        # everyone. Gaps in a draft are reported, not failed - a glossary is
+        # filled over weeks, and a suite that is red for weeks gets ignored.
+        draft = glossary.get("_status") == "draft"
+
         terms = {}
         confidence = {}
         for code, (term, conf) in glossary.get("categories", {}).items():
@@ -196,9 +261,9 @@ def main():
         for key, (term, conf) in glossary.get("checklists", {}).items():
             terms[key] = term
             confidence[key] = conf
-        for key, _, uk in profile:
-            terms[key] = uk
-            confidence[key] = "check"
+        for key, term, conf in profile_terms(locale, glossary, profile):
+            terms[key] = term
+            confidence[key] = conf
         for slug, _, uk in spechint_keys(glossary):
             if uk:
                 terms[f"hint_{slug}"] = uk
@@ -207,16 +272,19 @@ def main():
                     if isinstance(glossary["specHints"].get(_), list) else "check")
 
         # Aliases are keyed by the bare component code, not the cmp_ resource key.
-        synonyms[locale] = glossary.get("synonyms", {})
-        bad_codes = sorted(set(synonyms[locale]) - {c for c, _ in comps})
+        aliases = glossary.get("synonyms", {})
+        bad_codes = sorted(set(aliases) - {c for c, _ in comps})
         if bad_codes:
             failed = True
             print(f"    ALIAS for unknown code: {', '.join(bad_codes[:8])}")
+        if not draft:
+            synonyms[locale] = aliases
 
         if aliases_only:
-            n = sum(len(v) for v in synonyms[locale].values())
+            n = sum(len(v) for v in aliases.values())
             print(f"catalog/i18n/{name:<22} aliases only: "
-                  f"{len(synonyms[locale])} components, {n} phrases")
+                  f"{len(aliases)} components, {n} phrases"
+                  f"{'  (draft - not shipped)' if draft else ''}")
             continue
 
         missing = sorted(expected - set(terms))
@@ -230,23 +298,39 @@ def main():
                  for code, _ in checks if f"chk_{code}" in terms]
         rows += [("passport labels", f"hint_{slug}", uk)
                  for slug, _, uk in spechint_keys(glossary) if uk]
-        rows += [("vessel profile", key, uk) for key, _, uk in profile]
-        write_xml(os.path.join(RES, f"values-{locale}", "strings_catalog.xml"),
-                  rows, f" + catalog/i18n/{name}")
+        rows += [("vessel profile", key, terms[key])
+                 for key, _, _ in profile if key in terms]
+        folder = os.path.join(RES, f"values-{locale}")
+        if draft:
+            if os.path.exists(folder):
+                failed = True
+                print(f"    {folder} exists but catalog/i18n/{name} is a draft - "
+                      "either the folder was made by hand, or the draft mark "
+                      "should have been removed with the review")
+        else:
+            write_xml(os.path.join(folder, "strings_catalog.xml"),
+                      rows, f" + catalog/i18n/{name}")
 
         counts = {"ok": 0, "check": 0, "descr": 0}
         for key in terms:
             counts[confidence.get(key, "check")] = counts.get(confidence.get(key, "check"), 0) + 1
 
-        print(f"values-{locale}/strings_catalog.xml         {len(rows):3} keys  "
+        target = (f"catalog/i18n/{name} (draft)" if draft
+                  else f"values-{locale}/strings_catalog.xml")
+        print(f"{target:38}{len(rows):3} keys  "
               f"settled {counts['ok']}, needs review {counts['check']}, coined {counts['descr']}")
 
         if missing:
-            failed = True
+            failed = failed or not draft
             print(f"    MISSING {len(missing)}: {', '.join(missing[:8])}"
                   f"{' ...' if len(missing) > 8 else ''}")
         if extra:
             print(f"    EXTRA {len(extra)} (not in catalog): {', '.join(extra[:8])}")
+
+        if locale != "uk":
+            write_review_en(locale, terms, confidence, cats, comps, checks,
+                            hints, profile, missing)
+            continue
 
         # Checklist lines are sentences, not terms, and catalog/i18n/
         # uk-checklists-review.md already presents them with the English, the

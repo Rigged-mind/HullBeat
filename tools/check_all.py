@@ -68,6 +68,8 @@ STEPS = [
     ("check_touch_targets", "nothing you tap is smaller than 56 dp"),
     ("check_canvas_lifetime", "no local holds a canvas a page break frees"),
     ("check_translations", "no string falls back to English silently"),
+    ("check_locales", "picker, settings and values-* name the same languages"),
+    ("check_ui_drafts", "unreleased UI translations: placeholders, escapes, plurals"),
     ("prototype_due", "DueCalculator cases, JS against the Kotlin"),
     ("check_search", "search ranking, SQLite FTS4 and benchmark queries"),
     ("check_node_gates", "no checklist item outlives the node it names"),
@@ -92,8 +94,24 @@ GENERATED = [
     os.path.join("app", "src", "main", "res", "values-night",
                  "colors.xml"),
     os.path.join("app", "src", "main", "res", "values", "strings_catalog.xml"),
-    os.path.join("app", "src", "main", "res", "values-uk", "strings_catalog.xml"),
 ]
+# Per locale: make_strings writes a catalog XML and a review list for every
+# glossary in catalog/i18n/ that carries components. Listing values-uk by hand
+# meant a second language's generated files would never be checked for drift.
+for _name in sorted(os.listdir(os.path.join("catalog", "i18n"))):
+    _locale, _ext = os.path.splitext(_name)
+    if _ext != ".json" or _locale == "en":
+        continue
+    GENERATED.append(os.path.join("catalog", "i18n", f"{_locale}-review.md"))
+    GENERATED.append(os.path.join("app", "src", "main", "res", f"values-{_locale}",
+                                  "strings_catalog.xml"))
+# check_ui_drafts writes a review list per draft in catalog/i18n/ui/.
+_ui = os.path.join("catalog", "i18n", "ui")
+for _name in sorted(os.listdir(_ui)) if os.path.isdir(_ui) else []:
+    if _name.startswith("values-"):
+        GENERATED.append(os.path.join("catalog", "i18n",
+                                      f"{_name[len('values-'):]}-ui-review.md"))
+GENERATED = list(dict.fromkeys(GENERATED))
 
 
 def digest(path):

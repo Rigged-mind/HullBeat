@@ -741,32 +741,29 @@ fun SettingsDrawerSheet(
                         fontWeight = FontWeight.Bold,
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        SettingsSelectChip(
-                            selected = AppLanguage.current(context) == AppLanguage.UK,
-                            onClick = {
-                                if (AppLanguage.current(context) != AppLanguage.UK) {
-                                    AppLanguage.toggle(context)
-                                }
-                            },
-                            label = stringResource(R.string.lang_uk),
-                            modifier = Modifier.weight(1f),
-                            height = 42.dp,
-                        )
-                        SettingsSelectChip(
-                            selected = AppLanguage.current(context) == AppLanguage.EN,
-                            onClick = {
-                                if (AppLanguage.current(context) != AppLanguage.EN) {
-                                    AppLanguage.toggle(context)
-                                }
-                            },
-                            label = stringResource(R.string.lang_en),
-                            modifier = Modifier.weight(1f),
-                            height = 42.dp,
-                        )
+                    // One chip per shipped language, two to a row. The list is
+                    // AppLanguage.SUPPORTED, so a language released later
+                    // appears here without touching this screen.
+                    val current = AppLanguage.current(context)
+                    AppLanguage.SUPPORTED.chunked(2).forEach { rowTags ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            rowTags.forEach { tag ->
+                                SettingsSelectChip(
+                                    selected = current == tag,
+                                    onClick = {
+                                        if (current != tag) AppLanguage.set(context, tag)
+                                    },
+                                    label = stringResource(AppLanguage.nameRes(tag)),
+                                    modifier = Modifier.weight(1f),
+                                    height = 42.dp,
+                                )
+                            }
+                            // An odd last chip keeps the width of its pair.
+                            if (rowTags.size == 1) Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }
