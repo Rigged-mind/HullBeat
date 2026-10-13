@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DRAFT - see strings.xml in this folder. Spanish: one, many, other.
+    `many` is CLDR 42+ (Android 14) for exact millions; it reads the same as
+    `other` for every phrase here, and older devices never ask for it.
+-->
+<resources>
+    <plurals name="toast_jobs_saved">
+        <item quantity="one">%d trabajo guardado</item>
+        <item quantity="many">%d trabajos guardados</item>
+        <item quantity="other">%d trabajos guardados</item>
+    </plurals>
+
+    <plurals name="checklist_will_log">
+        <item quantity="one">%d marca creará un registro y reiniciará el intervalo</item>
+        <item quantity="many">%d marcas crearán registros y reiniciarán sus intervalos</item>
+        <item quantity="other">%d marcas crearán registros y reiniciarán sus intervalos</item>
+    </plurals>
+
+    <plurals name="checklist_not_applicable">
+        <item quantity="one">%d punto no se aplica a este barco</item>
+        <item quantity="many">%d puntos no se aplican a este barco</item>
+        <item quantity="other">%d puntos no se aplican a este barco</item>
+    </plurals>
+
+    <plurals name="checklist_skipped">
+        <item quantity="one">%d punto omitido</item>
+        <item quantity="many">%d puntos omitidos</item>
+        <item quantity="other">%d puntos omitidos</item>
+    </plurals>
+
+    <plurals name="due_overdue_days">
+        <item quantity="one">vencido hace %d día</item>
+        <item quantity="many">vencido hace %d días</item>
+        <item quantity="other">vencido hace %d días</item>
+    </plurals>
+
+    <plurals name="due_in_hours">
+        <item quantity="one">en %d hora de motor</item>
+        <item quantity="many">en %d horas de motor</item>
+        <item quantity="other">en %d horas de motor</item>
+    </plurals>
+
+    <plurals name="onboarding_seeded">
+        <item quantity="one">%d punto de mantenimiento creado</item>
+        <item quantity="many">%d puntos de mantenimiento creados</item>
+        <item quantity="other">%d puntos de mantenimiento creados</item>
+    </plurals>
+
+    <plurals name="boat_nodes">
+        <item quantity="one">%d componente</item>
+        <item quantity="many">%d componentes</item>
+        <item quantity="other">%d componentes</item>
+    </plurals>
+
+    <plurals name="boat_categories_in">
+        <item quantity="one">en %d categoría</item>
+        <item quantity="many">en %d categorías</item>
+        <item quantity="other">en %d categorías</item>
+    </plurals>
+
+    <plurals name="boat_categories">
+        <item quantity="one">%d categoría</item>
+        <item quantity="many">%d categorías</item>
+        <item quantity="other">%d categorías</item>
+    </plurals>
+
+    <plurals name="boat_categories_dead">
+        <item quantity="one">%d categoría no se aplica</item>
+        <item quantity="many">%d categorías no se aplican</item>
+        <item quantity="other">%d categorías no se aplican</item>
+    </plurals>
+
+    <plurals name="log_records">
+        <item quantity="one">%d registro</item>
+        <item quantity="many">%d registros</item>
+        <item quantity="other">%d registros</item>
+    </plurals>
+
+    <plurals name="log_gap_days">
+        <item quantity="one">%d día</item>
+        <item quantity="many">%d días</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+
+    <plurals name="log_gap_hours">
+        <item quantity="one">%d hora de motor</item>
+        <item quantity="many">%d horas de motor</item>
+        <item quantity="other">%d horas de motor</item>
+    </plurals>
+
+    <plurals name="log_photos">
+        <item quantity="one">%d foto</item>
+        <item quantity="many">%d fotos</item>
+        <item quantity="other">%d fotos</item>
+    </plurals>
+
+    <plurals name="store_qty">
+        <item quantity="one">%d ud.</item>
+        <item quantity="many">%d uds.</item>
+        <item quantity="other">%d uds.</item>
+    </plurals>
+
+    <plurals name="store_items">
+        <item quantity="one">%d pieza</item>
+        <item quantity="many">%d piezas</item>
+        <item quantity="other">%d piezas</item>
+    </plurals>
+
+    <plurals name="store_locations_in">
+        <item quantity="one">en %d pañol</item>
+        <item quantity="many">en %d pañoles</item>
+        <item quantity="other">en %d pañoles</item>
+    </plurals>
+
+    <plurals name="due_in_days">
+        <item quantity="one">en %d día</item>
+        <item quantity="many">en %d días</item>
+        <item quantity="other">en %d días</item>
+    </plurals>
+
+    <plurals name="boat_own_nodes">
+        <item quantity="one">%d de ellos propio</item>
+        <item quantity="many">%d de ellos propios</item>
+        <item quantity="other">%d de ellos propios</item>
+    </plurals>
+
+    <plurals name="now_needs_meter">
+        <item quantity="one">%d componente espera sus primeras horas de motor</item>
+        <item quantity="many">%d componentes esperan sus primeras horas de motor</item>
+        <item quantity="other">%d componentes esperan sus primeras horas de motor</item>
+    </plurals>
+
+    <plurals name="now_needs_first_record">
+        <item quantity="one">%d componente aún no tiene historial</item>
+        <item quantity="many">%d componentes aún no tienen historial</item>
+        <item quantity="other">%d componentes aún no tienen historial</item>
+    </plurals>
+
+    <plurals name="snack_logged_photos_failed">
+        <item quantity="one">Registrado, pero no se pudo guardar %d foto</item>
+        <item quantity="many">Registrado, pero no se pudieron guardar %d fotos</item>
+        <item quantity="other">Registrado, pero no se pudieron guardar %d fotos</item>
+    </plurals>
+
+    <plurals name="departure_check_chip">
+        <item quantity="one">Revisión antes de zarpar · %d punto</item>
+        <item quantity="many">Revisión antes de zarpar · %d puntos</item>
+        <item quantity="other">Revisión antes de zarpar · %d puntos</item>
+    </plurals>
+
+    <plurals name="store_stat_items">
+        <item quantity="one">%d pieza</item>
+        <item quantity="many">%d piezas</item>
+        <item quantity="other">%d piezas</item>
+    </plurals>
+
+    <plurals name="store_stat_lockers">
+        <item quantity="one">en %d pañol</item>
+        <item quantity="many">en %d pañoles</item>
+        <item quantity="other">en %d pañoles</item>
+    </plurals>
+
+    <plurals name="import_rows_count">
+        <item quantity="one">%d fila</item>
+        <item quantity="many">%d filas</item>
+        <item quantity="other">%d filas</item>
+    </plurals>
+
+    <plurals name="import_success_toast">
+        <item quantity="one">%d registro importado</item>
+        <item quantity="many">%d registros importados</item>
+        <item quantity="other">%d registros importados</item>
+    </plurals>
+</resources>

@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DRAFT - German interface strings, awaiting review by a native-speaking
+    sailor. This folder lives outside res/ on purpose: a values-de folder in
+    res/ ships to every phone set to German the moment it is merged.
+    tools/check_ui_drafts.py checks keys, placeholders and escapes, and writes
+    catalog/i18n/de-ui-review.md for the reviewer.
+
+    Agreed: formal "Sie"; nav_log = Wartungsbuch (Logbuch is the voyage log);
+    lockers = Stauräume (Backskiste is only the cockpit seat locker).
+-->
+<resources>
+    <string name="notification_channel_due">Wartung fällig</string>
+    <string name="notification_channel_due_description">Erinnerungen, wenn eine Arbeit fällig oder überfällig ist.</string>
+    <string name="action_mark_done">Erledigt</string>
+    <string name="action_renew">Erneuern…</string>
+    <string name="due_unknown">Fälligkeit unbekannt</string>
+    <string name="due_unknown_needs_meter">Motorstunden eintragen, um die Prognose zu starten</string>
+    <string name="due_unknown_needs_schedule">Wartungsplan festlegen</string>
+
+    <string name="snack_logged">Eingetragen</string>
+    <string name="action_undo">Rückgängig</string>
+    <string name="snack_deferral_cancelled">Zurückstellung aufgehoben</string>
+    <string name="snack_deferred_until">Zurückgestellt bis %1$s</string>
+
+    <string name="deferred_until">zurückgestellt bis %1$s</string>
+    <string name="deferred_until_reason">%1$s · bis %2$s</string>
+
+    <string name="placeholder_boat">Komponentenkatalog und Gerätedatenblätter.</string>
+    <string name="placeholder_log">Wartungsbuch, Zeitleiste und Suche.</string>
+    <string name="placeholder_store">Ersatzteile, Stauräume und Bestand.</string>
+    <string name="summary_overdue">%d überfällig</string>
+    <string name="summary_soon">%d bald fällig</string>
+    <string name="summary_more">und %d weitere</string>
+
+    <string name="record_from_notification">Aus der Benachrichtigung eingetragen</string>
+
+    <!-- Navigation -->
+    <string name="nav_now">Puls</string>
+    <string name="nav_boat">Boot</string>
+    <string name="nav_log">Wartungsbuch</string>
+    <string name="nav_store">Ersatzteile</string>
+
+    <!-- Now Screen -->
+    <string name="departure_check_done_today">Check vor dem Auslaufen heute erledigt</string>
+    <string name="departure_checklist_title">Check vor dem Auslaufen</string>
+    <string name="departure_check_fleet_partial">Check vor dem Auslaufen · erledigt: %s</string>
+    <string name="action_confirm_departure_check">Check bestätigen</string>
+    <string name="action_reset_departure_check">Neues Auslaufen</string>
+    <string name="departure_check_all_required">Alle Punkte abhaken, um zu bestätigen</string>
+    <string name="departure_check_empty_list">Checkliste konnte nicht geladen werden</string>
+    <string name="action_record_meter">Motorstunden eintragen</string>
+    <string name="record_meter_title">Motorstunden eintragen</string>
+    <string name="meter_reading_saved">Zählerstand gespeichert</string>
+    <string name="meter_current_reading">Aktueller Zählerstand</string>
+    <string name="meter_hours_unit">Std.</string>
+    <string name="meter_decrease_warning">Der Wert ist kleiner als der vorherige (%.1f Std.). Ein niedrigerer Wert schaltet die stundenbasierte Wartungsprognose ab.</string>
+    <string name="meter_decrease_confirm">Verstanden, neuen Wert speichern</string>
+    <string name="fleet_all">Alle</string>
+    <string name="action_add_vessel">Boot hinzufügen…</string>
+    <string name="vessel_select_title">Boot auswählen</string>
+    <string name="vessel_status_all_clear">Alles in Ordnung</string>
+    <string name="cd_select_vessel">Aktives Boot: %s. Tippen, um zu wechseln oder ein Boot hinzuzufügen</string>
+    <string name="status_overdue">überfällig</string>
+    <string name="status_soon">bald fällig</string>
+    <string name="action_cannot_now_defer">Geht gerade nicht — zurückstellen</string>
+    <string name="action_cancel_deferral">Zurückstellung aufheben</string>
+    <string name="all_clear_title">Alles in Ordnung</string>
+    <string name="all_clear_with_deferred">Alles in Ordnung · %1$d zurückgestellt</string>
+    <string name="all_clear_description">Zurzeit ist keine Wartung fällig.</string>
+    <string name="now_quick_actions">Schnellaktionen</string>
+    <string name="now_action_quick_log">Wartung eintragen</string>
+    <string name="now_action_enter_hours">Motorstunden</string>
+    <string name="now_action_checklists">Checklisten</string>
+    <string name="now_section_upcoming">Anstehende Wartung</string>
+    <string name="now_recent_activity">Letzter Eintrag</string>
+    <string name="now_all_journal">Alle Einträge ›</string>
+    <string name="now_unrecorded_title">Komponenten ohne Einträge</string>
+    <string name="now_unrecorded_subtitle">Anfangsstunden oder Datum der letzten Wartung eintragen, um den Wartungsplan zu aktivieren.</string>
+    <string name="action_view_nodes">Anzeigen</string>
+
+    <!-- Quick Log Sheet -->
+    <string name="quick_log_title">Schnelleintrag</string>
+    <string name="field_date">Datum</string>
+    <string name="field_work_type">Art der Arbeit</string>
+    <string name="field_meter_hours">Motorstunden</string>
+    <string name="field_new_expiry">Neues Ablaufdatum</string>
+    <string name="field_cost">Kosten</string>
+    <string name="field_notes">Notizen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_previous">Zurück</string>
+    <string name="action_next">Weiter</string>
+    <string name="service_logged_snackbar">Wartungseintrag gespeichert</string>
+
+    <!-- Defer Sheet -->
+    <string name="defer_title">Wartung zurückstellen</string>
+    <string name="defer_until_label">ZURÜCKSTELLEN BIS</string>
+    <string name="defer_reason_label">GRUND (OPTIONAL)</string>
+    <string name="defer_option_one_month">Um 1 Monat</string>
+    <string name="defer_option_haul_out">Bis zum Auskranen</string>
+    <string name="defer_option_spring">Bis zum Frühjahr</string>
+    <string name="defer_option_pick_date">Datum wählen…</string>
+    <string name="defer_explanation">Der Punkt verschwindet aus „Puls“ und kommt zum gewählten Zeitpunkt von selbst zurück. Die Überfälligkeit bleibt erhalten.</string>
+    <string name="deferred_snackbar">Zurückgestellt</string>
+
+    <!-- Themes -->
+    <string name="theme_system">System</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_sunlight">Sonnenlicht</string>
+    <string name="theme_night">Nacht</string>
+
+    <!-- Component Detail -->
+    <string name="detail_back">Zurück</string>
+    <string name="detail_next_service">Nächste Wartung</string>
+    <string name="detail_stock">Ersatzteile an Bord</string>
+    <string name="detail_passport">Datenblatt</string>
+    <string name="detail_history">Wartungshistorie</string>
+    <string name="detail_no_spares">Keine Ersatzteile mit dieser Komponente verknüpft.</string>
+    <string name="detail_no_history">Noch keine Wartungseinträge.</string>
+    <string name="detail_no_interval">Kein Intervall — Wartung nach Zustand</string>
+    <string name="detail_not_serviced_yet">Noch nicht gewartet · Intervall %s</string>
+    <string name="detail_passport_empty_hint">Das Datenblatt einmal ausfüllen, und die Frage „welcher Filter?“ ist für immer beantwortet. Teilenummern lassen sich vom Typenschild abfotografieren.</string>
+    <string name="passport_make">Hersteller</string>
+    <string name="passport_model">Modell</string>
+    <string name="passport_serial">Seriennummer</string>
+    <string name="passport_year">Baujahr</string>
+    <string name="detail_water_advice">Ihr Revier ist %1$s, daher wird eine %2$s benötigt.</string>
+    <string name="water_salt">Salzwasser</string>
+    <string name="water_fresh">Süßwasser</string>
+    <string name="water_brackish">Brackwasser</string>
+    <string name="anode_zinc">Zinkanode</string>
+    <string name="anode_magnesium">Magnesiumanode</string>
+    <string name="anode_aluminum">Aluminiumanode</string>
+    <string name="spare_in_locker">in %s</string>
+    <string name="spare_no_location">kein Stauraum</string>
+    <string name="spare_per_service">%s / Wartung</string>
+    <string name="crit_high">Kritisch</string>
+    <string name="crit_med">Wichtig</string>
+    <string name="crit_low">Routine</string>
+
+    <!-- Search & Custom components -->
+    <string name="search_hint">Komponente, Teil oder Angabe suchen…</string>
+    <string name="search_found_via">gefunden über „%1$s“</string>
+    <string name="search_found_in_spec">im Datenblatt gefunden</string>
+    <string name="search_found_in_notes">in den Notizen gefunden</string>
+    <string name="search_empty">Nichts gefunden</string>
+    <string name="create_component_title">Neue eigene Komponente</string>
+    <string name="create_component_name">Name der Komponente</string>
+    <string name="create_component_name_hint">z. B. Wassermacher Schenker Zen 30</string>
+    <string name="create_component_category">Kategorie</string>
+    <string name="create_component_criticality">Wichtigkeit</string>
+    <string name="create_component_notes">Daten / Notizen</string>
+    <string name="create_component_notes_hint">Teilenummer, Modell, Spannung usw.</string>
+    <string name="create_component_action">Komponente anlegen</string>
+    <string name="create_component_empty_search">Komponente „%1$s“ anlegen</string>
+    <string name="component_rename">Umbenennen</string>
+    <string name="component_rename_title">Eigener Name der Komponente</string>
+    <string name="component_rename_hint">Leer lassen für den Katalognamen</string>
+    <string name="add_custom_component">+ Eigene Komponente</string>
+
+    <!-- First run -->
+    <string name="setup_title">Ihr Boot</string>
+    <string name="setup_subtitle">Einmal beantworten, und der Katalog füllt sich von selbst — nur mit dem, was Ihr Boot wirklich hat.</string>
+    <string name="setup_name_label">Name</string>
+    <string name="setup_default_name">Mein Boot</string>
+    <string name="setup_action">Mein Boot anlegen</string>
+    <string name="vessel_add_photo">Foto</string>
+    <string name="boat_component_count_suffix">Komponenten</string>
+    <string name="action_language">Sprache</string>
+    <string name="passport_add_field">+ Feld hinzufügen</string>
+    <string name="passport_field_name">Feldname</string>
+
+    <!-- Work Types -->
+    <string name="work_type_scheduled">Planmäßig</string>
+    <string name="work_type_repair">Reparatur</string>
+    <string name="work_type_inspection">Inspektion</string>
+    <string name="work_type_winterization">Einwintern</string>
+    <string name="work_type_commissioning">Auswintern</string>
+    <string name="work_type_haul_out">Auskranen</string>
+    <string name="work_type_launch">Einkranen</string>
+    <string name="work_type_upgrade">Nachrüstung</string>
+    <string name="work_type_warranty">Garantie</string>
+    <string name="work_type_pre_sale">Vor dem Verkauf</string>
+
+    <!-- Condition Photos -->
+    <string name="detail_photos">Zustandsfotos</string>
+    <string name="detail_add_photo">Foto</string>
+    <string name="detail_add_more_photos">Foto hinzufügen</string>
+    <string name="detail_no_photos">Noch keine Fotos. So lassen sich Verschleiß und Korrosion über die Zeit verfolgen.</string>
+    <string name="action_change_photo">Foto ändern</string>
+    <string name="action_delete_photo">Foto löschen</string>
+    <string name="dialog_delete_photo_confirm">Dieses Foto löschen?</string>
+    <string name="photo_caption_label">Bildunterschrift (optional)</string>
+    <string name="photo_add_dialog_title">Zustandsfoto hinzufügen</string>
+    <string name="picker_gallery">Galerie</string>
+    <string name="picker_files">Dateien</string>
+    <string name="vessel_photo_dialog_title">Foto des Boots</string>
+
+    <!-- Date selection -->
+    <string name="date_today">Heute</string>
+    <string name="date_yesterday">Gestern</string>
+    <string name="date_pick_other">Kalender…</string>
+    <string name="date_picker_title">Datum wählen</string>
+
+    <!-- Service record edit & delete -->
+    <string name="action_edit">Bearbeiten</string>
+    <string name="action_delete">Löschen</string>
+    <string name="edit_record_title">Wartungseintrag bearbeiten</string>
+    <string name="action_delete_record">Eintrag löschen</string>
+    <string name="dialog_delete_record_title">Wartungseintrag löschen?</string>
+    <string name="dialog_delete_record_message">Dieser Wartungseintrag vom %1$s (%2$s) wird endgültig aus dem Wartungsbuch gelöscht.</string>
+
+    <!-- Journal screen -->
+    <string name="journal_empty_title">Das Wartungsbuch ist leer</string>
+    <string name="journal_empty_desc">Hier stehen alle erledigten Wartungen, Reparaturen und Inspektionen. Ein Tipp auf „Erledigt“ in „Puls“ oder auf der Komponentenkarte schreibt einen Eintrag mit Datum, Motorstunden und Foto.</string>
+    <string name="journal_all_categories">Alle Komponenten</string>
+    <string name="journal_spent_total">%1$s %2$s ausgegeben</string>
+    <string name="journal_gap_after_previous">%1$s nach dem vorigen</string>
+    <string name="journal_gap_and">und</string>
+    <string name="journal_imported_from">aus Import · Blatt „%1$s“, Zeile %2$d</string>
+    <string name="journal_precision_year">nur Jahr bekannt</string>
+    <string name="journal_precision_month">nur Monat bekannt</string>
+    <string name="journal_uncataloged_category">Code fehlt im Katalog</string>
+
+    <!-- Boat component management & catalog picker -->
+    <string name="boat_search_hint">Komponenten an Bord suchen…</string>
+    <string name="boat_add_component">+ Komponente hinzufügen</string>
+    <string name="catalog_add_title">Komponente zum Boot hinzufügen</string>
+    <string name="catalog_search_hint">Katalog durchsuchen…</string>
+    <string name="catalog_already_on_boat">An Bord</string>
+    <string name="catalog_action_add">+ Hinzufügen</string>
+    <string name="action_hide_from_boat">Vom Boot ausblenden</string>
+    <string name="dialog_hide_component_title">Komponente vom Boot ausblenden?</string>
+    <string name="dialog_hide_component_message">Die Komponente „%s“ wird in der Bootsliste ausgeblendet. Alle Einträge und die Wartungshistorie bleiben erhalten.</string>
+    <string name="catalog_from_catalog_tab">Aus dem Katalog</string>
+    <string name="catalog_custom_tab">Eigene Komponente</string>
+    <string name="boat_empty_components">Noch keine Komponenten an Bord.</string>
+
+    <!-- Settings & Currency -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_currency">Währung</string>
+    <string name="settings_currency_subtitle">Währung für Wartungs- und Ersatzteilkosten wählen</string>
+    <string name="settings_currency_custom">Eigene Währung</string>
+    <string name="settings_currency_custom_hint">Symbol oder Code, z. B. CAD, CHF, AUD…</string>
+    <string name="settings_theme">Farbschema</string>
+    <string name="settings_language">Sprache</string>
+    <string name="currency_uah">Ukrainische Hrywnja (₴)</string>
+    <string name="currency_usd">US-Dollar ($)</string>
+    <string name="currency_eur">Euro (€)</string>
+    <string name="currency_gbp">Britisches Pfund (£)</string>
+    <string name="currency_pln">Polnischer Złoty (zł)</string>
+    <string name="currency_sek">Schwedische Krone (kr)</string>
+    <string name="currency_nok">Norwegische Krone (kr)</string>
+    <string name="currency_try">Türkische Lira (₺)</string>
+    <string name="lang_uk">Українська</string>
+    <string name="lang_en">English</string>
+
+    <!-- Units of measurement -->
+    <string name="settings_units_title">Maßeinheiten</string>
+    <string name="settings_units_subtitle">Maßeinheiten für die ganze App festlegen</string>
+    <string name="settings_units_preset_metric">Metrisch</string>
+    <string name="settings_units_preset_nautical">Nautisch</string>
+    <string name="settings_unit_length">Bootsmaße &amp; Länge</string>
+    <string name="settings_unit_distance">Distanz &amp; Logge</string>
+    <string name="settings_unit_volume">Flüssigkeiten &amp; Tankvolumen</string>
+    <string name="settings_unit_pressure">Druck</string>
+    <string name="settings_unit_temperature">Temperatur</string>
+    <string name="unit_metres">Meter (m)</string>
+    <string name="unit_feet">Fuß (ft)</string>
+    <string name="unit_nautical_miles">Seemeilen (sm)</string>
+    <string name="unit_kilometres">Kilometer (km)</string>
+    <string name="unit_statute_miles">Landmeilen (mi)</string>
+    <string name="unit_litres">Liter (l)</string>
+    <string name="unit_gallons_us">US-Gallonen (gal)</string>
+    <string name="unit_gallons_uk">Britische Gallonen (gal)</string>
+    <string name="unit_bar">Bar (bar)</string>
+    <string name="unit_psi">PSI (psi)</string>
+    <string name="unit_celsius">Celsius (°C)</string>
+    <string name="unit_fahrenheit">Fahrenheit (°F)</string>
+    <string name="unit_short_m">m</string>
+    <string name="unit_short_ft">ft</string>
+    <string name="unit_short_nm">sm</string>
+    <string name="unit_short_km">km</string>
+    <string name="unit_short_mi">mi</string>
+    <string name="unit_short_l">l</string>
+    <string name="unit_short_gal_us">US gal</string>
+    <string name="unit_short_gal_uk">UK gal</string>
+    <string name="unit_short_bar">bar</string>
+    <string name="unit_short_psi">psi</string>
+    <string name="unit_short_celsius">°C</string>
+    <string name="unit_short_fahrenheit">°F</string>
+
+    <!-- Maintenance notifications -->
+    <string name="settings_notifications_title">Wartungserinnerungen</string>
+    <string name="settings_notifications_subtitle">Tägliche Prüfung im Hintergrund auf überfällige und anstehende Wartung</string>
+    <string name="settings_notifications_enabled">Erinnerungen aktivieren</string>
+    <string name="settings_notifications_advance">Vorlauf</string>
+    <string name="settings_notifications_days_7">7 Tage</string>
+    <string name="settings_notifications_days_14">14 Tage</string>
+    <string name="settings_notifications_days_30">30 Tage</string>
+
+    <!-- Data & Export -->
+    <string name="settings_data_title">Daten &amp; Speicher</string>
+    <string name="settings_data_subtitle">100% offline, lokal auf diesem Gerät gespeichert</string>
+    <string name="settings_export_journal">Wartungsbuch exportieren (CSV)</string>
+    <string name="settings_export_success">Wartungsbuch erfolgreich exportiert</string>
+    <string name="settings_export_empty">Keine Einträge zum Exportieren</string>
+
+    <!-- About -->
+    <string name="settings_about_title">Über HullBeat</string>
+    <string name="settings_about_version">Version %1$s</string>
+    <string name="settings_about_desc">HullBeat ist ein Offline-Wartungsbuch und Wartungsplaner für Segelboote und Motoryachten.</string>
+    <string name="settings_about_github">GitHub-Repository</string>
+
+    <!-- Store / Spares -->
+    <string name="store_tab_all">Alle Ersatzteile</string>
+    <string name="store_tab_tobuy">Einkaufen</string>
+    <string name="store_tab_locations">Stauräume</string>
+    <string name="store_search_hint">Teil, Nummer, Marke suchen…</string>
+    <string name="store_stat_gone">Nicht vorrätig: %1$d</string>
+    <string name="store_stat_low">Knapp: %1$d</string>
+    <string name="store_add_part">Teil hinzufügen</string>
+    <string name="store_edit_part">Teil bearbeiten</string>
+    <string name="store_delete_part">Aus dem Bestand löschen</string>
+    <string name="store_add_location">Stauraum hinzufügen</string>
+    <string name="store_edit_location">Stauraum bearbeiten</string>
+    <string name="store_delete_location">Stauraum löschen</string>
+    <string name="store_delete_location_confirm">Diesen Stauraum löschen? Die Teile darin bleiben ohne Stauraum erhalten.</string>
+    <string name="store_delete_part_confirm">„%1$s“ aus dem Bestand löschen?</string>
+    <string name="store_part_name">Bezeichnung</string>
+    <string name="store_part_name_hint">z. B. Ölfilter</string>
+    <string name="store_part_number">Teilenr.</string>
+    <string name="store_part_number_hint">z. B. 875812</string>
+    <string name="store_part_mfr">Hersteller / Marke</string>
+    <string name="store_part_mfr_hint">z. B. Volvo Penta, Yanmar</string>
+    <string name="store_part_qty">Menge an Bord</string>
+    <string name="store_part_min_qty">Sollbestand</string>
+    <string name="store_part_min_qty_hint">Wie viele an Bord bleiben sollen</string>
+    <string name="store_location_label">Stauraum</string>
+    <string name="store_no_location">Kein Stauraum</string>
+    <string name="store_new_location_prompt">+ Neuen Stauraum anlegen…</string>
+    <string name="store_location_name">Name des Stauraums / Fachs</string>
+    <string name="store_location_name_hint">z. B. Motorraum, Achterpiek</string>
+    <string name="store_location_qr">Etikettcode (optional)</string>
+    <string name="store_location_qr_hint">z. B. R-1, L-A1</string>
+    <string name="store_part_notes">Notizen</string>
+    <string name="store_part_notes_hint">Bezugsquelle, Kompatibilität usw.</string>
+    <string name="store_linked_components">Verwendet für</string>
+    <string name="store_linked_components_hint">Komponenten wählen, zu denen das Teil passt</string>
+    <string name="store_filter_components_hint">Komponenten filtern…</string>
+    <string name="store_empty_title">Der Bestand ist leer</string>
+    <string name="store_empty_desc">Fügen Sie die ersten Ersatzteile hinzu oder legen Sie die üblichen Stauräume an.</string>
+    <string name="store_seed_locations_btn">Übliche Stauräume anlegen</string>
+    <string name="store_tobuy_empty">Alle nötigen Ersatzteile sind ausreichend an Bord.</string>
+    <string name="store_locations_empty">Noch keine Stauräume. Legen Sie den ersten an oder nutzen Sie die Vorgaben.</string>
+    <string name="store_loc_empty">In diesem Stauraum liegen noch keine Teile.</string>
+    <string name="store_qty_badge">%1$s · Soll %2$s</string>
+    <string name="store_out_of_stock">LEER</string>
+    <string name="store_low_stock">KNAPP</string>
+    <string name="store_default_loc_engine">Motorraum</string>
+    <string name="store_default_loc_cockpit">Backskiste (Cockpit)</string>
+    <string name="store_default_loc_chart">Navigationsecke</string>
+    <string name="store_default_loc_forepeak">Vorschiff-Stauraum</string>
+    <string name="store_default_loc_galley">Pantry-Schapp</string>
+    <string name="store_items_count">%1$d Stk.</string>
+
+    <!-- Import & Rollback -->
+    <string name="settings_import_title">Wartungshistorie importieren</string>
+    <string name="settings_import_subtitle">Einträge aus einer CSV- oder TSV-Tabelle laden</string>
+    <string name="settings_import_btn">Tabelle importieren (CSV)</string>
+    <string name="import_sheet_title">Import ins Wartungsbuch</string>
+    <string name="import_preview_subtitle">Spalten zuordnen und Einträge prüfen</string>
+    <string name="import_file_label">Datei</string>
+    <string name="import_btn_commit">Einträge importieren</string>
+    <string name="import_history_title">Importverlauf</string>
+    <string name="import_history_empty">Noch keine Importe</string>
+    <string name="import_rollback_btn">Rückgängig</string>
+    <string name="import_rollback_success">Import rückgängig gemacht</string>
+    <string name="field_map_date">Datum</string>
+    <string name="field_map_desc">Beschreibung</string>
+    <string name="field_map_work_type">Art der Arbeit</string>
+    <string name="field_map_hours">Stunden</string>
+    <string name="field_map_cost">Kosten</string>
+    <string name="field_map_who">Ausgeführt von</string>
+    <string name="field_map_notes">Notizen</string>
+    <string name="field_map_component">Komponente</string>
+    <string name="field_map_ignore">Ignorieren</string>
+
+    <!-- Backup & Restore -->
+    <string name="settings_backup_title">Sicherung &amp; Wiederherstellung (SAF)</string>
+    <string name="settings_backup_subtitle">Vollständige Datenbanksicherung in den Speicher oder die Cloud</string>
+    <string name="settings_backup_create">Sicherung erstellen</string>
+    <string name="settings_backup_restore">Aus Sicherung wiederherstellen</string>
+    <string name="settings_backup_success">Sicherung erstellt</string>
+    <string name="settings_backup_failed">Sicherung fehlgeschlagen</string>
+    <string name="settings_restore_success">Datenbank wiederhergestellt</string>
+    <string name="settings_restore_invalid">Ungültige Sicherungsdatei</string>
+    <string name="settings_export_store">Bestand &amp; Stauräume exportieren (CSV)</string>
+    <string name="settings_export_store_empty">Keine Stauräume oder Teile zum Exportieren</string>
+    <string name="settings_export_store_success">Bestand und Stauräume exportiert</string>
+    <string name="settings_export_excel">Nach Excel exportieren (.xlsx)</string>
+    <string name="settings_export_excel_success">Excel-Datei exportiert</string>
+    <string name="settings_export_excel_failed">Excel-Export fehlgeschlagen</string>
+    <string name="settings_export_excel_empty">Keine Daten zum Exportieren</string>
+    <string name="excel_sheet_journal">Wartungsbuch</string>
+    <string name="excel_sheet_store">Bestand &amp; Stauräume</string>
+    <string name="settings_export_journal_csv">Wartungsbuch (CSV)</string>
+    <string name="settings_export_store_csv">Bestand (CSV)</string>
+
+    <!-- Boat Passport PDF -->
+    <string name="settings_export_pdf_passport">Bootsdatenblatt exportieren (PDF)</string>
+    <string name="settings_export_pdf_success">Bootsdatenblatt exportiert</string>
+    <string name="settings_export_pdf_failed">PDF konnte nicht erstellt werden</string>
+    <string name="pdf_passport_title">Bootsdatenblatt &amp; Serviceheft</string>
+    <string name="pdf_section_vessel">Bootsdaten</string>
+    <string name="pdf_section_equipment">Ausrüstungsverzeichnis</string>
+    <string name="pdf_section_equipment_photos">Ausrüstung</string>
+    <string name="pdf_more_photos">+%1$d weitere</string>
+    <string name="pdf_section_service">Wartungshistorie</string>
+    <string name="pdf_field_summary">Zusammenfassung</string>
+    <string name="pdf_field_records_count">Wartungseinträge: %1$d</string>
+    <string name="pdf_field_total_cost">Gesamtkosten: %1$s</string>
+    <string name="pdf_field_components_count">Erfasste Komponenten: %1$d</string>
+    <string name="pdf_field_make_model">Werft / Modell</string>
+    <string name="pdf_field_year">Baujahr</string>
+    <string name="pdf_field_hin">HIN / CIN</string>
+    <string name="pdf_field_length">Länge</string>
+    <string name="pdf_field_hull">Rumpfform</string>
+    <string name="pdf_field_engine">Motorart</string>
+    <string name="pdf_field_drive">Antriebsart</string>
+    <string name="pdf_field_fuel">Kraftstoff</string>
+    <string name="pdf_field_serial">S/N</string>
+    <string name="pdf_field_installed">Eingebaut</string>
+    <string name="pdf_footer_page">Seite %1$d</string>
+    <string name="pdf_footer_brand">HullBeat Wartungsbuch</string>
+    <string name="now_enter_hours">Stunden eintragen</string>
+    <string name="error_photo_save_failed">Foto konnte nicht gespeichert werden</string>
+    <string name="action_ok">OK</string>
+</resources>
