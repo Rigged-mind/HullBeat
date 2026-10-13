@@ -140,4 +140,30 @@
         <item quantity="one">%d Eintrag importiert</item>
         <item quantity="other">%d Einträge importiert</item>
     </plurals>
+
+    <!-- Added on main after 44e7713 -->
+    <plurals name="settings_backup_skipped_files">
+        <item quantity="one">Sicherung erstellt, aber %d Anhang konnte nicht aufgenommen werden (Datei nicht verfügbar)</item>
+        <item quantity="other">Sicherung erstellt, aber %d Anhänge konnten nicht aufgenommen werden (Dateien nicht verfügbar)</item>
+    </plurals>
+
+    <plurals name="import_skipped_rows">
+        <item quantity="one">%d Zeile übersprungen</item>
+        <item quantity="other">%d Zeilen übersprungen</item>
+    </plurals>
+
+    <plurals name="import_issues_banner_title">
+        <item quantity="one">%d Zeile mit Fehlern</item>
+        <item quantity="other">%d Zeilen mit Fehlern</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_subtitle">
+        <item quantity="one">%d Zeile enthält nicht erkannte Felder und wird nicht importiert:</item>
+        <item quantity="other">%d Zeilen enthalten nicht erkannte Felder und werden nicht importiert:</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_confirm">
+        <item quantity="one">%1$d von %2$d Zeile importieren</item>
+        <item quantity="other">%1$d von %2$d Zeilen importieren</item>
+    </plurals>
 </resources>

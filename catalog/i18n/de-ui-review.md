@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-378 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+396 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -123,6 +123,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `theme_dark` | Dark | **Dunkel** | |
 | `theme_sunlight` | Sunlight | **Sonnenlicht** | |
 | `theme_night` | Night | **Nacht** | |
+| `theme_colorful` | Color | **Farbig** | |
 | `detail_back` | Back | **Zurück** | |
 | `detail_next_service` | Next maintenance | **Nächste Wartung** | |
 | `detail_stock` | On board spares | **Ersatzteile an Bord** | |
@@ -249,6 +250,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `currency_try` | Turkish Lira (₺) | **Türkische Lira (₺)** | |
 | `lang_uk` | Українська | **Українська** | |
 | `lang_en` | English | **English** | |
+| `lang_de` | Deutsch | **Deutsch** | |
+| `lang_es` | Español | **Español** | |
 | `settings_units_title` | Units of measurement | **Maßeinheiten** | |
 | `settings_units_subtitle` | Configure measurement units across the app | **Maßeinheiten für die ganze App festlegen** | |
 | `settings_units_preset_metric` | Metric | **Metrisch** | |
@@ -355,6 +358,13 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `import_preview_subtitle` | Map columns and preview records | **Spalten zuordnen und Einträge prüfen** | |
 | `import_file_label` | File | **Datei** | |
 | `import_btn_commit` | Import records | **Einträge importieren** | |
+| `import_btn_commit_with_issues` | Review &amp; import | **Prüfen &amp; importieren** | |
+| `import_issues_banner_subtitle` | Unrecognized dates or components will be skipped upon import | **Nicht erkannte Daten oder Komponenten werden beim Import übersprungen** | |
+| `import_skip_dialog_title` | Skipping problematic rows | **Fehlerhafte Zeilen überspringen** | |
+| `import_issue_date` | unrecognized date «%s» | **nicht erkanntes Datum „%s“** | |
+| `import_issue_component` | unknown component «%s» | **unbekannte Komponente „%s“** | |
+| `import_issue_row` | Row %1$d: %2$s | **Zeile %1$d: %2$s** | |
+| `import_skip_dialog_cancel` | Cancel | **Abbrechen** | |
 | `import_history_title` | Import history | **Importverlauf** | |
 | `import_history_empty` | No imports yet | **Noch keine Importe** | |
 | `import_rollback_btn` | Undo | **Rückgängig** | |
@@ -387,10 +397,10 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `excel_sheet_store` | Store &amp; Lockers | **Bestand &amp; Stauräume** | |
 | `settings_export_journal_csv` | Log (CSV) | **Wartungsbuch (CSV)** | |
 | `settings_export_store_csv` | Store (CSV) | **Bestand (CSV)** | |
-| `settings_export_pdf_passport` | Export boat passport (PDF) | **Bootsdatenblatt exportieren (PDF)** | |
+| `settings_export_pdf_passport` | Boat passport &amp; service book (PDF) | **Bootsdatenblatt &amp; Serviceheft (PDF)** | |
 | `settings_export_pdf_success` | Boat passport exported successfully | **Bootsdatenblatt exportiert** | |
 | `settings_export_pdf_failed` | Failed to create PDF document | **PDF konnte nicht erstellt werden** | |
-| `pdf_passport_title` | Vessel Passport &amp; Service Dossier | **Bootsdatenblatt &amp; Serviceheft** | |
+| `pdf_passport_title` | Vessel Passport &amp; Service Book | **Bootsdatenblatt &amp; Serviceheft** | |
 | `pdf_section_vessel` | Vessel Specifications | **Bootsdaten** | |
 | `pdf_section_equipment` | Equipment Registry | **Ausrüstungsverzeichnis** | |
 | `pdf_section_equipment_photos` | Equipment | **Ausrüstung** | |
@@ -412,9 +422,17 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `pdf_field_installed` | Installed | **Eingebaut** | |
 | `pdf_footer_page` | Page %1$d | **Seite %1$d** | |
 | `pdf_footer_brand` | HullBeat Ship\'s Log | **HullBeat Wartungsbuch** | |
+| `pdf_compiled_by` | Compiled by owner via HullBeat | **Vom Eigner mit HullBeat erstellt** | |
 | `now_enter_hours` | Enter hours | **Stunden eintragen** | |
 | `error_photo_save_failed` | Could not save the photo | **Foto konnte nicht gespeichert werden** | |
 | `action_ok` | OK | **OK** | |
+| `nav_menu_title` | Menu | **Menü** | |
+| `drawer_switch_vessel` | Switch vessel | **Boot wechseln** | |
+| `state_expanded` | Expanded | **Ausgeklappt** | |
+| `state_collapsed` | Collapsed | **Eingeklappt** | |
+| `action_close` | Close | **Schließen** | |
+| `icons_overview_sections` | App sections | **Bereiche der App** | |
+| `icons_overview_categories` | Component categories (%d) | **Komponentenkategorien (%d)** | |
 | `toast_jobs_saved` | one: Saved %d job / other: Saved %d jobs | **one: %d Arbeit gespeichert / other: %d Arbeiten gespeichert** | |
 | `checklist_will_log` | one: %d tick will write a record and reset the interval / other: %d ticks will write records and reset their intervals | **one: %d Haken schreibt einen Eintrag und setzt das Intervall zurück / other: %d Haken schreiben Einträge und setzen ihre Intervalle zurück** | |
 | `checklist_not_applicable` | one: %d item does not apply to this boat / other: %d items do not apply to this boat | **one: %d Punkt gilt nicht für dieses Boot / other: %d Punkte gelten nicht für dieses Boot** | |
@@ -443,3 +461,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `store_stat_lockers` | one: in %d locker / other: in %d lockers | **one: in %d Stauraum / other: in %d Stauräumen** | |
 | `import_rows_count` | one: %d row / other: %d rows | **one: %d Zeile / other: %d Zeilen** | |
 | `import_success_toast` | one: Imported %d record / other: Imported %d records | **one: %d Eintrag importiert / other: %d Einträge importiert** | |
+| `settings_backup_skipped_files` | one: Backup created, but %d attachment could not be included (file unavailable) / other: Backup created, but %d attachments could not be included (files unavailable) | **one: Sicherung erstellt, aber %d Anhang konnte nicht aufgenommen werden (Datei nicht verfügbar) / other: Sicherung erstellt, aber %d Anhänge konnten nicht aufgenommen werden (Dateien nicht verfügbar)** | |
+| `import_skipped_rows` | one: %d row skipped / other: %d rows skipped | **one: %d Zeile übersprungen / other: %d Zeilen übersprungen** | |
+| `import_issues_banner_title` | one: %d row has issues / other: %d rows have issues | **one: %d Zeile mit Fehlern / other: %d Zeilen mit Fehlern** | |
+| `import_skip_dialog_subtitle` | one: %d row has unparsed fields and will not be imported: / other: %d rows have unparsed fields and will not be imported: | **one: %d Zeile enthält nicht erkannte Felder und wird nicht importiert: / other: %d Zeilen enthalten nicht erkannte Felder und werden nicht importiert:** | |
+| `import_skip_dialog_confirm` | one: Import %1$d of %2$d row / other: Import %1$d of %2$d rows | **one: %1$d von %2$d Zeile importieren / other: %1$d von %2$d Zeilen importieren** | |

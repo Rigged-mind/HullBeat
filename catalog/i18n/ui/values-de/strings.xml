@@ -410,7 +410,7 @@
     <string name="settings_export_store_csv">Bestand (CSV)</string>
 
     <!-- Boat Passport PDF -->
-    <string name="settings_export_pdf_passport">Bootsdatenblatt exportieren (PDF)</string>
+    <string name="settings_export_pdf_passport">Bootsdatenblatt &amp; Serviceheft (PDF)</string>
     <string name="settings_export_pdf_success">Bootsdatenblatt exportiert</string>
     <string name="settings_export_pdf_failed">PDF konnte nicht erstellt werden</string>
     <string name="pdf_passport_title">Bootsdatenblatt &amp; Serviceheft</string>
@@ -438,4 +438,24 @@
     <string name="now_enter_hours">Stunden eintragen</string>
     <string name="error_photo_save_failed">Foto konnte nicht gespeichert werden</string>
     <string name="action_ok">OK</string>
+
+    <!-- Added on main after 44e7713 -->
+    <string name="theme_colorful">Farbig</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_es">Español</string>
+    <string name="import_btn_commit_with_issues">Prüfen &amp; importieren</string>
+    <string name="import_issues_banner_subtitle">Nicht erkannte Daten oder Komponenten werden beim Import übersprungen</string>
+    <string name="import_skip_dialog_title">Fehlerhafte Zeilen überspringen</string>
+    <string name="import_issue_date">nicht erkanntes Datum „%s“</string>
+    <string name="import_issue_component">unbekannte Komponente „%s“</string>
+    <string name="import_issue_row">Zeile %1$d: %2$s</string>
+    <string name="import_skip_dialog_cancel">Abbrechen</string>
+    <string name="pdf_compiled_by">Vom Eigner mit HullBeat erstellt</string>
+    <string name="nav_menu_title">Menü</string>
+    <string name="drawer_switch_vessel">Boot wechseln</string>
+    <string name="state_expanded">Ausgeklappt</string>
+    <string name="state_collapsed">Eingeklappt</string>
+    <string name="action_close">Schließen</string>
+    <string name="icons_overview_sections">Bereiche der App</string>
+    <string name="icons_overview_categories">Komponentenkategorien (%d)</string>
 </resources>

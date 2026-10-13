@@ -172,4 +172,35 @@
         <item quantity="many">%d registros importados</item>
         <item quantity="other">%d registros importados</item>
     </plurals>
+
+    <!-- Added on main after 44e7713 -->
+    <plurals name="settings_backup_skipped_files">
+        <item quantity="one">Copia creada, pero no se pudo incluir %d adjunto (archivo no disponible)</item>
+        <item quantity="many">Copia creada, pero no se pudieron incluir %d adjuntos (archivos no disponibles)</item>
+        <item quantity="other">Copia creada, pero no se pudieron incluir %d adjuntos (archivos no disponibles)</item>
+    </plurals>
+
+    <plurals name="import_skipped_rows">
+        <item quantity="one">%d fila omitida</item>
+        <item quantity="many">%d filas omitidas</item>
+        <item quantity="other">%d filas omitidas</item>
+    </plurals>
+
+    <plurals name="import_issues_banner_title">
+        <item quantity="one">%d fila con problemas</item>
+        <item quantity="many">%d filas con problemas</item>
+        <item quantity="other">%d filas con problemas</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_subtitle">
+        <item quantity="one">%d fila tiene campos no reconocidos y no se importará:</item>
+        <item quantity="many">%d filas tienen campos no reconocidos y no se importarán:</item>
+        <item quantity="other">%d filas tienen campos no reconocidos y no se importarán:</item>
+    </plurals>
+
+    <plurals name="import_skip_dialog_confirm">
+        <item quantity="one">Importar %1$d de %2$d fila</item>
+        <item quantity="many">Importar %1$d de %2$d filas</item>
+        <item quantity="other">Importar %1$d de %2$d filas</item>
+    </plurals>
 </resources>
