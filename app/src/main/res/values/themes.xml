@@ -11,4 +11,14 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <!--
+      The launch screen, on the app icon's colour. MainActivity swaps to
+      Theme.HullBeat before its first frame. values-v31 overrides this with
+      the SplashScreen attributes.
+    -->
+    <style name="Theme.HullBeat.Starting">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

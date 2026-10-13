@@ -92,6 +92,17 @@ import app.hullbeat.data.preferences.TemperatureUnit
 import app.hullbeat.data.preferences.VolumeUnit
 import app.hullbeat.ui.AppLanguage
 import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.LocalExtendedColors
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.DpOffset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -131,6 +142,8 @@ fun SettingsDrawerSheet(
     // Hoisted with the rest: a `remember` inside a LazyColumn item is thrown
     // away when the item scrolls out of view.
     var currencyMenuOpen by remember { mutableStateOf(false) }
+    var languageMenuOpen by remember { mutableStateOf(false) }
+    var themeMenuOpen by remember { mutableStateOf(false) }
 
     // Units state
     var lengthUnit by remember { mutableStateOf(AppPreferences.getLengthUnit(context)) }
@@ -581,75 +594,43 @@ fun SettingsDrawerSheet(
                         selectedCurrency
                     }
 
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedButton(
-                            onClick = { currencyMenuOpen = true },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 56.dp),
-                            shape = RoundedCornerShape(10.dp),
-                        ) {
-                            Text(
-                                text = currencyFieldText,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
-                                textAlign = TextAlign.Start,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                            )
-                            Icon(
-                                painter = painterResource(R.drawable.ic_chevron_down),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = currencyMenuOpen,
-                            onDismissRequest = { currencyMenuOpen = false },
-                        ) {
-                            AppPreferences.AVAILABLE_CURRENCIES.forEach { option ->
-                                DropdownMenuItem(
-                                    modifier = Modifier.heightIn(min = 56.dp),
-                                    text = {
-                                        Text(
-                                            text = option.symbol + " · " + option.code +
-                                                " · " + stringResource(option.nameRes),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                        )
-                                    },
-                                    onClick = {
-                                        currencyMenuOpen = false
-                                        isCustomSelected = false
-                                        selectedCurrency = option.symbol
-                                        AppPreferences.setCurrency(context, option.symbol)
-                                        onCurrencyChanged(option.symbol)
-                                    },
-                                )
-                            }
-
-                            HorizontalDivider()
-
-                            DropdownMenuItem(
-                                modifier = Modifier.heightIn(min = 56.dp),
-                                text = {
-                                    Text(
-                                        text = stringResource(R.string.settings_currency_custom),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                },
+                    SettingsDropdown(
+                        fieldText = currencyFieldText,
+                        expanded = currencyMenuOpen,
+                        onExpandedChange = { currencyMenuOpen = it },
+                    ) {
+                        AppPreferences.AVAILABLE_CURRENCIES.forEach { option ->
+                            SettingsDropdownItem(
+                                text = option.symbol + " · " + option.code +
+                                    " · " + stringResource(option.nameRes),
+                                // By identity, not symbol: only the row the
+                                // field shows is ticked, not both "kr".
+                                selected = option === selectedCurrencyOption,
                                 onClick = {
                                     currencyMenuOpen = false
-                                    isCustomSelected = true
-                                    if (customCurrencyText.isNotBlank()) {
-                                        selectedCurrency = customCurrencyText.trim()
-                                        AppPreferences.setCurrency(context, selectedCurrency)
-                                        onCurrencyChanged(selectedCurrency)
-                                    }
+                                    isCustomSelected = false
+                                    selectedCurrency = option.symbol
+                                    AppPreferences.setCurrency(context, option.symbol)
+                                    onCurrencyChanged(option.symbol)
                                 },
                             )
                         }
+
+                        SettingsDropdownDivider()
+
+                        SettingsDropdownItem(
+                            text = stringResource(R.string.settings_currency_custom),
+                            selected = isCustomSelected,
+                            onClick = {
+                                currencyMenuOpen = false
+                                isCustomSelected = true
+                                if (customCurrencyText.isNotBlank()) {
+                                    selectedCurrency = customCurrencyText.trim()
+                                    AppPreferences.setCurrency(context, selectedCurrency)
+                                    onCurrencyChanged(selectedCurrency)
+                                }
+                            },
+                        )
                     }
 
                     // Only while it is the answer, instead of a permanent card
@@ -686,44 +667,45 @@ fun SettingsDrawerSheet(
                         fontWeight = FontWeight.Bold,
                     )
 
-                    // Row 1: System, Light, Dark (3 equal columns)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    // Everyday schemes, then the marine ones (sunlight, night,
+                    // colour), split by a divider.
+                    val generalThemes: List<Pair<Scheme, Int>> = listOf(
+                        Scheme.SYSTEM to R.string.theme_system,
+                        Scheme.LIGHT to R.string.theme_light,
+                        Scheme.DARK to R.string.theme_dark,
+                    )
+                    val marineThemes: List<Pair<Scheme, Int>> = listOf(
+                        Scheme.SUNLIGHT to R.string.theme_sunlight,
+                        Scheme.NIGHT to R.string.theme_night,
+                        Scheme.COLORFUL to R.string.theme_colorful,
+                    )
+                    val currentThemeLabel = (generalThemes + marineThemes)
+                        .first { it.first == currentScheme }.second
+
+                    SettingsDropdown(
+                        fieldText = stringResource(currentThemeLabel),
+                        expanded = themeMenuOpen,
+                        onExpandedChange = { themeMenuOpen = it },
                     ) {
-                        val generalThemes: List<Pair<Scheme, Int>> = listOf(
-                            Scheme.SYSTEM to R.string.theme_system,
-                            Scheme.LIGHT to R.string.theme_light,
-                            Scheme.DARK to R.string.theme_dark,
-                        )
                         generalThemes.forEach { (scheme, labelRes) ->
-                            SettingsSelectChip(
+                            SettingsDropdownItem(
+                                text = stringResource(labelRes),
                                 selected = currentScheme == scheme,
-                                onClick = { onSchemeChanged(scheme) },
-                                label = stringResource(labelRes),
-                                modifier = Modifier.weight(1f),
-                                height = 40.dp,
+                                onClick = {
+                                    themeMenuOpen = false
+                                    onSchemeChanged(scheme)
+                                },
                             )
                         }
-                    }
-
-                    // Row 2: Sunlight, Night, Color (3 equal columns)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        val marineThemes: List<Pair<Scheme, Int>> = listOf(
-                            Scheme.SUNLIGHT to R.string.theme_sunlight,
-                            Scheme.NIGHT to R.string.theme_night,
-                            Scheme.COLORFUL to R.string.theme_colorful,
-                        )
+                        SettingsDropdownDivider()
                         marineThemes.forEach { (scheme, labelRes) ->
-                            SettingsSelectChip(
+                            SettingsDropdownItem(
+                                text = stringResource(labelRes),
                                 selected = currentScheme == scheme,
-                                onClick = { onSchemeChanged(scheme) },
-                                label = stringResource(labelRes),
-                                modifier = Modifier.weight(1f),
-                                height = 40.dp,
+                                onClick = {
+                                    themeMenuOpen = false
+                                    onSchemeChanged(scheme)
+                                },
                             )
                         }
                     }
@@ -741,28 +723,25 @@ fun SettingsDrawerSheet(
                         fontWeight = FontWeight.Bold,
                     )
 
-                    // One chip per shipped language, two to a row. The list is
-                    // AppLanguage.SUPPORTED, so a language released later
-                    // appears here without touching this screen.
+                    // A dropdown, built like the currency one above: chips took
+                    // a row per two languages and stop scaling past four. The
+                    // list is AppLanguage.SUPPORTED, so a language released
+                    // later appears here without touching this screen.
                     val current = AppLanguage.current(context)
-                    AppLanguage.SUPPORTED.chunked(2).forEach { rowTags ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            rowTags.forEach { tag ->
-                                SettingsSelectChip(
-                                    selected = current == tag,
-                                    onClick = {
-                                        if (current != tag) AppLanguage.set(context, tag)
-                                    },
-                                    label = stringResource(AppLanguage.nameRes(tag)),
-                                    modifier = Modifier.weight(1f),
-                                    height = 42.dp,
-                                )
-                            }
-                            // An odd last chip keeps the width of its pair.
-                            if (rowTags.size == 1) Spacer(modifier = Modifier.weight(1f))
+                    SettingsDropdown(
+                        fieldText = stringResource(AppLanguage.nameRes(current)),
+                        expanded = languageMenuOpen,
+                        onExpandedChange = { languageMenuOpen = it },
+                    ) {
+                        AppLanguage.SUPPORTED.forEach { tag ->
+                            SettingsDropdownItem(
+                                text = stringResource(AppLanguage.nameRes(tag)),
+                                selected = tag == current,
+                                onClick = {
+                                    languageMenuOpen = false
+                                    if (current != tag) AppLanguage.set(context, tag)
+                                },
+                            )
                         }
                     }
                 }
@@ -1275,6 +1254,137 @@ private fun <T> SettingsUnitRow(
             }
         }
     }
+}
+
+/**
+ * A field that opens a list, drawn in the app's own colours.
+ *
+ * The stock DropdownMenu paints itself `surfaceContainer`, which none of our
+ * schemes define, so it fell back to Material's baseline lavender in every
+ * theme. Here the container, border and selection come from the live scheme,
+ * and the menu is as wide as its field.
+ */
+@Composable
+private fun SettingsDropdown(
+    fieldText: String,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    items: @Composable ColumnScope.() -> Unit,
+) {
+    val colors = MaterialTheme.colorScheme
+    val borderWidth = LocalExtendedColors.current.borderWidth.dp
+    val density = LocalDensity.current
+    var fieldWidth by remember { mutableIntStateOf(0) }
+    val chevronTurn by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "chevron",
+    )
+
+    Box(modifier = modifier.fillMaxWidth()) {
+        Surface(
+            onClick = { onExpandedChange(true) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp)
+                .onSizeChanged { fieldWidth = it.width },
+            shape = RoundedCornerShape(12.dp),
+            color = if (expanded) colors.primaryContainer.copy(alpha = 0.35f) else colors.surface,
+            border = BorderStroke(
+                width = if (expanded) borderWidth + 0.5.dp else borderWidth,
+                color = if (expanded) colors.primary else colors.outline,
+            ),
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(
+                    text = fieldText,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = colors.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_chevron_down),
+                    contentDescription = null,
+                    tint = colors.primary,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .rotate(chevronTurn),
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onExpandedChange(false) },
+            modifier = Modifier
+                .width(with(density) { fieldWidth.toDp() })
+                .padding(vertical = 2.dp),
+            offset = DpOffset(0.dp, 6.dp),
+            shape = RoundedCornerShape(12.dp),
+            containerColor = colors.surface,
+            tonalElevation = 0.dp,
+            shadowElevation = 8.dp,
+            border = BorderStroke(borderWidth, colors.outlineVariant),
+            content = items,
+        )
+    }
+}
+
+/** One row of a [SettingsDropdown]; the chosen one sits on the brand tint with a tick. */
+@Composable
+private fun SettingsDropdownItem(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val colors = MaterialTheme.colorScheme
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        onClick = onClick,
+        trailingIcon = if (selected) {
+            {
+                Icon(
+                    painter = painterResource(R.drawable.ic_check),
+                    contentDescription = null,
+                    tint = colors.onPrimaryContainer,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+        } else {
+            null
+        },
+        colors = MenuDefaults.itemColors(
+            textColor = if (selected) colors.onPrimaryContainer else colors.onSurface,
+        ),
+        modifier = Modifier
+            .padding(horizontal = 6.dp, vertical = 1.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (selected) colors.primaryContainer else Color.Transparent)
+            .heightIn(min = 48.dp),
+    )
+}
+
+@Composable
+private fun SettingsDropdownDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+        color = MaterialTheme.colorScheme.outlineVariant,
+    )
 }
 
 @Composable

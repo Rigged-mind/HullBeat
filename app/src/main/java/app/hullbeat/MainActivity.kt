@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // The manifest starts on the launch-screen theme; back to the app's
+        // own before anything is drawn.
+        setTheme(R.style.Theme_HullBeat)
         // Before super.onCreate, so decor fitting applies to the first frame.
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
