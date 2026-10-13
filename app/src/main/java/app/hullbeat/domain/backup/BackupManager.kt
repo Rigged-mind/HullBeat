@@ -41,6 +41,18 @@ data class VesselPhotoEntry(
     val archivePath: String,
 )
 
+/**
+ * Result of a backup operation.
+ *
+ * [success] is false when the checkpoint did not flush the WAL or when an
+ * unrecoverable IO error occurred. [skippedFiles] counts attachments and vessel
+ * photos whose URIs existed in the database but could not be read at backup
+ * time — the database entry is still present, but the file itself is gone.
+ * A positive count means the archive looks complete from the outside but will
+ * have broken attachment links after a restore.
+ */
+data class BackupResult(val success: Boolean, val skippedFiles: Int = 0)
+
 object BackupManager {
 
     val SQLITE_HEADER: ByteArray = "SQLite format 3\u0000".toByteArray(Charsets.US_ASCII)
@@ -64,7 +76,7 @@ object BackupManager {
         return header.sliceArray(0 until 16).contentEquals(SQLITE_HEADER)
     }
 
-    suspend fun createBackup(context: Context, db: AppDatabase, outputStream: OutputStream): Boolean {
+    suspend fun createBackup(context: Context, db: AppDatabase, outputStream: OutputStream): BackupResult {
         return try {
             // Only the main .db file goes into the archive, so everything still
             // sitting in the WAL must be folded into it first. A checkpoint
@@ -74,10 +86,10 @@ object BackupManager {
             val checkpointed = db.openHelper.writableDatabase
                 .query("PRAGMA wal_checkpoint(FULL)")
                 .use { it.moveToFirst() && it.getInt(0) == 0 }
-            if (!checkpointed) return false
+            if (!checkpointed) return BackupResult(success = false)
 
             val dbFile = context.getDatabasePath(AppDatabase.NAME)
-            if (!dbFile.exists()) return false
+            if (!dbFile.exists()) return BackupResult(success = false)
 
             val attachments = try {
                 db.attachmentDao().allAttachments()
@@ -92,6 +104,7 @@ object BackupManager {
             }
 
             val zipOut = ZipOutputStream(outputStream)
+            var skippedFiles = 0
 
             // 1. Pack database file
             zipOut.putNextEntry(ZipEntry("database/hullbeat.db"))
@@ -103,13 +116,19 @@ object BackupManager {
             for (att in attachments) {
                 if (att.fileUri.isBlank()) continue
                 val archivePath = "attachments/${att.id}.bin"
-                val stream = openUriStream(context, att.fileUri) ?: continue
+                val stream = openUriStream(context, att.fileUri)
+                if (stream == null) {
+                    // URI in the DB but file unreachable — archive will be incomplete.
+                    skippedFiles++
+                    continue
+                }
                 try {
                     zipOut.putNextEntry(ZipEntry(archivePath))
                     stream.use { it.copyTo(zipOut) }
                     zipOut.closeEntry()
                     attachmentEntries.add(AttachmentEntry(id = att.id, archivePath = archivePath))
                 } catch (_: Exception) {
+                    skippedFiles++
                 }
             }
 
@@ -119,13 +138,18 @@ object BackupManager {
                 val photoUri = vessel.photoUri
                 if (photoUri.isNullOrBlank()) continue
                 val archivePath = "vessels/${vessel.id}.bin"
-                val stream = openUriStream(context, photoUri) ?: continue
+                val stream = openUriStream(context, photoUri)
+                if (stream == null) {
+                    skippedFiles++
+                    continue
+                }
                 try {
                     zipOut.putNextEntry(ZipEntry(archivePath))
                     stream.use { it.copyTo(zipOut) }
                     zipOut.closeEntry()
                     vesselEntries.add(VesselPhotoEntry(vesselId = vessel.id, archivePath = archivePath))
                 } catch (_: Exception) {
+                    skippedFiles++
                 }
             }
 
@@ -144,9 +168,9 @@ object BackupManager {
 
             zipOut.finish()
             zipOut.flush()
-            true
+            BackupResult(success = true, skippedFiles = skippedFiles)
         } catch (_: Exception) {
-            false
+            BackupResult(success = false)
         }
     }
 

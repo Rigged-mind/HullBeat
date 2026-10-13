@@ -22,7 +22,7 @@ AXES = {
     "engine": ("Engine", "Двигун"),
     "drive": ("Drive", "Передача"),
     "cooling": ("Engine cooling", "Охолодження двигуна"),
-    "rig": ("Rig", "Озброєння"),
+    "rig": ("Rig", "Тип вітрил"),
     "keel": ("Keel", "Кіль"),
     "storage": ("Where she spends the winter", "Де зимує"),
     "water": ("Water", "Вода"),

@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -33,9 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.hullbeat.R
 import app.hullbeat.data.db.categoryDisplayName
+import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.ui.theme.LocalExtendedColors
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Surface
+import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.categorySectionColor
 
 /**
  * Single maintenance card on the Зараз screen.
@@ -82,8 +92,19 @@ fun NowCard(
         else -> ""
     }
 
-    val borderColor = if (isOverdue) extended.status.overdue else MaterialTheme.colorScheme.outlineVariant
-    val borderWidth = if (isOverdue && extended.isHighContrast) 2.dp else extended.borderWidth.dp
+    val secColor = categorySectionColor(item.component.categoryCode)
+    val isColorful = LocalScheme.current == Scheme.COLORFUL
+
+    val borderColor = when {
+        isOverdue -> extended.status.overdue
+        isColorful -> secColor.accent.copy(alpha = 0.5f)
+        else -> MaterialTheme.colorScheme.outlineVariant
+    }
+    val borderWidth = when {
+        isOverdue && extended.isHighContrast -> 2.dp
+        isColorful -> 1.5.dp
+        else -> extended.borderWidth.dp
+    }
 
     Card(
         modifier = modifier
@@ -107,36 +128,87 @@ fun NowCard(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(
-                        text = glyph,
-                        color = glyphColor,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.semantics {
-                            if (glyphSemantic.isNotBlank()) {
-                                contentDescription = glyphSemantic
-                            }
-                        },
-                    )
-                    Spacer(Modifier.width(10.dp))
+                    if (isColorful) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = secColor.container,
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(categoryIconRes(item.component.categoryCode)),
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp),
+                                tint = secColor.accent,
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                    }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = item.component.displayName(context),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Text(
+                                text = glyph,
+                                color = glyphColor,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.semantics {
+                                    if (glyphSemantic.isNotBlank()) {
+                                        contentDescription = glyphSemantic
+                                    }
+                                },
+                            )
+                            Text(
+                                text = item.component.displayName(context),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
                         val categoryText = categoryDisplayName(context, item.component.categoryCode)
                         val subtitleText = if (showVesselBadge) {
                             "${item.vessel.displayName(context)} · $categoryText"
                         } else {
                             categoryText
                         }
-                        Text(
-                            text = subtitleText,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        if (isColorful) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = secColor.container,
+                                modifier = Modifier.padding(top = 4.dp),
+                            ) {
+                                Text(
+                                    text = subtitleText,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = secColor.onContainer,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                )
+                            }
+                        } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(top = 2.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(categoryIconRes(item.component.categoryCode)),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Text(
+                                    text = subtitleText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
                     }
                 }
 

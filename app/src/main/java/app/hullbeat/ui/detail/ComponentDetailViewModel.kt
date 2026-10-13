@@ -20,10 +20,12 @@ import app.hullbeat.data.db.MeterUnit
 import app.hullbeat.data.db.ParentType
 import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.ServiceSchedule
+import app.hullbeat.data.db.StorageLocation
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.DueEngine
 import app.hullbeat.notify.MaintenanceCheckWorker
+import app.hullbeat.ui.store.saveInventoryPart
 import java.time.LocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -62,6 +64,9 @@ data class ComponentDetailUiState(
     val unknownReason: DueEngine.UnknownReason = DueEngine.UnknownReason.NONE,
     val urgencyText: String = "",
     val spares: List<ComponentSpare> = emptyList(),
+    /** For the add-a-spare sheet opened from this card: lockers and link targets. */
+    val locations: List<StorageLocation> = emptyList(),
+    val vesselComponents: List<Component> = emptyList(),
     val history: List<ServiceRecord> = emptyList(),
     val gallery: List<Attachment> = emptyList(),
     val isAnodeAdvice: Boolean = false,
@@ -89,6 +94,8 @@ class ComponentDetailViewModel(
     val uiState: StateFlow<ComponentDetailUiState> = _uiState.asStateFlow()
 
     private var sparesJob: Job? = null
+    private var locationsJob: Job? = null
+    private var componentsJob: Job? = null
     private var historyJob: Job? = null
     private var galleryJob: Job? = null
 
@@ -229,6 +236,20 @@ class ComponentDetailViewModel(
                 }
             }
 
+            locationsJob?.cancel()
+            locationsJob = launch {
+                db.inventoryDao().observeLocationsForVessel(component.vesselId).collectLatest { locations ->
+                    _uiState.value = _uiState.value.copy(locations = locations)
+                }
+            }
+
+            componentsJob?.cancel()
+            componentsJob = launch {
+                db.componentDao().observeForVessel(component.vesselId).collectLatest { components ->
+                    _uiState.value = _uiState.value.copy(vesselComponents = components)
+                }
+            }
+
             historyJob?.cancel()
             historyJob = launch {
                 db.serviceRecordDao().observeForComponent(componentId).collectLatest { history ->
@@ -242,6 +263,59 @@ class ComponentDetailViewModel(
                     _uiState.value = _uiState.value.copy(gallery = gallery)
                 }
             }
+        }
+    }
+
+    /**
+     * A new spare added from this card. The spares list refreshes by itself:
+     * [observeSparesForComponent] watches the tables this writes.
+     */
+    fun addSpare(
+        name: String,
+        partNumber: String?,
+        manufacturer: String?,
+        note: String?,
+        locationId: Long?,
+        quantity: Double,
+        minQuantity: Double?,
+        linkedComponentIds: List<Long>,
+        onComplete: () -> Unit = {},
+    ) {
+        val vesselId = _uiState.value.component?.vesselId ?: return
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                db.saveInventoryPart(
+                    vesselId = vesselId,
+                    itemId = null,
+                    partId = null,
+                    name = name,
+                    partNumber = partNumber,
+                    manufacturer = manufacturer,
+                    note = note,
+                    locationId = locationId,
+                    quantity = quantity,
+                    minQuantity = minQuantity,
+                    linkedComponentIds = linkedComponentIds,
+                )
+            }
+            onComplete()
+        }
+    }
+
+    fun addLocation(name: String, qrCode: String?, note: String?, onComplete: () -> Unit = {}) {
+        val vesselId = _uiState.value.component?.vesselId ?: return
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                db.inventoryDao().insertLocation(
+                    StorageLocation(
+                        vesselId = vesselId,
+                        name = name.trim(),
+                        qrCode = qrCode?.trim()?.ifBlank { null },
+                        note = note?.trim()?.ifBlank { null },
+                    )
+                )
+            }
+            onComplete()
         }
     }
 

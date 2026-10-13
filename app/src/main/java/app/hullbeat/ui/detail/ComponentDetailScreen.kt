@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -94,8 +95,14 @@ import app.hullbeat.ui.components.RecordMeterDialog
 import app.hullbeat.ui.components.rememberSampledBitmap
 import app.hullbeat.ui.now.NowItem
 import app.hullbeat.ui.now.QuickLogSheet
+import app.hullbeat.ui.store.AddEditPartSheet
+import app.hullbeat.ui.store.AddLocationDialog
 import app.hullbeat.ui.store.LOW_STOCK_FRACTION
 import app.hullbeat.ui.theme.LocalExtendedColors
+import app.hullbeat.data.db.categoryIconRes
+import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.categorySectionColor
 import java.time.LocalDate
 
 /**
@@ -151,6 +158,8 @@ fun ComponentDetailScreen(
     var editingRecord by remember { mutableStateOf<ServiceRecord?>(null) }
     var editingRecordMeterHours by remember { mutableStateOf<Double?>(null) }
     var recordToDelete by remember { mutableStateOf<ServiceRecord?>(null) }
+    var showAddSpareSheet by remember { mutableStateOf(false) }
+    var showAddLocationDialog by remember { mutableStateOf(false) }
 
     val galleryPhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia()
@@ -247,6 +256,7 @@ fun ComponentDetailScreen(
                 .padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            flingBehavior = appFlingBehavior(),
         ) {
             // Header
             item(key = "header") {
@@ -275,13 +285,39 @@ fun ComponentDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            // `cat_<code>`, not the code: this line read
-                            // "standing_rig" to an owner.
-                            text = categoryLabel(context, component.categoryCode),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        val secColor = categorySectionColor(component.categoryCode)
+                        val isColorful = LocalScheme.current == Scheme.COLORFUL
+                        if (isColorful) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = secColor.container,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                ) {
+                                    Icon(
+                                        painter = painterResource(categoryIconRes(component.categoryCode)),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(13.dp),
+                                        tint = secColor.accent,
+                                    )
+                                    Text(
+                                        text = categoryLabel(context, component.categoryCode),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = secColor.onContainer,
+                                    )
+                                }
+                            }
+                        } else {
+                            Text(
+                                text = categoryLabel(context, component.categoryCode),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                         Text("·", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         val (critRes, critColor) = when (component.criticality) {
                             Criticality.HIGH -> R.string.crit_high to extended.status.overdue
@@ -567,11 +603,36 @@ fun ComponentDetailScreen(
 
             // On-board Spares Section
             item(key = "spares_header") {
-                Text(
-                    text = stringResource(R.string.detail_stock),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.detail_stock),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    // Here and not only in the Store: the card is where the owner
+                    // is standing when they notice the spare is missing, and the
+                    // Store route meant leaving, finding this node again among
+                    // every chip on the boat, and coming back.
+                    OutlinedButton(
+                        onClick = { showAddSpareSheet = true },
+                        shape = RoundedCornerShape(8.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_add),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = stringResource(R.string.store_add_part),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
             }
 
             if (state.spares.isEmpty()) {
@@ -604,6 +665,43 @@ fun ComponentDetailScreen(
                 }
                 Spacer(Modifier.height(32.dp))
             }
+        }
+
+        if (showAddSpareSheet) {
+            AddEditPartSheet(
+                locations = state.locations,
+                components = state.vesselComponents,
+                preselectedComponentIds = setOf(component.id),
+                onDismiss = { showAddSpareSheet = false },
+                onSave = { name, partNumber, manufacturer, note, locationId, quantity, minQuantity, linkedComponentIds ->
+                    viewModel.addSpare(
+                        name = name,
+                        partNumber = partNumber,
+                        manufacturer = manufacturer,
+                        note = note,
+                        locationId = locationId,
+                        quantity = quantity,
+                        minQuantity = minQuantity,
+                        linkedComponentIds = linkedComponentIds,
+                        onComplete = { showAddSpareSheet = false },
+                    )
+                },
+                onRequestCreateLocation = { showAddLocationDialog = true },
+            )
+        }
+
+        if (showAddLocationDialog) {
+            AddLocationDialog(
+                onDismiss = { showAddLocationDialog = false },
+                onSave = { name, qrCode, note ->
+                    viewModel.addLocation(
+                        name = name,
+                        qrCode = qrCode,
+                        note = note,
+                        onComplete = { showAddLocationDialog = false },
+                    )
+                },
+            )
         }
 
         if (showLogSheet) {

@@ -20,7 +20,9 @@ import androidx.compose.runtime.CompositionLocalProvider
  * tools/make_palette.py generated it. It now clears the same WCAG AA floors
  * as every other scheme, which is checked rather than asserted.
  */
-enum class Scheme { SYSTEM, LIGHT, DARK, SUNLIGHT, NIGHT }
+enum class Scheme { SYSTEM, LIGHT, DARK, SUNLIGHT, NIGHT, COLORFUL }
+
+val LocalScheme = androidx.compose.runtime.staticCompositionLocalOf { Scheme.SYSTEM }
 
 @Composable
 fun HullBeatTheme(
@@ -34,7 +36,7 @@ fun HullBeatTheme(
         scheme
     }
     val colors: ColorScheme = when (resolved) {
-        Scheme.LIGHT -> LightScheme
+        Scheme.LIGHT, Scheme.COLORFUL -> LightScheme
         Scheme.DARK -> DarkScheme
         Scheme.SUNLIGHT -> SunlightScheme
         Scheme.NIGHT -> NightScheme
@@ -45,13 +47,18 @@ fun HullBeatTheme(
     // not Material roles, and they must travel with whichever scheme is active
     // or a card renders its urgency in the wrong palette.
     val extended = when (resolved) {
-        Scheme.LIGHT -> LightExtended
+        Scheme.LIGHT, Scheme.COLORFUL -> LightExtended
         Scheme.DARK -> DarkExtended
         Scheme.SUNLIGHT -> SunlightExtended
         Scheme.NIGHT -> NightExtended
         Scheme.SYSTEM -> LightExtended
     }
-    CompositionLocalProvider(LocalExtendedColors provides extended) {
+    val appFling = rememberAppFlingBehavior()
+    CompositionLocalProvider(
+        LocalScheme provides resolved,
+        LocalExtendedColors provides extended,
+        LocalAppFlingBehavior provides appFling,
+    ) {
         MaterialTheme(colorScheme = colors, content = content)
     }
 }

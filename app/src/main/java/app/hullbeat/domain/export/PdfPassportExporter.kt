@@ -87,7 +87,7 @@ data class PassportReportData(
 )
 
 data class PassportLabels(
-    val docTitle: String = "Vessel Passport & Service Dossier",
+    val docTitle: String = "Vessel Passport & Service Book",
     val sectionVessel: String = "Vessel Specifications",
     val sectionEquipment: String = "Equipment Registry",
     val sectionEquipmentPhotos: String = "Equipment",
@@ -117,6 +117,14 @@ data class PassportLabels(
     val morePhotos: String = "+%1\$d more",
     val footerPage: String = "Page %1\$d",
     val footerBrand: String = "HullBeat Ship's Log",
+    /**
+     * Who vouches for the contents: the owner, not HullBeat. A buyer or a
+     * surveyor reads anything that looks like a certificate with suspicion,
+     * so the document says plainly what it is - on the first page and in
+     * the footer of every page, since pages get printed and handed on alone.
+     */
+    val compiledBy: String = "Compiled by owner via HullBeat",
+    val currency: String = "",
 )
 
 object PdfPassportExporter {
@@ -145,18 +153,17 @@ object PdfPassportExporter {
     // Each of these is used BOTH to reserve the space and to advance down
     // the page. They were literals in two places before, which is the shape
     // that eventually draws a card shorter than the text inside it.
-    private const val ROW_PITCH = 22f        // a row of the equipment table
-    private const val SPEC_PITCH = 20f       // the vessel specification grid
-    private const val RECORD_LINE = 17f      // lines inside a service card
-    private const val WRAP_LINE = 13f        // wrapped description and notes
+    // Line pitch. Raised for improved readability and comfortable line spacing
+    // across title, specification grids, equipment table, and service history cards.
+    // Each of these is used BOTH to reserve space and to advance down the page.
+    private const val ROW_PITCH = 24f        // a row of the equipment table (was 22f)
+    private const val SPEC_PITCH = 23f       // the vessel specification grid (was 20f)
+    private const val RECORD_LINE = 20f      // lines inside a service card (was 17f)
+    private const val WRAP_LINE = 15f        // wrapped description and notes (was 13f)
 
-    // A service card holds two lines of its own, then a wrapped description
-    // and a wrapped note if they exist. Its height is worked out from that
-    // walk rather than typed, so the card can never be shorter than what
-    // goes into it - which is what a hand-written 44f was one edit away
-    // from at any moment.
-    private const val CARD_TOP = 15f         // first baseline inside a card
-    private const val CARD_BOTTOM = 6f       // air under the last line
+    // Air inside service cards
+    private const val CARD_TOP = 17f         // first baseline inside a card (was 15f)
+    private const val CARD_BOTTOM = 8f       // air under the last line (was 6f)
 
     /**
      * The kinds that are actually an image.
@@ -172,6 +179,17 @@ object PdfPassportExporter {
         AttachmentKind.DIAGRAM,
         AttachmentKind.METER_PHOTO,
     )
+
+    /**
+     * Every paint in the document. Android hints text for a screen: each
+     * glyph's advance is rounded to a whole unit. On this canvas a unit is
+     * a typographic point, and at 8-10 pt that rounding is a quarter of a
+     * letter - spaces shrank to almost nothing and words ran together on
+     * paper. Linear, unhinted metrics keep the font's own spacing.
+     */
+    private fun pdfPaint() = Paint(
+        Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG or Paint.LINEAR_TEXT_FLAG
+    ).apply { hinting = Paint.HINTING_OFF }
 
     private fun imageUris(attachments: List<Attachment>?): List<String> =
         attachments.orEmpty().filter { it.kind in IMAGE_KINDS }.map { it.fileUri }
@@ -362,7 +380,7 @@ object PdfPassportExporter {
             // the same accessor as everything else: no function in this file
             // keeps a canvas in a local, so there is no exception for the
             // checker to carry and none for a reader to remember.
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            val paint = pdfPaint()
 
             paint.color = COLOR_BRAND_TEAL
             paint.textSize = 10f
@@ -383,11 +401,16 @@ object PdfPassportExporter {
 
             paint.color = COLOR_TEXT_MUTED
             paint.textSize = 8f
-            val footerLeft = "${labels.footerBrand} • $generatedDate"
-            c.drawText(footerLeft, leftMargin, bottomMargin + 18f, paint)
-
             val footerRight = String.format(labels.footerPage, pageNumber)
             val rightW = paint.measureText(footerRight)
+
+            // The owner's line where it fits beside the page number; the
+            // shorter brand line where a long translation would run into it.
+            val footerLeft = "${labels.compiledBy} • $generatedDate"
+                .takeIf { paint.measureText(it) <= contentWidth - rightW - 12f }
+                ?: "${labels.footerBrand} • $generatedDate"
+            c.drawText(footerLeft, leftMargin, bottomMargin + 18f, paint)
+
             c.drawText(footerRight, rightMargin - rightW, bottomMargin + 18f, paint)
         }
 
@@ -425,9 +448,9 @@ object PdfPassportExporter {
     }
 
     private fun drawTitleBanner(pdf: PdfContext, vessel: PassportVesselInfo, labels: PassportLabels) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
 
-        val bannerHeight = 54f
+        val bannerHeight = 78f
         val rect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + bannerHeight)
 
         paint.color = COLOR_BRAND_LIGHT
@@ -436,12 +459,12 @@ object PdfPassportExporter {
         paint.color = COLOR_BRAND_TEAL
         paint.textSize = 10f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        pdf.c.drawText(labels.docTitle.uppercase(), pdf.leftMargin + 12f, pdf.y + 18f, paint)
+        pdf.c.drawText(labels.docTitle.uppercase(), pdf.leftMargin + 14f, pdf.y + 20f, paint)
 
         paint.color = COLOR_TEXT_DARK
         paint.textSize = 18f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        pdf.c.drawText(vessel.name, pdf.leftMargin + 12f, pdf.y + 40f, paint)
+        pdf.c.drawText(vessel.name, pdf.leftMargin + 14f, pdf.y + 45f, paint)
 
         if (vessel.makeModel != null || vessel.year != null) {
             val sub = listOfNotNull(vessel.makeModel, vessel.year?.toString()).joinToString(" • ")
@@ -449,23 +472,29 @@ object PdfPassportExporter {
             paint.textSize = 9f
             paint.typeface = Typeface.DEFAULT
             val subW = paint.measureText(sub)
-            pdf.c.drawText(sub, pdf.rightMargin - subW - 12f, pdf.y + 36f, paint)
+            pdf.c.drawText(sub, pdf.rightMargin - subW - 14f, pdf.y + 44f, paint)
         }
 
-        pdf.y += bannerHeight + 14f
+        // A line of its own under the name with comfortable vertical separation
+        paint.color = COLOR_TEXT_MUTED
+        paint.textSize = 8f
+        paint.typeface = Typeface.DEFAULT
+        pdf.c.drawText("${labels.compiledBy} • ${pdf.generatedDate}", pdf.leftMargin + 14f, pdf.y + 65f, paint)
+
+        pdf.y += bannerHeight + 16f
     }
 
     private fun drawVesselSpecs(context: Context, pdf: PdfContext, vessel: PassportVesselInfo, labels: PassportLabels) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
 
-        pdf.ensureSpace(120f)
+        pdf.ensureSpace(130f)
 
         // Section header
         paint.color = COLOR_BRAND_TEAL
         paint.textSize = 12f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         pdf.c.drawText(labels.sectionVessel, pdf.leftMargin, pdf.y, paint)
-        pdf.y += 12f
+        pdf.y += 16f
 
         val photoBitmap = vessel.photoUri?.let { uriStr ->
             runCatching {
@@ -525,18 +554,18 @@ object PdfPassportExporter {
             pdf.c.drawRect(dstRect, paint)
             paint.style = Paint.Style.FILL
 
-            pdf.y = maxOf(startY + specsHeight, startY - 4f + finalHeight) + 12f
+            pdf.y = maxOf(startY + specsHeight, startY - 4f + finalHeight) + 16f
         } else {
-            pdf.y = startY + specsHeight + 12f
+            pdf.y = startY + specsHeight + 16f
         }
     }
 
     private fun drawSummaryCard(pdf: PdfContext, data: PassportReportData, labels: PassportLabels) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
 
-        pdf.ensureSpace(38f)
+        pdf.ensureSpace(44f)
 
-        val cardRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 32f)
+        val cardRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 36f)
         paint.color = COLOR_CARD_BG
         pdf.c.drawRoundRect(cardRect, 4f, 4f, paint)
 
@@ -547,87 +576,120 @@ object PdfPassportExporter {
         paint.style = Paint.Style.FILL
 
         val colW = pdf.contentWidth / 3f
-        val yText = pdf.y + 20f
+        val yText = pdf.y + 22.5f
 
         // Metric 1: Components
         paint.color = COLOR_TEXT_DARK
         paint.textSize = 9f
         paint.typeface = Typeface.DEFAULT
         val m1 = String.format(labels.fieldComponentsCount, data.components.size)
-        pdf.c.drawText(m1, pdf.leftMargin + 10f, yText, paint)
+        pdf.c.drawText(m1, pdf.leftMargin + 12f, yText, paint)
 
         // Metric 2: Records
         val m2 = String.format(labels.fieldRecordsCount, data.serviceRecords.size)
-        pdf.c.drawText(m2, pdf.leftMargin + colW + 10f, yText, paint)
+        pdf.c.drawText(m2, pdf.leftMargin + colW + 12f, yText, paint)
 
         // Metric 3: Total cost
-        val costFormatted = String.format(java.util.Locale.US, "%.2f", data.totalCost)
-        val m3 = String.format(labels.fieldTotalCost, costFormatted)
-        pdf.c.drawText(m3, pdf.leftMargin + (colW * 2) + 10f, yText, paint)
+        val costFormatted = if (data.totalCost % 1.0 == 0.0) {
+            String.format(java.util.Locale.getDefault(), "%,d", data.totalCost.toLong()).replace(',', ' ')
+        } else {
+            String.format(java.util.Locale.getDefault(), "%,.2f", data.totalCost).replace(',', ' ')
+        }
+        val costWithCurrency = if (labels.currency.isNotBlank()) "$costFormatted ${labels.currency}" else costFormatted
+        val m3 = String.format(labels.fieldTotalCost, costWithCurrency)
+        pdf.c.drawText(m3, pdf.leftMargin + (colW * 2) + 12f, yText, paint)
 
-        pdf.y += 44f
+        pdf.y += 48f
     }
 
     private fun drawEquipmentSection(pdf: PdfContext, components: List<PassportComponentInfo>, labels: PassportLabels) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
 
-        pdf.ensureSpace(50f)
+        pdf.ensureSpace(55f)
 
         paint.color = COLOR_BRAND_TEAL
         paint.textSize = 12f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         pdf.c.drawText(labels.sectionEquipment, pdf.leftMargin, pdf.y, paint)
-        pdf.y += 12f
-
-        // Table Header
-        val headerRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 16f)
-        paint.color = COLOR_BRAND_LIGHT
-        pdf.c.drawRect(headerRect, paint)
-
-        paint.color = COLOR_BRAND_TEAL
-        paint.textSize = 8.5f
-        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        pdf.y += 15f
 
         val col1X = pdf.leftMargin + 6f
         val col2X = pdf.leftMargin + 180f
         val col3X = pdf.leftMargin + 360f
         val col4X = pdf.leftMargin + 460f
-        val headerY = pdf.y + 11.5f
 
-        pdf.c.drawText(labels.colComponent, col1X, headerY, paint)
-        pdf.c.drawText(labels.colMakeModel, col2X, headerY, paint)
-        pdf.c.drawText(labels.colSerial, col3X, headerY, paint)
-        pdf.c.drawText(labels.colInstalled, col4X, headerY, paint)
+        fun drawTableHeader() {
+            val headerRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 18f)
+            paint.color = COLOR_BRAND_LIGHT
+            pdf.c.drawRect(headerRect, paint)
 
-        pdf.y += 18f
+            paint.color = COLOR_BRAND_TEAL
+            paint.textSize = 8.5f
+            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            val headerY = pdf.y + 12.5f
 
-        // Table Rows
-        for (comp in components) {
-            pdf.ensureSpace(ROW_PITCH)
-            val rowY = pdf.y + (ROW_PITCH / 2f) + 3f
+            pdf.c.drawText(labels.colComponent, col1X, headerY, paint)
+            pdf.c.drawText(labels.colMakeModel, col2X, headerY, paint)
+            pdf.c.drawText(labels.colSerial, col3X, headerY, paint)
+            pdf.c.drawText(labels.colInstalled, col4X, headerY, paint)
+
+            pdf.y += 21f
+        }
+
+        // Initial Table Header
+        drawTableHeader()
+
+        val boldFace = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        val cellGap = 8f
+        components.forEachIndexed { index, comp ->
+            paint.textSize = 8.5f
+            paint.typeface = boldFace
+            val nameLines = wrapLines(comp.name, col2X - col1X - cellGap, paint)
+
+            paint.textSize = 8f
+            paint.typeface = Typeface.DEFAULT
+            val makeModel = listOfNotNull(comp.make, comp.model).joinToString(" ").ifBlank { "—" }
+            val makeLines = wrapLines(makeModel, col3X - col2X - cellGap, paint)
+            val serialLines = wrapLines(comp.serial ?: "—", col4X - col3X - cellGap, paint)
+
+            val lineCount = maxOf(nameLines.size, makeLines.size, serialLines.size)
+            val rowHeight = ROW_PITCH + (lineCount - 1) * WRAP_LINE
+
+            if (pdf.y + rowHeight > pdf.bottomMargin) {
+                pdf.newPage()
+                drawTableHeader()
+            }
+
+            // Zebra striping: alternate rows get subtle background
+            if (index % 2 == 1) {
+                val bgRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + rowHeight)
+                paint.color = COLOR_CARD_BG
+                pdf.c.drawRect(bgRect, paint)
+            }
+
+            val rowY = pdf.y + (ROW_PITCH / 2f) + 3.5f
 
             paint.color = COLOR_TEXT_DARK
             paint.textSize = 8.5f
-            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            pdf.c.drawText(comp.name, col1X, rowY, paint)
+            paint.typeface = boldFace
+            nameLines.forEachIndexed { i, line -> pdf.c.drawText(line, col1X, rowY + i * WRAP_LINE, paint) }
 
             paint.color = COLOR_TEXT_MUTED
             paint.textSize = 8f
             paint.typeface = Typeface.DEFAULT
-            val makeModel = listOfNotNull(comp.make, comp.model).joinToString(" ").ifBlank { "—" }
-            pdf.c.drawText(makeModel, col2X, rowY, paint)
-            pdf.c.drawText(comp.serial ?: "—", col3X, rowY, paint)
+            makeLines.forEachIndexed { i, line -> pdf.c.drawText(line, col2X, rowY + i * WRAP_LINE, paint) }
+            serialLines.forEachIndexed { i, line -> pdf.c.drawText(line, col3X, rowY + i * WRAP_LINE, paint) }
             pdf.c.drawText(comp.yearInstalled?.toString() ?: "—", col4X, rowY, paint)
 
             paint.color = COLOR_BORDER_LIGHT
             paint.strokeWidth = 0.5f
-            val ruleY = pdf.y + ROW_PITCH - 1.5f
+            val ruleY = pdf.y + rowHeight - 1.5f
             pdf.c.drawLine(pdf.leftMargin, ruleY, pdf.rightMargin, ruleY, paint)
 
-            pdf.y += ROW_PITCH
+            pdf.y += rowHeight
         }
 
-        pdf.y += 16f
+        pdf.y += 18f
     }
 
     /**
@@ -658,14 +720,14 @@ object PdfPassportExporter {
         val withPhotos = components.filter { it.photoUris.isNotEmpty() }
         if (withPhotos.isEmpty()) return
 
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
         pdf.ensureSpace(40f + THUMB_H)
 
         paint.color = COLOR_BRAND_TEAL
         paint.textSize = 12f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         pdf.c.drawText(labels.sectionEquipmentPhotos, pdf.leftMargin, pdf.y, paint)
-        pdf.y += 14f
+        pdf.y += 16f
 
         for (comp in withPhotos) {
             val shown = comp.photoUris.take(MAX_PHOTOS_PER_COMPONENT)
@@ -766,7 +828,7 @@ object PdfPassportExporter {
         records: List<PassportServiceRecordInfo>,
         labels: PassportLabels,
     ) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = pdfPaint()
 
         pdf.ensureSpace(50f)
 
@@ -774,17 +836,61 @@ object PdfPassportExporter {
         paint.textSize = 12f
         paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         pdf.c.drawText(labels.sectionService, pdf.leftMargin, pdf.y, paint)
-        pdf.y += 14f
+        pdf.y += 16f
+
+        val cardContentWidth = pdf.contentWidth - 16f
 
         for (rec in records) {
             val hasPhotos = rec.photoUris.isNotEmpty()
-            val baseCardHeight = CARD_TOP + (RECORD_LINE * 2f) + CARD_BOTTOM +
-                (if (rec.description.isNotBlank()) WRAP_LINE else 0f) +
-                (if (rec.notes != null) WRAP_LINE else 0f)
-            val photoHeight = if (hasPhotos) 56f else 0f
-            val totalCardHeight = baseCardHeight + photoHeight
 
-            pdf.ensureSpace(totalCardHeight + 8f)
+            // Details line (Hours, Cost, Performed By)
+            val detailsList = mutableListOf<String>()
+            if (rec.meterHours != null) {
+                val formattedHours = if (rec.meterHours % 1.0 == 0.0) {
+                    "${rec.meterHours.toLong()} h"
+                } else {
+                    String.format(java.util.Locale.US, "%.1f h", rec.meterHours)
+                }
+                detailsList.add("${labels.colHours}: $formattedHours")
+            }
+            if (rec.cost != null) {
+                val formattedCost = if (rec.cost % 1.0 == 0.0) {
+                    String.format(java.util.Locale.getDefault(), "%,d", rec.cost.toLong()).replace(',', ' ')
+                } else {
+                    String.format(java.util.Locale.getDefault(), "%,.2f", rec.cost).replace(',', ' ')
+                }
+                val costStr = if (labels.currency.isNotBlank()) "$formattedCost ${labels.currency}" else formattedCost
+                detailsList.add("${labels.colCost}: $costStr")
+            }
+            if (!rec.performedBy.isNullOrBlank()) {
+                detailsList.add("${labels.colPerformedBy}: ${rec.performedBy}")
+            }
+            val detailsStr = detailsList.joinToString(" • ")
+            val hasDetails = detailsStr.isNotBlank()
+
+            // Measure description lines
+            paint.textSize = 8.5f
+            paint.typeface = Typeface.DEFAULT
+            val descLines = if (rec.description.isNotBlank()) {
+                wrapLines(rec.description, cardContentWidth, paint)
+            } else emptyList()
+
+            // Measure note lines
+            paint.textSize = 8f
+            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            val noteLine = if (!rec.notes.isNullOrBlank()) "${labels.colNotes}: ${rec.notes}" else null
+            val noteLines = if (noteLine != null) {
+                wrapLines(noteLine, cardContentWidth, paint)
+            } else emptyList()
+
+            val detailsHeight = if (hasDetails) RECORD_LINE else 0f
+            val descHeight = descLines.size * WRAP_LINE
+            val noteHeight = noteLines.size * WRAP_LINE
+            val photoHeight = if (hasPhotos) 54f else 0f
+
+            val totalCardHeight = CARD_TOP + RECORD_LINE + detailsHeight + descHeight + noteHeight + photoHeight + CARD_BOTTOM
+
+            pdf.ensureSpace(totalCardHeight + 10f)
 
             val cardRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + totalCardHeight)
             paint.color = COLOR_CARD_BG
@@ -798,54 +904,78 @@ object PdfPassportExporter {
 
             var innerY = pdf.y + CARD_TOP
 
-            // Line 1: Date, WorkType, Component
+            // Line 1: Date, WorkType Badge, Component
             paint.color = COLOR_TEXT_DARK
             paint.textSize = 9f
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             pdf.c.drawText(rec.date, pdf.leftMargin + 8f, innerY, paint)
 
             val dateW = paint.measureText(rec.date)
-            paint.color = COLOR_BRAND_TEAL
-            paint.textSize = 8.5f
-            val workTypeBadge = "[${rec.workTypes}]"
-            pdf.c.drawText(workTypeBadge, pdf.leftMargin + 12f + dateW, innerY, paint)
+            val badgeX = pdf.leftMargin + 14f + dateW
 
-            val badgeW = paint.measureText(workTypeBadge)
-            paint.color = COLOR_TEXT_DARK
+            // Work type pill badge
+            paint.textSize = 8f
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            pdf.c.drawText(rec.componentName, pdf.leftMargin + 18f + dateW + badgeW, innerY, paint)
+            val badgeTextW = paint.measureText(rec.workTypes)
+            val badgePadH = 5f
+            val badgeRect = RectF(badgeX, innerY - 9.5f, badgeX + badgeTextW + (badgePadH * 2), innerY + 4f)
+
+            paint.color = COLOR_BRAND_LIGHT
+            pdf.c.drawRoundRect(badgeRect, 3f, 3f, paint)
+
+            paint.color = COLOR_BRAND_TEAL
+            pdf.c.drawText(rec.workTypes, badgeX + badgePadH, innerY, paint)
+
+            // Component name
+            paint.color = COLOR_TEXT_DARK
+            paint.textSize = 9f
+            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            val compX = badgeRect.right + 8f
+            val maxCompW = pdf.rightMargin - 8f - compX
+            if (maxCompW > 20f) {
+                val compName = if (paint.measureText(rec.componentName) <= maxCompW) {
+                    rec.componentName
+                } else {
+                    var trimmed = rec.componentName
+                    while (trimmed.isNotEmpty() && paint.measureText("$trimmed…") > maxCompW) {
+                        trimmed = trimmed.dropLast(1)
+                    }
+                    "$trimmed…"
+                }
+                pdf.c.drawText(compName, compX, innerY, paint)
+            }
+
+            innerY += RECORD_LINE
 
             // Line 2: Details (Hours, Cost, Performed By)
-            innerY += RECORD_LINE
-            paint.color = COLOR_TEXT_MUTED
-            paint.textSize = 8f
-            paint.typeface = Typeface.DEFAULT
-
-            val detailsList = mutableListOf<String>()
-            if (rec.meterHours != null) detailsList.add("${labels.colHours}: ${rec.meterHours}")
-            if (rec.cost != null) detailsList.add("${labels.colCost}: ${rec.cost}")
-            if (!rec.performedBy.isNullOrBlank()) detailsList.add("${labels.colPerformedBy}: ${rec.performedBy}")
-            val detailsStr = detailsList.joinToString(" • ")
-            if (detailsStr.isNotBlank()) {
+            if (hasDetails) {
+                paint.color = COLOR_TEXT_MUTED
+                paint.textSize = 8f
+                paint.typeface = Typeface.DEFAULT
                 pdf.c.drawText(detailsStr, pdf.leftMargin + 8f, innerY, paint)
                 innerY += RECORD_LINE
             }
 
-            // Description
-            if (rec.description.isNotBlank()) {
+            // Description lines
+            if (descLines.isNotEmpty()) {
                 paint.color = COLOR_TEXT_DARK
                 paint.textSize = 8.5f
                 paint.typeface = Typeface.DEFAULT
-                innerY = drawWrappedText(pdf.c, rec.description, pdf.leftMargin + 8f, innerY, pdf.contentWidth - 16f, paint, WRAP_LINE)
+                for (line in descLines) {
+                    pdf.c.drawText(line, pdf.leftMargin + 8f, innerY, paint)
+                    innerY += WRAP_LINE
+                }
             }
 
-            // Notes
-            if (!rec.notes.isNullOrBlank()) {
+            // Note lines
+            if (noteLines.isNotEmpty()) {
                 paint.color = COLOR_TEXT_MUTED
                 paint.textSize = 8f
                 paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
-                val noteLine = "${labels.colNotes}: ${rec.notes}"
-                innerY = drawWrappedText(pdf.c, noteLine, pdf.leftMargin + 8f, innerY, pdf.contentWidth - 16f, paint, WRAP_LINE)
+                for (line in noteLines) {
+                    pdf.c.drawText(line, pdf.leftMargin + 8f, innerY, paint)
+                    innerY += WRAP_LINE
+                }
             }
 
             // Inline photo thumbnails (up to 3)
@@ -861,7 +991,7 @@ object PdfPassportExporter {
                     }.getOrNull()
 
                     if (bmp != null) {
-                        val dstRect = RectF(photoX, innerY + 2f, photoX + thumbWidth, innerY + 2f + thumbHeight)
+                        val dstRect = RectF(photoX, innerY + 3f, photoX + thumbWidth, innerY + 3f + thumbHeight)
                         val srcRect = Rect(0, 0, bmp.width, bmp.height)
                         pdf.c.drawBitmap(bmp, srcRect, dstRect, paint)
 
@@ -876,40 +1006,34 @@ object PdfPassportExporter {
                 }
             }
 
-            pdf.y += totalCardHeight + 8f
+            pdf.y += totalCardHeight + 10f
         }
     }
 
-    private fun drawWrappedText(
-        canvas: Canvas,
-        text: String,
-        x: Float,
-        startY: Float,
-        maxWidth: Float,
-        paint: Paint,
-        lineHeight: Float,
-    ): Float {
-        if (text.isBlank()) return startY
-        val words = text.split(" ")
-        var currentLine = StringBuilder()
-        var curY = startY
-
-        for (word in words) {
-            val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
-            if (paint.measureText(testLine) <= maxWidth) {
-                currentLine = StringBuilder(testLine)
-            } else {
-                if (currentLine.isNotEmpty()) {
-                    canvas.drawText(currentLine.toString(), x, curY, paint)
-                    curY += lineHeight
+    /**
+     * [text] broken at spaces into lines no wider than [maxWidth]. A single
+     * word wider than that keeps a line of its own rather than being cut.
+     * Newlines ('\n') start a new line.
+     */
+    internal fun wrapLines(text: String, maxWidth: Float, measure: (String) -> Float): List<String> {
+        val lines = mutableListOf<String>()
+        val paragraphs = text.split("\n")
+        for (paragraph in paragraphs) {
+            var current = ""
+            for (word in paragraph.split(" ").filter { it.isNotEmpty() }) {
+                val candidate = if (current.isEmpty()) word else "$current $word"
+                if (current.isEmpty() || measure(candidate) <= maxWidth) {
+                    current = candidate
+                } else {
+                    lines += current
+                    current = word
                 }
-                currentLine = StringBuilder(word)
             }
+            if (current.isNotEmpty()) lines += current
         }
-        if (currentLine.isNotEmpty()) {
-            canvas.drawText(currentLine.toString(), x, curY, paint)
-            curY += lineHeight
-        }
-        return curY
+        return lines.ifEmpty { listOf("") }
     }
+
+    private fun wrapLines(text: String, maxWidth: Float, paint: Paint): List<String> =
+        wrapLines(text, maxWidth) { paint.measureText(it) }
 }

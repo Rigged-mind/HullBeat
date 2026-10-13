@@ -1,0 +1,10 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Boat propeller / drivetrain -->
+    <path
+        android:pathData="M12,10 A2,2 0 1,0 12,14 A2,2 0 1,0 12,10 Z M12,8 C13.5,4.5 16,3 17.5,4.5 C19,6 17.5,8.5 14,10 C14,8.5 13.5,8 12,8 Z M10,14 C6.5,14 4,16.5 5.5,18 C7,19.5 9.5,18 11,14.5 C10.5,14.5 10,14 10,14 Z M14,13 C17.5,14.5 19,17 17.5,18.5 C16,20 13.5,18.5 13,15 C13.5,14.5 14,13.5 14,13 Z M11,11 C7.5,9.5 6,7 7.5,5.5 C9,4 11.5,5.5 12,9 C11.5,9.5 11,10.5 11,11 Z"
+        android:fillColor="#FFFFFFFF" />
+</vector>

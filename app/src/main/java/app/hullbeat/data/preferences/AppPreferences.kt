@@ -81,6 +81,7 @@ object AppPreferences {
     private const val KEY_TEMPERATURE_UNIT = "unit_temperature"
     private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
     private const val KEY_ADVANCE_REMINDER_DAYS = "advance_reminder_days"
+    private const val KEY_BOAT_COLLAPSED_CATEGORIES = "boat_collapsed_categories"
 
     const val DEFAULT_CURRENCY = "₴"
     val DEFAULT_LENGTH_UNIT = LengthUnit.METRES
@@ -226,6 +227,23 @@ object AppPreferences {
             prefs(context).edit().putLong(KEY_SELECTED_VESSEL_ID, vesselId).apply()
         } else {
             prefs(context).edit().remove(KEY_SELECTED_VESSEL_ID).apply()
+        }
+    }
+
+    // Collapsed categories on Boat screen
+    fun getCollapsedCategories(context: Context): Set<String> {
+        return prefs(context).getStringSet(KEY_BOAT_COLLAPSED_CATEGORIES, emptySet())?.toSet() ?: emptySet()
+    }
+
+    fun setCollapsedCategories(context: Context, categories: Set<String>) {
+        prefs(context).edit().putStringSet(KEY_BOAT_COLLAPSED_CATEGORIES, categories).apply()
+    }
+
+    fun expandCategory(context: Context, categoryCode: String?) {
+        if (categoryCode.isNullOrBlank()) return
+        val current = getCollapsedCategories(context)
+        if (categoryCode in current) {
+            setCollapsedCategories(context, current - categoryCode)
         }
     }
 

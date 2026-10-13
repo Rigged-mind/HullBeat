@@ -69,6 +69,12 @@ fun AddEditPartSheet(
     ) -> Unit,
     onRequestCreateLocation: () -> Unit,
     modifier: Modifier = Modifier,
+    /**
+     * Components ticked when a NEW part's sheet opens - the card it was opened
+     * from. Still an ordinary chip: the same zinc can fit the shaft and the
+     * saildrive, and the owner may add the second link right here.
+     */
+    preselectedComponentIds: Set<Long> = emptySet(),
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
@@ -89,12 +95,14 @@ fun AddEditPartSheet(
 
     val selectedComponentIds = remember {
         mutableStateListOf<Long>().apply {
-            partToEdit?.linkedComponents?.forEach { add(it.componentId) }
+            if (partToEdit != null) {
+                partToEdit.linkedComponents.forEach { add(it.componentId) }
+            } else {
+                addAll(preselectedComponentIds)
+            }
         }
     }
-    val initiallyLinkedIds = remember {
-        partToEdit?.linkedComponents?.map { it.componentId }?.toSet().orEmpty()
-    }
+    val initiallyLinkedIds = remember { selectedComponentIds.toSet() }
     var compFilterText by remember { mutableStateOf("") }
 
     ModalBottomSheet(

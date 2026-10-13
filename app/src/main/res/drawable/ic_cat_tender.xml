@@ -1,0 +1,10 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Tender / dinghy / small boat -->
+    <path
+        android:pathData="M12,3 C8,3 5,7 4,14 L4,19 C4,20.1 4.9,21 6,21 L18,21 C19.1,21 20,20.1 20,19 L20,14 C19,7 16,3 12,3 Z M6,15 C6.8,9 9,5 12,5 C15,5 17.2,9 18,15 L18,19 L15,19 L15,17 L9,17 L9,19 L6,19 L6,15 Z M10,10 L14,10 L14,12 L10,12 L10,10 Z"
+        android:fillColor="#FFFFFFFF" />
+</vector>

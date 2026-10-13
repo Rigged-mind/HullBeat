@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                             Scheme.SUNLIGHT -> Scheme.NIGHT
                             Scheme.NIGHT -> Scheme.DARK
                             Scheme.DARK -> Scheme.LIGHT
-                            Scheme.LIGHT -> Scheme.SYSTEM
+                            Scheme.LIGHT -> Scheme.COLORFUL
+                            Scheme.COLORFUL -> Scheme.SYSTEM
                         }
                         AppPreferences.setThemeScheme(this@MainActivity, currentScheme)
                     },

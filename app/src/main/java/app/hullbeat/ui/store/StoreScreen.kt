@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.hullbeat.R
 import app.hullbeat.data.db.StorageLocation
+import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.storageLocationDisplayName
 
 @Composable
@@ -349,6 +351,7 @@ fun StoreScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
+                            flingBehavior = appFlingBehavior(),
                         ) {
                             items(uiState.items, key = { it.detail.id }) { item ->
                                 StorePartCard(
@@ -403,6 +406,7 @@ fun StoreScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp),
+                            flingBehavior = appFlingBehavior(),
                         ) {
                             items(uiState.locations, key = { it.id }) { location ->
                                 val partsInLocation = itemsByLocation[location.id].orEmpty()
@@ -719,7 +723,7 @@ fun StorePartCard(
                 )
 
                 item.linkedComponents.forEach { comp ->
-                    val compLabel = comp.componentCustomName ?: comp.componentName
+                    val compLabel = comp.displayName(context)
                     AssistChip(
                         onClick = { onOpenComponent(comp.componentId) },
                         label = { Text(compLabel, style = MaterialTheme.typography.labelSmall) },

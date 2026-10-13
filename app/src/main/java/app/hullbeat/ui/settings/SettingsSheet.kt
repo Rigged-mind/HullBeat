@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
-import android.provider.DocumentsContract
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,23 +12,19 @@ import app.hullbeat.MainActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import app.hullbeat.data.db.ImportSession
-import app.hullbeat.data.db.ParentType
-import app.hullbeat.data.db.categoryDisplayName
 import app.hullbeat.data.db.displayName
-import app.hullbeat.data.db.profileOptionLabel
 import app.hullbeat.data.db.formatWorkTypes
 import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.data.db.storageLocationDisplayName
 import app.hullbeat.domain.backup.BackupManager
+import app.hullbeat.domain.backup.BackupResult
 import app.hullbeat.domain.export.ExcelExporter
-import app.hullbeat.domain.export.PassportLabels
-import app.hullbeat.domain.export.PdfPassportExporter
 import app.hullbeat.domain.export.ServiceRecordExportItem
-import app.hullbeat.domain.export.VesselProfileLabels
 import app.hullbeat.domain.importer.ImportEngine
 import app.hullbeat.notify.MaintenanceCheckWorker
 import java.time.LocalDate
 import app.hullbeat.ui.importer.ImportSheet
+import app.hullbeat.ui.export.rememberPassportPdfExport
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +40,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -58,11 +54,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -104,21 +102,21 @@ private tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
     else -> null
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsSheet(
+fun SettingsDrawerSheet(
     currentCurrency: String,
     onCurrencyChanged: (String) -> Unit,
     currentScheme: Scheme,
     onSchemeChanged: (Scheme) -> Unit,
-    onDismiss: () -> Unit,
+    onClose: () -> Unit,
     activeVesselId: Long? = null,
+    activeVesselName: String? = null,
+    onSwitchVessel: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     // Currency state
     var selectedCurrency by remember { mutableStateOf(currentCurrency) }
@@ -168,12 +166,20 @@ fun SettingsSheet(
     ) { uri: Uri? ->
         if (uri != null) {
             scope.launch(Dispatchers.IO) {
-                val ok = context.contentResolver.openOutputStream(uri)?.use { stream ->
+                val result = context.contentResolver.openOutputStream(uri)?.use { stream ->
                     BackupManager.createBackup(context, db, stream)
-                } ?: false
+                } ?: BackupResult(success = false)
                 withContext(Dispatchers.Main) {
-                    val msg = if (ok) context.getString(R.string.settings_backup_success) else context.getString(R.string.settings_backup_failed)
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    val msg = when {
+                        !result.success -> context.getString(R.string.settings_backup_failed)
+                        result.skippedFiles > 0 -> context.resources.getQuantityString(
+                            R.plurals.settings_backup_skipped_files,
+                            result.skippedFiles,
+                            result.skippedFiles,
+                        )
+                        else -> context.getString(R.string.settings_backup_success)
+                    }
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -313,199 +319,98 @@ fun SettingsSheet(
         }
     }
 
-    val createPdfLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/pdf")
-    ) { uri: Uri? ->
-        if (uri != null) {
-            scope.launch(Dispatchers.IO) {
-                // Everything from here to the render was unprotected: the DB
-                // reads, the label lookups, preparePassportData. A throw in
-                // any of them is an uncaught exception inside a coroutine,
-                // which takes the whole app down - and the owner sees a crash
-                // instead of a sentence telling them what went wrong.
-                try {
-                    val targetVesselId = activeVesselId ?: db.vesselDao().allActive().firstOrNull()?.id
-                    val vessel = if (targetVesselId != null) db.vesselDao().byId(targetVesselId) else null
-                    if (vessel == null) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context, context.getString(R.string.settings_export_excel_empty), Toast.LENGTH_SHORT).show()
-                        }
-                        return@launch
-                    }
+    val exportPassportPdf = rememberPassportPdfExport()
 
-                    val components = db.componentDao().allForVessel(vessel.id)
-                    val compCategoryNames = components.associate { it.id to categoryDisplayName(context, it.categoryCode) }
-                    val compDisplayNames = components.associate { it.id to it.displayName(context) }
-
-                    val rawRecords = db.serviceRecordDao().allForVessel(vessel.id)
-                    val meterIds = rawRecords.mapNotNull { it.meterReadingId }
-                    val meters = if (meterIds.isNotEmpty()) {
-                        db.meterDao().readingsByIds(meterIds).associate { it.id to it.value }
-                    } else {
-                        emptyMap<Long, Double>()
-                    }
-
-                    val recordIds = rawRecords.map { it.id }
-                    val recordAttachments = if (recordIds.isNotEmpty()) {
-                        db.attachmentDao().forParents(ParentType.SERVICE_RECORD, recordIds).groupBy { it.parentId }
-                    } else {
-                        emptyMap()
-                    }
-
-                    // Photographs hang off the components, not off the work
-                    // done to them: the owner's five were all on equipment
-                    // and the passport had nowhere to put a single one.
-                    val componentIds = components.map { it.id }
-                    val componentAttachments = if (componentIds.isNotEmpty()) {
-                        db.attachmentDao().forParents(ParentType.COMPONENT, componentIds).groupBy { it.parentId }
-                    } else {
-                        emptyMap()
-                    }
-
-                    val labels = PassportLabels(
-                        docTitle = context.getString(R.string.pdf_passport_title),
-                        sectionVessel = context.getString(R.string.pdf_section_vessel),
-                        sectionEquipment = context.getString(R.string.pdf_section_equipment),
-                        sectionEquipmentPhotos = context.getString(R.string.pdf_section_equipment_photos),
-                        sectionService = context.getString(R.string.pdf_section_service),
-                        summaryTitle = context.getString(R.string.pdf_field_summary),
-                        fieldMakeModel = context.getString(R.string.pdf_field_make_model),
-                        fieldYear = context.getString(R.string.pdf_field_year),
-                        fieldHin = context.getString(R.string.pdf_field_hin),
-                        fieldLength = context.getString(R.string.pdf_field_length),
-                        fieldHull = context.getString(R.string.pdf_field_hull),
-                        fieldEngine = context.getString(R.string.pdf_field_engine),
-                        fieldDrive = context.getString(R.string.pdf_field_drive),
-                        fieldFuel = context.getString(R.string.pdf_field_fuel),
-                        fieldComponentsCount = context.getString(R.string.pdf_field_components_count),
-                        fieldRecordsCount = context.getString(R.string.pdf_field_records_count),
-                        fieldTotalCost = context.getString(R.string.pdf_field_total_cost),
-                        colComponent = context.getString(R.string.field_map_component),
-                        colMakeModel = context.getString(R.string.pdf_field_make_model),
-                        colSerial = context.getString(R.string.pdf_field_serial),
-                        colInstalled = context.getString(R.string.pdf_field_installed),
-                        colDate = context.getString(R.string.field_map_date),
-                        colWorkType = context.getString(R.string.field_map_work_type),
-                        colPerformedBy = context.getString(R.string.field_map_who),
-                        colHours = context.getString(R.string.field_map_hours),
-                        colCost = context.getString(R.string.field_map_cost),
-                        colNotes = context.getString(R.string.field_map_notes),
-                        morePhotos = context.getString(R.string.pdf_more_photos),
-                        footerBrand = context.getString(R.string.pdf_footer_brand),
-                        footerPage = context.getString(R.string.pdf_footer_page),
-                    )
-
-                    // Codes become words here, where a Context exists.
-                    val lengthUnit = AppPreferences.getLengthUnit(context)
-                    val vesselProfile = VesselProfileLabels(
-                        hullType = vessel.hullType.ifBlank { null }
-                            ?.let { profileOptionLabel(context, "hull", it) },
-                        engineType = vessel.engine.ifBlank { null }
-                            ?.let { profileOptionLabel(context, "engine", it) },
-                        driveType = vessel.drive.ifBlank { null }
-                            ?.let { profileOptionLabel(context, "drive", it) },
-                        length = vessel.lengthMetres
-                            ?.let { AppPreferences.formatLength(it, lengthUnit) },
-                    )
-                    val workTypeNames = rawRecords
-                        .map { it.workTypes }
-                        .distinct()
-                        .associateWith { formatWorkTypes(context, it) }
-
-                    val reportData = PdfPassportExporter.preparePassportData(
-                        vessel = vessel.copy(name = vessel.displayName(context)),
-                        components = components,
-                        componentCategoryNames = compCategoryNames,
-                        componentDisplayNames = compDisplayNames,
-                        records = rawRecords.map { r ->
-                            r.copy(description = formatRecordDescription(context, r.description))
-                        },
-                        meters = meters,
-                        vesselProfile = vesselProfile,
-                        workTypeNames = workTypeNames,
-                        recordAttachments = recordAttachments,
-                        componentAttachments = componentAttachments,
-                    )
-
-                    // `generatePdf` returns null for SUCCESS and openOutputStream
-                    // returns null for NO STREAM. Folded into one elvis they
-                    // cancel out and every successful export reports as a
-                    // failure - which is what the previous version did.
-                    val stream = context.contentResolver.openOutputStream(uri)
-                    val error = if (stream == null) {
-                        "openOutputStream returned null"
-                    } else {
-                        stream.use { PdfPassportExporter.generatePdf(context, reportData, it, labels) }
-                    }
-
-                    // The picker created the file before we ever ran. Leaving an
-                    // empty one behind is what the owner reported as "a PDF that
-                    // will not open"; better no file than a broken one.
-                    if (error != null) {
-                        runCatching {
-                            DocumentsContract.deleteDocument(context.contentResolver, uri)
-                        }
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        val msg = if (error == null) {
-                            context.getString(R.string.settings_export_pdf_success)
-                        } else {
-                            context.getString(R.string.settings_export_pdf_failed) + "\n" + error
-                        }
-                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-                    }
-                } catch (e: Exception) {
-                    Log.e("PdfPassport", "Passport export failed before rendering", e)
-                    runCatching {
-                        DocumentsContract.deleteDocument(context.contentResolver, uri)
-                    }
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.settings_export_pdf_failed) +
-                                "\n" + e.javaClass.simpleName + ": " + (e.message ?: ""),
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface,
-        modifier = modifier,
+    ModalDrawerSheet(
+        drawerContainerColor = MaterialTheme.colorScheme.surface,
+        modifier = modifier.widthIn(max = 360.dp),
     ) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
+            flingBehavior = appFlingBehavior(),
         ) {
             // Header
-            item(key = "header") {
-                Row(
+            item(key = "drawer_header") {
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text(
-                        text = stringResource(R.string.settings_title),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_check),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                        )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_nav_boat),
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                        IconButton(onClick = onClose) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_close),
+                                contentDescription = stringResource(R.string.action_cancel),
+                                modifier = Modifier.size(22.dp),
+                            )
+                        }
+                    }
+
+                    if (activeVesselName != null) {
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = activeVesselName,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                                if (onSwitchVessel != null) {
+                                    TextButton(
+                                        onClick = onSwitchVessel,
+                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.drawer_switch_vessel),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+            item(key = "divider_top") { HorizontalDivider() }
 
             // 1. Units of measurement
             item(key = "units_section") {
@@ -802,7 +707,7 @@ fun SettingsSheet(
                         }
                     }
 
-                    // Row 2: Sunlight, Night (2 equal columns)
+                    // Row 2: Sunlight, Night, Color (3 equal columns)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -810,6 +715,7 @@ fun SettingsSheet(
                         val marineThemes: List<Pair<Scheme, Int>> = listOf(
                             Scheme.SUNLIGHT to R.string.theme_sunlight,
                             Scheme.NIGHT to R.string.theme_night,
+                            Scheme.COLORFUL to R.string.theme_colorful,
                         )
                         marineThemes.forEach { (scheme, labelRes) ->
                             SettingsSelectChip(
@@ -998,8 +904,7 @@ fun SettingsSheet(
                     // Export Boat Passport (PDF) Button
                     OutlinedButton(
                         onClick = {
-                            val dateStr = LocalDate.now().toString()
-                            createPdfLauncher.launch("boat_passport_$dateStr.pdf")
+                            exportPassportPdf(activeVesselId)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -1424,3 +1329,26 @@ private fun SettingsSelectChip(
         }
     }
 }
+
+@Deprecated("Use SettingsDrawerSheet instead")
+@Composable
+fun SettingsSheet(
+    currentCurrency: String,
+    onCurrencyChanged: (String) -> Unit,
+    currentScheme: Scheme,
+    onSchemeChanged: (Scheme) -> Unit,
+    onDismiss: () -> Unit,
+    activeVesselId: Long? = null,
+    modifier: Modifier = Modifier,
+) {
+    SettingsDrawerSheet(
+        currentCurrency = currentCurrency,
+        onCurrencyChanged = onCurrencyChanged,
+        currentScheme = currentScheme,
+        onSchemeChanged = onSchemeChanged,
+        onClose = onDismiss,
+        activeVesselId = activeVesselId,
+        modifier = modifier,
+    )
+}
+

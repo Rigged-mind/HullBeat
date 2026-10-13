@@ -19,6 +19,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
+import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.categorySectionColor
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -54,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.hullbeat.R
 import app.hullbeat.data.db.categoryDisplayName
+import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.domain.DueCalculator
@@ -128,6 +134,7 @@ fun NowScreen(
                 .padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
+            flingBehavior = appFlingBehavior(),
         ) {
             item(key = "departure_chip") {
                 val isDone = uiState.departureCheckDoneToday
@@ -732,12 +739,18 @@ private fun UpcomingMaintenanceCard(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val secColor = categorySectionColor(item.component.categoryCode)
+    val isColorful = LocalScheme.current == Scheme.COLORFUL
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onOpenDetail),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        border = BorderStroke(
+            if (isColorful) 1.5.dp else 1.dp,
+            if (isColorful) secColor.accent.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outlineVariant
+        ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(
@@ -753,13 +766,33 @@ private fun UpcomingMaintenanceCard(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.weight(1f),
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_calendar),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(Modifier.width(8.dp))
+                    if (isColorful) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = secColor.container,
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(categoryIconRes(item.component.categoryCode)),
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp),
+                                tint = secColor.accent,
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                    } else {
+                        Icon(
+                            painter = painterResource(categoryIconRes(item.component.categoryCode)),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(Modifier.width(10.dp))
+                    }
                     Column {
                         Text(
                             text = item.component.displayName(context),
@@ -775,11 +808,27 @@ private fun UpcomingMaintenanceCard(
                         } else {
                             categoryText
                         }
-                        Text(
-                            text = subtitleText,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        if (isColorful) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = secColor.container,
+                                modifier = Modifier.padding(top = 4.dp),
+                            ) {
+                                Text(
+                                    text = subtitleText,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = secColor.onContainer,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = subtitleText,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.width(8.dp))
@@ -894,13 +943,27 @@ private fun RecentActivityCard(
                     } else {
                         desc
                     }
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(top = 2.dp),
+                    ) {
+                        if (activity.categoryCode.isNotBlank()) {
+                            Icon(
+                                painter = painterResource(categoryIconRes(activity.categoryCode)),
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Text(
+                            text = subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 }
                 Spacer(Modifier.width(12.dp))
                 Text(

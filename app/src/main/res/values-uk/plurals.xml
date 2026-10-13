@@ -220,4 +220,16 @@
         <item quantity="many">Імпортовано %d записів</item>
         <item quantity="other">Імпортовано %d записи</item>
     </plurals>
+    <plurals name="settings_backup_skipped_files">
+        <item quantity="one">Backup створено, але %d вкладення не ввійшло до архіву (файл недоступний)</item>
+        <item quantity="few">Backup створено, але %d вкладення не ввійшли до архіву (файли недоступні)</item>
+        <item quantity="many">Backup створено, але %d вкладень не ввійшло до архіву (файли недоступні)</item>
+        <item quantity="other">Backup створено, але %d вкладення не ввійшли до архіву (файли недоступні)</item>
+    </plurals>
+    <plurals name="import_skipped_rows">
+        <item quantity="one">пропущено %d рядок</item>
+        <item quantity="few">пропущено %d рядки</item>
+        <item quantity="many">пропущено %d рядків</item>
+        <item quantity="other">пропущено %d рядків</item>
+    </plurals>
 </resources>

@@ -155,4 +155,12 @@
         <item quantity="one">Imported %d record</item>
         <item quantity="other">Imported %d records</item>
     </plurals>
+    <plurals name="settings_backup_skipped_files">
+        <item quantity="one">Backup created, but %d attachment could not be included (file unavailable)</item>
+        <item quantity="other">Backup created, but %d attachments could not be included (files unavailable)</item>
+    </plurals>
+    <plurals name="import_skipped_rows">
+        <item quantity="one">%d row skipped</item>
+        <item quantity="other">%d rows skipped</item>
+    </plurals>
 </resources>

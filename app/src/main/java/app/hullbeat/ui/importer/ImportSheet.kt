@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -34,6 +36,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -73,7 +76,17 @@ fun ImportSheet(
 
     var preview by remember { mutableStateOf<ImportEngine.ImportPreview?>(null) }
     var mapping by remember { mutableStateOf<Map<Int, TargetField>>(emptyMap()) }
+    var analysis by remember { mutableStateOf<ImportEngine.ImportAnalysis?>(null) }
     var isImporting by remember { mutableStateOf(false) }
+    var showSkipDialog by remember { mutableStateOf(false) }
+
+    /** Builds the component name set needed by analyzeRows() without touching Room. */
+    suspend fun loadComponentNames(): Set<String> {
+        val comps = database.componentDao().forVessel(vesselId)
+        return comps.flatMap { c ->
+            listOfNotNull(c.name, c.customName, c.catalogCode)
+        }.toSet()
+    }
 
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
@@ -84,9 +97,12 @@ fun ImportSheet(
                     context.contentResolver.openInputStream(uri)?.use { stream ->
                         val fileName = queryFileName(context, uri)
                         val p = ImportEngine.createPreview(stream, fileName)
+                        val knownNames = loadComponentNames()
+                        val a = ImportEngine.analyzeRows(p, p.suggestedMapping, knownNames)
                         withContext(Dispatchers.Main) {
                             preview = p
                             mapping = p.suggestedMapping
+                            analysis = a
                         }
                     }
                 } catch (e: Exception) {
@@ -96,6 +112,127 @@ fun ImportSheet(
                 }
             }
         }
+    }
+
+    // Re-run analysis whenever the user changes column mapping
+    fun refreshAnalysis(newMapping: Map<Int, TargetField>) {
+        val p = preview ?: return
+        scope.launch(Dispatchers.IO) {
+            val knownNames = loadComponentNames()
+            val a = ImportEngine.analyzeRows(p, newMapping, knownNames)
+            withContext(Dispatchers.Main) {
+                analysis = a
+            }
+        }
+    }
+
+    // Confirmation dialog shown when there are problematic rows
+    if (showSkipDialog) {
+        val p = preview!!
+        val a = analysis!!
+        val skipIndices = a.issues.map { it.rowIndex }.toSet()
+        AlertDialog(
+            onDismissRequest = { showSkipDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.import_skip_dialog_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = stringResource(
+                            R.string.import_skip_dialog_subtitle,
+                            a.issues.size,
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    a.issues.forEach { issue ->
+                        val detail = buildString {
+                            if (issue.hasDateError) append(
+                                stringResource(R.string.import_issue_date, issue.rawDate)
+                            )
+                            if (issue.hasDateError && issue.hasComponentError) append(", ")
+                            if (issue.hasComponentError) append(
+                                stringResource(R.string.import_issue_component, issue.rawComponent)
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.import_issue_row, issue.rowIndex, detail),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSkipDialog = false
+                        isImporting = true
+                        scope.launch(Dispatchers.IO) {
+                            try {
+                                val result = ImportEngine.commitImport(
+                                    vesselId = vesselId,
+                                    preview = p,
+                                    mapping = mapping,
+                                    db = database,
+                                    skipRows = skipIndices,
+                                )
+                                withContext(Dispatchers.Main) {
+                                    isImporting = false
+                                    val msg = buildString {
+                                        append(
+                                            context.resources.getQuantityString(
+                                                R.plurals.import_success_toast,
+                                                result.importedRecords,
+                                                result.importedRecords,
+                                            )
+                                        )
+                                        if (result.skippedRows > 0) {
+                                            append(" (")
+                                            append(
+                                                context.resources.getQuantityString(
+                                                    R.plurals.import_skipped_rows,
+                                                    result.skippedRows,
+                                                    result.skippedRows,
+                                                )
+                                            )
+                                            append(")")
+                                        }
+                                    }
+                                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                                    onImportFinished()
+                                    onDismiss()
+                                }
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    isImporting = false
+                                    Toast.makeText(context, e.localizedMessage ?: "Import failed", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                ) {
+                    Text(
+                        stringResource(
+                            R.string.import_skip_dialog_confirm,
+                            a.validCount,
+                            a.totalRows,
+                        )
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSkipDialog = false }) {
+                    Text(stringResource(R.string.import_skip_dialog_cancel))
+                }
+            },
+        )
     }
 
     ModalBottomSheet(
@@ -109,6 +246,7 @@ fun ImportSheet(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            flingBehavior = appFlingBehavior(),
         ) {
             item(key = "header") {
                 Row(
@@ -207,6 +345,32 @@ fun ImportSheet(
                     }
                 }
 
+                // Warning banner when some rows have unrecognised data
+                val a = analysis
+                if (a != null && a.hasAnyIssue) {
+                    item(key = "issues_banner") {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    text = stringResource(R.string.import_issues_banner_title, a.issues.size),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                )
+                                Text(
+                                    text = stringResource(R.string.import_issues_banner_subtitle),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                )
+                            }
+                        }
+                    }
+                }
+
                 item(key = "mapping_title") {
                     Text(
                         text = stringResource(R.string.import_preview_subtitle),
@@ -224,7 +388,9 @@ fun ImportSheet(
                             headerName = headerName.ifEmpty { "Col ${colIndex + 1}" },
                             selectedField = currentTarget,
                             onFieldSelected = { newField ->
-                                mapping = mapping.toMutableMap().apply { put(colIndex, newField) }
+                                val newMapping = mapping.toMutableMap().apply { put(colIndex, newField) }
+                                mapping = newMapping
+                                refreshAnalysis(newMapping)
                             },
                         )
                     }
@@ -240,45 +406,62 @@ fun ImportSheet(
                             CircularProgressIndicator()
                         }
                     } else {
+                        val currentAnalysis = analysis
+                        val hasIssues = currentAnalysis?.hasAnyIssue == true
+                        val canCommit = currentAnalysis?.canCommit != false
+
                         Button(
                             onClick = {
-                                isImporting = true
-                                scope.launch(Dispatchers.IO) {
-                                    try {
-                                        val result = ImportEngine.commitImport(
-                                            vesselId = vesselId,
-                                            preview = p,
-                                            mapping = mapping,
-                                            db = database,
-                                        )
-                                        withContext(Dispatchers.Main) {
-                                            isImporting = false
-                                            Toast.makeText(
-                                                context,
-                                                context.resources.getQuantityString(
-                                                    R.plurals.import_success_toast,
-                                                    result.importedRecords,
-                                                    result.importedRecords,
-                                                ),
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                            onImportFinished()
-                                            onDismiss()
-                                        }
-                                    } catch (e: Exception) {
-                                        withContext(Dispatchers.Main) {
-                                            isImporting = false
-                                            Toast.makeText(context, e.localizedMessage ?: "Import failed", Toast.LENGTH_SHORT).show()
+                                if (hasIssues) {
+                                    // Show the skip-rows confirmation dialog first
+                                    showSkipDialog = true
+                                } else {
+                                    // All rows are clean — commit immediately
+                                    isImporting = true
+                                    scope.launch(Dispatchers.IO) {
+                                        try {
+                                            val result = ImportEngine.commitImport(
+                                                vesselId = vesselId,
+                                                preview = p,
+                                                mapping = mapping,
+                                                db = database,
+                                            )
+                                            withContext(Dispatchers.Main) {
+                                                isImporting = false
+                                                Toast.makeText(
+                                                    context,
+                                                    context.resources.getQuantityString(
+                                                        R.plurals.import_success_toast,
+                                                        result.importedRecords,
+                                                        result.importedRecords,
+                                                    ),
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                                onImportFinished()
+                                                onDismiss()
+                                            }
+                                        } catch (e: Exception) {
+                                            withContext(Dispatchers.Main) {
+                                                isImporting = false
+                                                Toast.makeText(context, e.localizedMessage ?: "Import failed", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
                                 }
                             },
+                            enabled = canCommit,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
                             shape = RoundedCornerShape(8.dp),
                         ) {
-                            Text(stringResource(R.string.import_btn_commit))
+                            Text(
+                                if (hasIssues) {
+                                    stringResource(R.string.import_btn_commit_with_issues)
+                                } else {
+                                    stringResource(R.string.import_btn_commit)
+                                }
+                            )
                         }
                     }
                     Spacer(Modifier.height(16.dp))

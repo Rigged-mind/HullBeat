@@ -1,0 +1,10 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- AC Plug -->
+    <path
+        android:pathData="M16.01,7 L16.01,3 L14.01,3 L14.01,7 L9.99,7 L9.99,3 L7.99,3 L7.99,7 C6.89,7 6,7.89 6,8.99 L6,13 C6,15.21 7.79,17 10,17 L11,17 L11,21 L13,21 L13,17 L14,17 C16.21,17 18,15.21 18,13 L18,8.99 C18,7.89 17.11,7 16.01,7 Z"
+        android:fillColor="#FFFFFFFF" />
+</vector>

@@ -119,6 +119,7 @@
     <string name="theme_dark">Темна</string>
     <string name="theme_sunlight">Яскраве сонце</string>
     <string name="theme_night">Нічна</string>
+    <string name="theme_colorful">Кольорова</string>
 
     <!-- Component Detail -->
     <string name="detail_back">Назад</string>
@@ -385,6 +386,16 @@
     <string name="import_preview_subtitle">Зіставте колонки та перевірте записи</string>
     <string name="import_file_label">Файл</string>
     <string name="import_btn_commit">Імпортувати записи</string>
+    <string name="import_btn_commit_with_issues">Переглянути та імпортувати</string>
+    <string name="import_issues_banner_title">Рядків з проблемами: %d</string>
+    <string name="import_issues_banner_subtitle">Рядки з нерозпізнаною датою або компонентом будуть пропущені при імпорті</string>
+    <string name="import_skip_dialog_title">Пропуск проблемних рядків</string>
+    <string name="import_skip_dialog_subtitle">%d рядків містять нерозпізнані поля і не будуть імпортовані:</string>
+    <string name="import_issue_date">невідома дата «%s»</string>
+    <string name="import_issue_component">невідомий компонент «%s»</string>
+    <string name="import_issue_row">Рядок %1$d: %2$s</string>
+    <string name="import_skip_dialog_confirm">Імпортувати %1$d з %2$d рядків</string>
+    <string name="import_skip_dialog_cancel">Скасувати</string>
     <string name="import_history_title">Історія імпортів</string>
     <string name="import_history_empty">Імпортів ще не було</string>
     <string name="import_rollback_btn">Скасувати</string>
@@ -421,10 +432,10 @@
     <string name="settings_export_store_csv">Склад (CSV)</string>
 
     <!-- Boat Passport PDF -->
-    <string name="settings_export_pdf_passport">Експортувати паспорт судна (PDF)</string>
+    <string name="settings_export_pdf_passport">Паспорт судна та сервісна книжка (PDF)</string>
     <string name="settings_export_pdf_success">Паспорт судна успішно експортовано</string>
     <string name="settings_export_pdf_failed">Не вдалося створити PDF-документ</string>
-    <string name="pdf_passport_title">Судновий паспорт та досьє ТО</string>
+    <string name="pdf_passport_title">Паспорт судна та сервісна книжка</string>
     <string name="pdf_section_vessel">Специфікація судна</string>
     <string name="pdf_section_equipment">Реєстр обладнання</string>
     <string name="pdf_section_equipment_photos">Обладнання</string>
@@ -446,7 +457,12 @@
     <string name="pdf_field_installed">Встановлено</string>
     <string name="pdf_footer_page">Сторінка %1$d</string>
     <string name="pdf_footer_brand">Судновий журнал HullBeat</string>
+    <string name="pdf_compiled_by">Складено власником за даними HullBeat</string>
     <string name="now_enter_hours">Внести мотогодини</string>
     <string name="error_photo_save_failed">Не вдалося зберегти фотографію</string>
     <string name="action_ok">Зрозуміло</string>
+    <string name="nav_menu_title">Меню</string>
+    <string name="drawer_switch_vessel">Змінити судно</string>
+    <string name="state_expanded">Розгорнуто</string>
+    <string name="state_collapsed">Згорнуто</string>
 </resources>
