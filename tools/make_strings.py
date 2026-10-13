@@ -108,7 +108,8 @@ def profile_terms(locale, glossary, profile):
             for key, _, _ in profile if key in block]
 
 
-def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profile):
+def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profile,
+                    missing=()):
     """catalog/i18n/<locale>-review.md for a locale whose reviewer reads English.
 
     The Ukrainian review file is written in Ukrainian and leaves checklist
@@ -131,6 +132,8 @@ def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profi
              "contested or borrowed term; `descr` means no settled term exists "
              "and the wording is descriptive.\n",
              "\nOne question for each: **is this what it is called on the water?**\n",
+             (f"\n{len(missing)} more keys have no draft yet and are not "
+              "listed.\n" if missing else ""),
              "\n| Key | English | Draft | Status | Correction |\n"
              "|---|---|---|---|---|\n"]
     for key in review:
@@ -232,6 +235,15 @@ def main():
         # the catalog), so an empty components block is normal, not an error.
         aliases_only = not glossary.get("components")
 
+        # A glossary marked "_status": "draft" is still being translated or
+        # reviewed. Its review list is written and its keys are checked, but
+        # nothing of it reaches the app: no values-<locale> folder, because
+        # that folder ships to every phone set to the language the moment it
+        # is merged, and no search aliases, because synonyms.json ships to
+        # everyone. Gaps in a draft are reported, not failed - a glossary is
+        # filled over weeks, and a suite that is red for weeks gets ignored.
+        draft = glossary.get("_status") == "draft"
+
         terms = {}
         confidence = {}
         for code, (term, conf) in glossary.get("categories", {}).items():
@@ -257,16 +269,19 @@ def main():
                     if isinstance(glossary["specHints"].get(_), list) else "check")
 
         # Aliases are keyed by the bare component code, not the cmp_ resource key.
-        synonyms[locale] = glossary.get("synonyms", {})
-        bad_codes = sorted(set(synonyms[locale]) - {c for c, _ in comps})
+        aliases = glossary.get("synonyms", {})
+        bad_codes = sorted(set(aliases) - {c for c, _ in comps})
         if bad_codes:
             failed = True
             print(f"    ALIAS for unknown code: {', '.join(bad_codes[:8])}")
+        if not draft:
+            synonyms[locale] = aliases
 
         if aliases_only:
-            n = sum(len(v) for v in synonyms[locale].values())
+            n = sum(len(v) for v in aliases.values())
             print(f"catalog/i18n/{name:<22} aliases only: "
-                  f"{len(synonyms[locale])} components, {n} phrases")
+                  f"{len(aliases)} components, {n} phrases"
+                  f"{'  (draft - not shipped)' if draft else ''}")
             continue
 
         missing = sorted(expected - set(terms))
@@ -282,18 +297,28 @@ def main():
                  for slug, _, uk in spechint_keys(glossary) if uk]
         rows += [("vessel profile", key, terms[key])
                  for key, _, _ in profile if key in terms]
-        write_xml(os.path.join(RES, f"values-{locale}", "strings_catalog.xml"),
-                  rows, f" + catalog/i18n/{name}")
+        folder = os.path.join(RES, f"values-{locale}")
+        if draft:
+            if os.path.exists(folder):
+                failed = True
+                print(f"    {folder} exists but catalog/i18n/{name} is a draft - "
+                      "either the folder was made by hand, or the draft mark "
+                      "should have been removed with the review")
+        else:
+            write_xml(os.path.join(folder, "strings_catalog.xml"),
+                      rows, f" + catalog/i18n/{name}")
 
         counts = {"ok": 0, "check": 0, "descr": 0}
         for key in terms:
             counts[confidence.get(key, "check")] = counts.get(confidence.get(key, "check"), 0) + 1
 
-        print(f"values-{locale}/strings_catalog.xml         {len(rows):3} keys  "
+        target = (f"catalog/i18n/{name} (draft)" if draft
+                  else f"values-{locale}/strings_catalog.xml")
+        print(f"{target:38}{len(rows):3} keys  "
               f"settled {counts['ok']}, needs review {counts['check']}, coined {counts['descr']}")
 
         if missing:
-            failed = True
+            failed = failed or not draft
             print(f"    MISSING {len(missing)}: {', '.join(missing[:8])}"
                   f"{' ...' if len(missing) > 8 else ''}")
         if extra:
@@ -301,7 +326,7 @@ def main():
 
         if locale != "uk":
             write_review_en(locale, terms, confidence, cats, comps, checks,
-                            hints, profile)
+                            hints, profile, missing)
             continue
 
         # Checklist lines are sentences, not terms, and catalog/i18n/
