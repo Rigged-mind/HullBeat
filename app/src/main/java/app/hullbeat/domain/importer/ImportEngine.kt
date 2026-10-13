@@ -37,7 +37,96 @@ object ImportEngine {
         val sessionId: Long,
         val rowCount: Int,
         val importedRecords: Int,
+        val skippedRows: Int = 0,
     )
+
+    /**
+     * Describes a single problematic row found during pre-commit analysis.
+     *
+     * [rowIndex] is 1-based so it maps directly to what the user sees in a
+     * spreadsheet application. [rawDate] and [rawComponent] hold the raw cell
+     * text that could not be parsed, so the UI can show the user exactly what
+     * failed rather than just a row number.
+     */
+    data class RowIssue(
+        val rowIndex: Int,
+        val rawDate: String,
+        val rawComponent: String,
+        val hasDateError: Boolean,
+        val hasComponentError: Boolean,
+    )
+
+    /**
+     * Summary produced by [analyzeRows] before any database write.
+     *
+     * [validCount] is the number of rows that *will* be written if the user
+     * proceeds. [issues] contains one entry per row that has at least one
+     * field that cannot be resolved — an unrecognised date, an unknown
+     * component name, or both.
+     */
+    data class ImportAnalysis(
+        val totalRows: Int,
+        val issues: List<RowIssue>,
+        val validCount: Int,
+    ) {
+        val hasAnyIssue: Boolean get() = issues.isNotEmpty()
+        /** True when there is at least one row that *can* be imported. */
+        val canCommit: Boolean get() = validCount > 0
+    }
+
+    /**
+     * Scans [preview] rows against [mapping] and [knownComponentNames] without
+     * touching the database.
+     *
+     * A row is considered problematic when:
+     * - the column mapped to DATE is non-empty but [ColumnMapper.parseDate]
+     *   returns null, OR no column is mapped to DATE at all (so every row
+     *   would fall back to today); or
+     * - the column mapped to COMPONENT is non-empty but no entry in
+     *   [knownComponentNames] matches it (case-insensitive).
+     *
+     * Rows that are entirely blank are counted as valid (they will be skipped
+     * by commitImport anyway and produce a synthetic description).
+     */
+    fun analyzeRows(
+        preview: ImportPreview,
+        mapping: Map<Int, TargetField>,
+        knownComponentNames: Set<String>,
+    ): ImportAnalysis {
+        val issues = mutableListOf<RowIssue>()
+        var validCount = 0
+
+        val dateColIndex = mapping.entries.firstOrNull { it.value == TargetField.DATE }?.key
+        val compColIndex = mapping.entries.firstOrNull { it.value == TargetField.COMPONENT }?.key
+
+        for ((index, row) in preview.allRows.withIndex()) {
+            val rawDate = dateColIndex?.let { row.getOrNull(it)?.trim() } ?: ""
+            val rawComp = compColIndex?.let { row.getOrNull(it)?.trim() } ?: ""
+
+            val hasDateError = rawDate.isNotEmpty() && ColumnMapper.parseDate(rawDate) == null
+            val hasCompError = rawComp.isNotEmpty() &&
+                knownComponentNames.none { it.equals(rawComp, ignoreCase = true) }
+
+            if (hasDateError || hasCompError) {
+                issues += RowIssue(
+                    rowIndex = index + 1,
+                    rawDate = rawDate,
+                    rawComponent = rawComp,
+                    hasDateError = hasDateError,
+                    hasComponentError = hasCompError,
+                )
+            } else {
+                validCount++
+            }
+        }
+
+        return ImportAnalysis(
+            totalRows = preview.totalRowCount,
+            issues = issues,
+            validCount = validCount,
+        )
+    }
+
 
     fun createPreview(inputStream: InputStream, fileName: String): ImportPreview {
         val sniff = CsvSniffer.sniffAndParse(inputStream)
@@ -63,10 +152,15 @@ object ImportEngine {
         preview: ImportPreview,
         mapping: Map<Int, TargetField>,
         db: AppDatabase,
+        // 1-based row indices that the user has chosen to skip (problematic rows
+        // identified by analyzeRows() and confirmed in the UI). Skipped rows are
+        // recorded in import_row with parseStatus="SKIPPED" but are not written
+        // as ServiceRecord entries.
+        skipRows: Set<Int> = emptySet(),
     ): ImportResult = db.withTransaction {
         var existingComponents = db.componentDao().forVessel(vesselId)
         if (existingComponents.isEmpty()) {
-            val defaultCompId = db.componentDao().insert(
+            db.componentDao().insert(
                 Component(
                     vesselId = vesselId,
                     categoryCode = "general",
@@ -103,19 +197,27 @@ object ImportEngine {
             // line break from a quoted CSV field is ordinary data, and hand-
             // escaping only the quote stored it as JSON nothing could read back.
             val rowJson = JsonArray(row.map { JsonPrimitive(it) }).toString()
+            val status = if ((index + 1) in skipRows) "SKIPPED" else "OK"
             ImportRow(
                 sessionId = sessionId,
                 sheet = "Sheet1",
                 rowIndex = index + 1,
                 rawJson = rowJson,
-                parseStatus = "OK",
+                parseStatus = status,
             )
         }
         db.importDao().insertRows(importRows)
 
         var importedCount = 0
+        var skippedCount = 0
 
         for ((rowIndex, row) in preview.allRows.withIndex()) {
+            val oneBasedIndex = rowIndex + 1
+            if (oneBasedIndex in skipRows) {
+                skippedCount++
+                continue
+            }
+
             var datePair = Pair(LocalDate.now(), DatePrecision.DAY)
             var description = ""
             var workType = WorkType.SCHEDULED
@@ -184,7 +286,7 @@ object ImportEngine {
                 description = row.filter { it.isNotBlank() }.take(3).joinToString(" · ")
             }
             if (description.isEmpty()) {
-                description = "Imported record #${rowIndex + 1}"
+                description = "Imported record #$oneBasedIndex"
             }
 
             val finalComponentId = targetComponentId ?: existingComponents.first().id
@@ -220,7 +322,7 @@ object ImportEngine {
                 notes = notes,
                 importSessionId = sessionId,
                 importSheet = "Sheet1",
-                importRowIndex = rowIndex + 1,
+                importRowIndex = oneBasedIndex,
             )
             db.serviceRecordDao().insert(record)
             importedCount++
@@ -230,6 +332,7 @@ object ImportEngine {
             sessionId = sessionId,
             rowCount = preview.totalRowCount,
             importedRecords = importedCount,
+            skippedRows = skippedCount,
         )
     }
 

@@ -1,6 +1,7 @@
 package app.hullbeat.data.db
 
 import android.content.Context
+import androidx.annotation.DrawableRes
 import app.hullbeat.R
 
 /**
@@ -41,11 +42,59 @@ fun Component.displayName(context: Context): String {
 }
 
 /**
+ * Localised name of a linked component in inventory/store.
+ */
+fun ComponentPartLink.displayName(context: Context): String {
+    componentCustomName?.takeIf { it.isNotBlank() }?.let { return it }
+
+    val code = catalogCode
+    if (code != null) {
+        val base = code.substringBefore('#')
+        val resId = context.resources.getIdentifier(
+            "cmp_$base", "string", context.packageName
+        )
+        if (resId != 0) {
+            val catalogName = context.getString(resId)
+            return engineIndex?.let { "$catalogName #$it" } ?: catalogName
+        }
+    }
+    return componentName
+}
+
+/**
  * Localised name of a catalog category (e.g. "cat_hull_underwater" -> "Корпус і підводна частина").
  */
 fun categoryDisplayName(context: Context, categoryCode: String): String {
     val id = context.resources.getIdentifier("cat_$categoryCode", "string", context.packageName)
     return if (id != 0) context.getString(id) else categoryCode
+}
+
+/**
+ * Vector icon resource for a catalog category.
+ */
+@DrawableRes
+fun categoryIconRes(categoryCode: String): Int = when (categoryCode) {
+    "hull" -> R.drawable.ic_cat_hull
+    "drivetrain" -> R.drawable.ic_cat_drivetrain
+    "engine", "engine_main" -> R.drawable.ic_cat_engine
+    "genset" -> R.drawable.ic_cat_genset
+    "fuel" -> R.drawable.ic_cat_fuel
+    "elec", "elec_dc" -> R.drawable.ic_cat_elec_dc
+    "elec_ac" -> R.drawable.ic_cat_elec_ac
+    "plumbing" -> R.drawable.ic_cat_plumbing
+    "gas" -> R.drawable.ic_cat_gas
+    "standing_rig" -> R.drawable.ic_cat_standing_rig
+    "running_rig" -> R.drawable.ic_cat_running_rig
+    "sails" -> R.drawable.ic_cat_sails
+    "ground_tackle" -> R.drawable.ic_cat_ground_tackle
+    "safety" -> R.drawable.ic_cat_safety
+    "nav" -> R.drawable.ic_cat_nav
+    "hvac" -> R.drawable.ic_cat_hvac
+    "galley" -> R.drawable.ic_cat_galley
+    "tender" -> R.drawable.ic_cat_tender
+    "trailer" -> R.drawable.ic_cat_trailer
+    "documents" -> R.drawable.ic_cat_documents
+    else -> R.drawable.ic_cat_other
 }
 
 /**

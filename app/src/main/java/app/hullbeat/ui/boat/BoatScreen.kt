@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,8 +24,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -57,24 +64,39 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import app.hullbeat.R
 import app.hullbeat.data.catalog.CoreComponents
+import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.data.db.AppDatabase
 import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.categoryDisplayName
+import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
+import androidx.compose.foundation.background
 import app.hullbeat.ui.components.AddFromCatalogSheet
 import app.hullbeat.ui.components.rememberSampledBitmap
+import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.categorySectionColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -99,8 +121,17 @@ fun BoatScreen(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var showAddCatalogSheet by rememberSaveable { mutableStateOf(false) }
     var reload by remember { mutableStateOf(0) }
+    var collapsedCategories by remember {
+        mutableStateOf(AppPreferences.getCollapsedCategories(context))
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        collapsedCategories = AppPreferences.getCollapsedCategories(context)
+        reload++
+    }
 
     LaunchedEffect(reload, vesselId) {
+        collapsedCategories = AppPreferences.getCollapsedCategories(context)
         withContext(Dispatchers.IO) {
             val target = if (vesselId != null) {
                 database.vesselDao().byId(vesselId)
@@ -182,32 +213,177 @@ fun BoatScreen(
         }
     }
 
+    val strCollapsed = stringResource(R.string.state_collapsed)
+    val strExpanded = stringResource(R.string.state_expanded)
+
+    var showAllIconsOverview by rememberSaveable { mutableStateOf(false) }
+
+    if (showAllIconsOverview || searchQuery.trim().lowercase() == "icons") {
+        Surface(modifier = modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Розділи застосунку",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    IconButton(onClick = { showAllIconsOverview = false }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_close),
+                            contentDescription = "Закрити",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+
+                val navItems = listOf(
+                    R.drawable.ic_nav_now to stringResource(R.string.nav_now),
+                    R.drawable.ic_nav_boat to stringResource(R.string.nav_boat),
+                    R.drawable.ic_nav_log to stringResource(R.string.nav_log),
+                    R.drawable.ic_nav_store to stringResource(R.string.nav_store),
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    navItems.forEach { (iconRes, name) ->
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(vertical = 5.dp, horizontal = 2.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(2.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(iconRes),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Text(
+                                    text = name,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Text(
+                    text = "Категорії вузлів (21)",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+
+                val allCategoryCodes = listOf(
+                    "hull", "drivetrain", "engine_main",
+                    "genset", "fuel", "elec_dc",
+                    "elec_ac", "plumbing", "gas",
+                    "standing_rig", "running_rig", "sails",
+                    "ground_tackle", "safety", "nav",
+                    "hvac", "galley", "tender",
+                    "trailer", "documents", "other"
+                )
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    contentPadding = PaddingValues(bottom = 8.dp),
+                ) {
+                    items(allCategoryCodes) { code ->
+                        val secColor = categorySectionColor(code)
+                        val isColorful = LocalScheme.current == Scheme.COLORFUL
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = secColor.container,
+                            border = BorderStroke(
+                                1.dp,
+                                if (isColorful) secColor.accent.copy(alpha = 0.35f)
+                                else MaterialTheme.colorScheme.outlineVariant
+                            ),
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(categoryIconRes(code)),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = secColor.accent,
+                                )
+                                Text(
+                                    text = categoryDisplayName(context, code),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Medium,
+                                    color = if (isColorful) secColor.onContainer else MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return
+    }
+
     Surface(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(0.dp),
+            flingBehavior = appFlingBehavior(),
         ) {
             item(key = "header") {
-                VesselHeader(
-                    vessel = vessel,
-                    componentCount = components.size,
-                    onPickPhoto = {
-                        if (vessel?.photoUri != null) {
-                            showPhotoDialog = true
-                        } else {
-                            photoPicker.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
-                        }
-                    },
-                )
+                Box(modifier = Modifier.padding(bottom = 8.dp)) {
+                    VesselHeader(
+                        vessel = vessel,
+                        componentCount = components.size,
+                        onPickPhoto = {
+                            if (vessel?.photoUri != null) {
+                                showPhotoDialog = true
+                            } else {
+                                photoPicker.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                        },
+                    )
+                }
             }
 
             // Search Bar & Add Button
             item(key = "search_and_actions") {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     OutlinedTextField(
@@ -249,7 +425,7 @@ fun BoatScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp),
+                            .padding(top = 16.dp, bottom = 32.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
@@ -274,22 +450,139 @@ fun BoatScreen(
                     }
                 }
             } else {
+                val isSearching = searchQuery.isNotBlank()
                 val grouped = filteredComponents.groupBy { it.categoryCode }
-                grouped.forEach { (catCode, rows) ->
-                    item(key = "cat_$catCode") {
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            text = categoryDisplayName(context, catCode) + "  ·  " + rows.size,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                grouped.entries.forEachIndexed { groupIndex, (catCode, rows) ->
+                    val isCollapsed = !isSearching && catCode in collapsedCategories
+                    val topPadding = if (groupIndex > 0) 16.dp else 8.dp
+
+                    item(key = "cat_header_$catCode") {
+                        val headerShape = if (isCollapsed || rows.isEmpty()) {
+                            RoundedCornerShape(12.dp)
+                        } else {
+                            RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                        }
+                        val secColor = categorySectionColor(catCode)
+                        val isColorful = LocalScheme.current == Scheme.COLORFUL
+
+                        Surface(
+                            shape = headerShape,
+                            color = if (isColorful) secColor.container else MaterialTheme.colorScheme.surfaceVariant,
+                            border = if (isColorful) BorderStroke(1.dp, secColor.accent.copy(alpha = 0.35f)) else null,
+                            onClick = {
+                                if (!isSearching) {
+                                    val next = if (catCode in collapsedCategories) {
+                                        collapsedCategories - catCode
+                                    } else {
+                                        collapsedCategories + catCode
+                                    }
+                                    collapsedCategories = next
+                                    AppPreferences.setCollapsedCategories(context, next)
+                                }
+                            },
+                            enabled = !isSearching,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = topPadding)
+                                .semantics(mergeDescendants = true) {
+                                    heading()
+                                    if (!isSearching) {
+                                        role = Role.Button
+                                        stateDescription = if (isCollapsed) strCollapsed else strExpanded
+                                    }
+                                },
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(min = 52.dp)
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                        modifier = Modifier.weight(1f),
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .background(
+                                                    color = if (isColorful) secColor.accent else Color.Transparent,
+                                                    shape = RoundedCornerShape(8.dp)
+                                                ),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(categoryIconRes(catCode)),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(20.dp),
+                                                tint = if (isColorful) Color.White else secColor.accent,
+                                            )
+                                        }
+                                        Text(
+                                            text = categoryDisplayName(context, catCode),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isColorful) secColor.onContainer else MaterialTheme.colorScheme.onSurface,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.weight(1f, fill = false),
+                                        )
+                                        Surface(
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = if (isColorful) secColor.accent else MaterialTheme.colorScheme.surface,
+                                        ) {
+                                            Text(
+                                                text = rows.size.toString(),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontWeight = FontWeight.Bold,
+                                                color = if (isColorful) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            )
+                                        }
+                                    }
+                                    if (!isSearching) {
+                                        Icon(
+                                            painter = painterResource(
+                                                if (isCollapsed) R.drawable.ic_chevron_right else R.drawable.ic_chevron_down
+                                            ),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(20.dp),
+                                            tint = if (isColorful) secColor.onContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                }
+                                if (!isCollapsed && rows.isNotEmpty()) {
+                                    HorizontalDivider(
+                                        color = if (isColorful) secColor.accent.copy(alpha = 0.25f) else MaterialTheme.colorScheme.outlineVariant,
+                                    )
+                                }
+                            }
+                        }
                     }
-                    items(rows, key = { "c" + it.id }) { component ->
-                        ComponentRow(
-                            label = component.displayName(context),
-                            onClick = { onOpenComponent(component.id) },
-                        )
+
+                    if (!isCollapsed) {
+                        itemsIndexed(rows, key = { _, c -> "c" + c.id }) { index, component ->
+                            val secColor = categorySectionColor(catCode)
+                            val isColorful = LocalScheme.current == Scheme.COLORFUL
+                            val isLast = index == rows.lastIndex
+                            val shape = if (isLast) {
+                                RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                            } else {
+                                RectangleShape
+                            }
+                            ComponentRow(
+                                label = component.displayName(context),
+                                onClick = { onOpenComponent(component.id) },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = shape,
+                                showDivider = !isLast,
+                                accentColor = if (isColorful) secColor.accent else null,
+                            )
+                        }
                     }
                 }
             }
@@ -519,33 +812,61 @@ private fun VesselHeader(
 private fun ComponentRow(
     label: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(8.dp),
+    showDivider: Boolean = false,
+    accentColor: Color? = null,
 ) {
     Surface(
-        shape = RoundedCornerShape(8.dp),
+        shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier
+        onClick = onClick,
+        modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp)
-            .clickable(onClick = onClick)
             .semantics(mergeDescendants = true) {},
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Text(
-                text = "›",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.clearAndSetSemantics { },
-            )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 56.dp)
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f),
+                ) {
+                    if (accentColor != null) {
+                        Box(
+                            modifier = Modifier
+                                .width(3.5.dp)
+                                .height(16.dp)
+                                .background(accentColor, RoundedCornerShape(2.dp))
+                        )
+                        Spacer(Modifier.width(10.dp))
+                    }
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Text(
+                    text = "›",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.clearAndSetSemantics { },
+                )
+            }
+            if (showDivider) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                )
+            }
         }
     }
 }
+

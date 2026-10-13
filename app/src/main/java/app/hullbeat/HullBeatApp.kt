@@ -41,7 +41,7 @@ class HullBeatApp : Application() {
 
     private fun buildDatabase(): AppDatabase {
         return Room.databaseBuilder(applicationContext, AppDatabase::class.java, AppDatabase.NAME)
-            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onOpen(db: SupportSQLiteDatabase) {
                     super.onOpen(db)

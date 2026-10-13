@@ -14,6 +14,7 @@ import app.hullbeat.data.db.InventoryItem
 import app.hullbeat.data.db.InventoryItemDetail
 import app.hullbeat.data.db.Part
 import app.hullbeat.data.db.StorageLocation
+import app.hullbeat.data.db.displayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,6 +60,91 @@ data class StoreItemUiModel(
  */
 const val LOW_STOCK_FRACTION = 0.5
 
+/**
+ * Write one part, its stock row and its component links in one transaction.
+ *
+ * Shared by the Store and the component card: a part added from the card is
+ * the same part as one added from the Store, and two copies of this sequence
+ * would drift - one of them forgetting the links is exactly the orphan the
+ * card's "no spares" line would then show.
+ */
+suspend fun AppDatabase.saveInventoryPart(
+    vesselId: Long,
+    itemId: Long?,
+    partId: Long?,
+    name: String,
+    partNumber: String?,
+    manufacturer: String?,
+    note: String?,
+    locationId: Long?,
+    quantity: Double,
+    minQuantity: Double?,
+    linkedComponentIds: List<Long>,
+) {
+    val db = this
+    db.withTransaction {
+        val cleanName = name.trim()
+        val cleanNumber = partNumber?.trim()?.ifBlank { null }
+        val cleanMfr = manufacturer?.trim()?.ifBlank { null }
+        val cleanNote = note?.trim()?.ifBlank { null }
+
+        val targetPartId = if (partId == null || partId == 0L) {
+            db.inventoryDao().insertPart(
+                Part(
+                    name = cleanName,
+                    partNumber = cleanNumber,
+                    manufacturer = cleanMfr,
+                    note = cleanNote,
+                )
+            )
+        } else {
+            db.inventoryDao().updatePart(
+                Part(
+                    id = partId,
+                    name = cleanName,
+                    partNumber = cleanNumber,
+                    manufacturer = cleanMfr,
+                    note = cleanNote,
+                )
+            )
+            partId
+        }
+
+        if (itemId == null || itemId == 0L) {
+            db.inventoryDao().insertItem(
+                InventoryItem(
+                    vesselId = vesselId,
+                    partId = targetPartId,
+                    locationId = locationId,
+                    quantity = maxOf(0.0, quantity),
+                    minQuantity = minQuantity?.let { maxOf(0.0, it) },
+                )
+            )
+        } else {
+            db.inventoryDao().updateItem(
+                InventoryItem(
+                    id = itemId,
+                    vesselId = vesselId,
+                    partId = targetPartId,
+                    locationId = locationId,
+                    quantity = maxOf(0.0, quantity),
+                    minQuantity = minQuantity?.let { maxOf(0.0, it) },
+                )
+            )
+        }
+
+        db.inventoryDao().unlinkPartFromAllComponents(targetPartId)
+        for (compId in linkedComponentIds.distinct()) {
+            db.inventoryDao().linkPartToComponent(
+                ComponentPart(
+                    componentId = compId,
+                    partId = targetPartId,
+                )
+            )
+        }
+    }
+}
+
 data class StoreUiState(
     val items: List<StoreItemUiModel> = emptyList(),
     val locations: List<StorageLocation> = emptyList(),
@@ -82,6 +168,7 @@ private data class DbStoreData(
 class StoreViewModel(
     private val db: AppDatabase,
     private val vesselId: Long,
+    private val context: Context? = null,
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -135,7 +222,8 @@ class StoreViewModel(
                             (d.partNote?.lowercase()?.contains(cleanQuery) == true) ||
                             model.linkedComponents.any { comp ->
                                 comp.componentName.lowercase().contains(cleanQuery) ||
-                                    (comp.componentCustomName?.lowercase()?.contains(cleanQuery) == true)
+                                    (comp.componentCustomName?.lowercase()?.contains(cleanQuery) == true) ||
+                                    (context != null && comp.displayName(context).lowercase().contains(cleanQuery))
                             }
                     }
                 }
@@ -200,67 +288,19 @@ class StoreViewModel(
     ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                db.withTransaction {
-                    val cleanName = name.trim()
-                    val cleanNumber = partNumber?.trim()?.ifBlank { null }
-                    val cleanMfr = manufacturer?.trim()?.ifBlank { null }
-                    val cleanNote = note?.trim()?.ifBlank { null }
-
-                    val targetPartId = if (partId == null || partId == 0L) {
-                        db.inventoryDao().insertPart(
-                            Part(
-                                name = cleanName,
-                                partNumber = cleanNumber,
-                                manufacturer = cleanMfr,
-                                note = cleanNote,
-                            )
-                        )
-                    } else {
-                        db.inventoryDao().updatePart(
-                            Part(
-                                id = partId,
-                                name = cleanName,
-                                partNumber = cleanNumber,
-                                manufacturer = cleanMfr,
-                                note = cleanNote,
-                            )
-                        )
-                        partId
-                    }
-
-                    if (itemId == null || itemId == 0L) {
-                        db.inventoryDao().insertItem(
-                            InventoryItem(
-                                vesselId = vesselId,
-                                partId = targetPartId,
-                                locationId = locationId,
-                                quantity = maxOf(0.0, quantity),
-                                minQuantity = minQuantity?.let { maxOf(0.0, it) },
-                            )
-                        )
-                    } else {
-                        db.inventoryDao().updateItem(
-                            InventoryItem(
-                                id = itemId,
-                                vesselId = vesselId,
-                                partId = targetPartId,
-                                locationId = locationId,
-                                quantity = maxOf(0.0, quantity),
-                                minQuantity = minQuantity?.let { maxOf(0.0, it) },
-                            )
-                        )
-                    }
-
-                    db.inventoryDao().unlinkPartFromAllComponents(targetPartId)
-                    for (compId in linkedComponentIds) {
-                        db.inventoryDao().linkPartToComponent(
-                            ComponentPart(
-                                componentId = compId,
-                                partId = targetPartId,
-                            )
-                        )
-                    }
-                }
+                db.saveInventoryPart(
+                    vesselId = vesselId,
+                    itemId = itemId,
+                    partId = partId,
+                    name = name,
+                    partNumber = partNumber,
+                    manufacturer = manufacturer,
+                    note = note,
+                    locationId = locationId,
+                    quantity = quantity,
+                    minQuantity = minQuantity,
+                    linkedComponentIds = linkedComponentIds,
+                )
             }
             onComplete()
         }
@@ -356,11 +396,11 @@ class StoreViewModel(
     }
 
     companion object {
-        fun provideFactory(db: AppDatabase, vesselId: Long): ViewModelProvider.Factory =
+        fun provideFactory(db: AppDatabase, vesselId: Long, context: Context? = null): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return StoreViewModel(db, vesselId) as T
+                    return StoreViewModel(db, vesselId, context) as T
                 }
             }
     }

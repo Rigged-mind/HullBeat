@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import app.hullbeat.data.preferences.AppPreferences
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ import app.hullbeat.R
 import app.hullbeat.data.db.AppDatabase
 import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.categoryDisplayName
+import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
 import app.hullbeat.ui.theme.LocalExtendedColors
 import kotlinx.coroutines.Dispatchers
@@ -216,13 +218,24 @@ fun AddFromCatalogSheet(
                 ) {
                     grouped.forEach { (catCode, compList) ->
                         item(key = "hdr_$catCode") {
-                            Text(
-                                text = categoryDisplayName(context, catCode),
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                            )
+                            ) {
+                                Icon(
+                                    painter = painterResource(categoryIconRes(catCode)),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Text(
+                                    text = categoryDisplayName(context, catCode),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
                         }
 
                         items(compList, key = { it.id }) { comp ->
@@ -273,6 +286,7 @@ fun AddFromCatalogSheet(
                                                     withContext(Dispatchers.IO) {
                                                         database.componentDao().unarchive(comp.id)
                                                     }
+                                                    AppPreferences.expandCategory(context, comp.categoryCode)
                                                     addedIds = addedIds + comp.id
                                                     onComponentAdded(comp.id)
                                                 }

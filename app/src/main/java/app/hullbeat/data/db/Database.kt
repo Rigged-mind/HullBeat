@@ -453,7 +453,9 @@ interface InventoryDao {
             cp.partId            AS partId,
             c.id                 AS componentId,
             c.name               AS componentName,
-            c.customName         AS componentCustomName
+            c.customName         AS componentCustomName,
+            c.catalogCode        AS catalogCode,
+            c.engineIndex        AS engineIndex
         FROM component_part cp
         JOIN component c ON c.id = cp.componentId
         WHERE c.vesselId = :vesselId
@@ -517,6 +519,8 @@ data class ComponentPartLink(
     val componentId: Long,
     val componentName: String,
     val componentCustomName: String?,
+    val catalogCode: String? = null,
+    val engineIndex: Int? = null,
 )
 
 /**
@@ -709,7 +713,10 @@ interface ChecklistDao {
     )
     suspend fun lastRunVesselId(code: String): Long?
 
-    @Insert suspend fun insertRun(run: ChecklistRun): Long
+    // IGNORE makes a duplicate insert (same vessel+checklist+date) return -1
+    // instead of throwing, so a race between two rapid taps never crashes.
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertRun(run: ChecklistRun): Long
 
     @Query(
         """
@@ -732,7 +739,7 @@ interface ChecklistDao {
         Attachment::class, ImportSession::class, ImportRow::class,
         SearchIndex::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -756,6 +763,31 @@ abstract class AppDatabase : RoomDatabase() {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE service_record ADD COLUMN scheduleId INTEGER REFERENCES service_schedule(id) ON DELETE SET NULL")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_service_record_scheduleId ON service_record(scheduleId)")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Remove duplicate checklist runs before adding the unique index.
+                // Order matters: creating the index first would throw a constraint
+                // violation on any device where duplicates already exist.
+                db.execSQL(
+                    """
+                    DELETE FROM checklist_run
+                    WHERE id NOT IN (
+                        SELECT MIN(id)
+                        FROM checklist_run
+                        GROUP BY vesselId, checklistCode, date
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL(
+                    """
+                    CREATE UNIQUE INDEX IF NOT EXISTS
+                    index_checklist_run_vesselId_checklistCode_date
+                    ON checklist_run(vesselId, checklistCode, date)
+                    """.trimIndent()
+                )
             }
         }
     }

@@ -60,7 +60,7 @@
     <string name="cmp_teak_deck">Тикова палуба і шви</string>
     <string name="cmp_nonskid">Нековзке покриття палуби</string>
     <string name="cmp_sprayhood_bimini">Тканина кокпіта (спрейхуд, біміні, чохли)</string>
-    <string name="cmp_deck_rails_lifelines">Леєри, стійки, пульпіт і пушпіт</string>
+    <string name="cmp_deck_rails_lifelines">Леєри, стійки, носовий і кормовий релінги</string>
     <string name="cmp_rubbing_strake">Привальний брус</string>
     <string name="cmp_bowsprit">Бушприт</string>
     <string name="cmp_bathing_platform">Купальна платформа і трап</string>
@@ -644,7 +644,7 @@
     <string name="axis_extras">Що є на борту</string>
     <string name="axis_hull">Тип корпусу</string>
     <string name="axis_keel">Кіль</string>
-    <string name="axis_rig">Озброєння</string>
+    <string name="axis_rig">Тип вітрил</string>
     <string name="axis_storage">Де зимує</string>
     <string name="axis_water">Вода</string>
     <string name="opt_cooling_keel_cooled">Кільове, сухий вихлоп</string>

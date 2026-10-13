@@ -39,6 +39,7 @@ import app.hullbeat.data.catalog.VesselSetup
 import app.hullbeat.data.db.AppDatabase
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.profileOptionLabel
+import app.hullbeat.ui.theme.appFlingBehavior
 import kotlinx.coroutines.launch
 
 /**
@@ -104,7 +105,7 @@ fun VesselSetupScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState(), flingBehavior = appFlingBehavior())
                 .padding(horizontal = 20.dp, vertical = 24.dp),
         ) {
             if (onDismiss != null) {

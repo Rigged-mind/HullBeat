@@ -14,7 +14,7 @@
 | `axis_extras` |  | **Що є на борту** | |
 | `axis_hull` |  | **Тип корпусу** | |
 | `axis_keel` |  | **Кіль** | |
-| `axis_rig` |  | **Озброєння** | |
+| `axis_rig` |  | **Тип вітрил** | |
 | `axis_storage` |  | **Де зимує** | |
 | `axis_water` |  | **Вода** | |
 | `hint_application_date` |  | **Дата нанесення** | |

@@ -57,8 +57,13 @@ class MarkDoneReceiver : BroadcastReceiver() {
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
         val vesselId = intent.getLongExtra(EXTRA_VESSEL_ID, NO_ID)
 
-        if (!processingComponents.add(componentId)) {
-            // Already processing a concurrent broadcast for this component
+        // Lock at schedule granularity so two different schedules on the same
+        // component (e.g. oil change + belt check on the same engine) are not
+        // mutually blocked. Fall back to componentId when the notification was
+        // posted by an older build that did not include a scheduleId.
+        val lockKey = if (scheduleId != null) "s:$scheduleId" else "c:$componentId"
+        if (!processingKeys.add(lockKey)) {
+            // Already processing a concurrent broadcast for this exact schedule
             return
         }
 
@@ -114,7 +119,7 @@ class MarkDoneReceiver : BroadcastReceiver() {
                 }
                 dismiss(context, notificationId, vesselId)
             } finally {
-                processingComponents.remove(componentId)
+                processingKeys.remove(lockKey)
                 // Always: a receiver that never finishes its async work is an
                 // ANR waiting for the next slow query.
                 pending.finish()
@@ -149,6 +154,6 @@ class MarkDoneReceiver : BroadcastReceiver() {
         const val EXTRA_NOTIFICATION_ID = "notification_id"
 
         private const val NO_ID = -1L
-        private val processingComponents = ConcurrentHashMap.newKeySet<Long>()
+        private val processingKeys = ConcurrentHashMap.newKeySet<String>()
     }
 }

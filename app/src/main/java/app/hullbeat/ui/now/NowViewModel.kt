@@ -619,13 +619,21 @@ class NowViewModel(
 
     fun markDepartureCheckDone(vesselId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.checklistDao().insertRun(
-                ChecklistRun(
-                    vesselId = vesselId,
-                    checklistCode = "predeparture",
-                    date = LocalDate.now(),
+            val today = LocalDate.now()
+            // isRunDoneToday() was already written in ChecklistDao but never wired up.
+            // Check first so we never attempt an insert that the UNIQUE index would
+            // silently drop (OnConflictStrategy.IGNORE) — the DB is the safety net,
+            // this check keeps the hot path clean.
+            val alreadyDone = db.checklistDao().isRunDoneToday(vesselId, "predeparture", today)
+            if (!alreadyDone) {
+                db.checklistDao().insertRun(
+                    ChecklistRun(
+                        vesselId = vesselId,
+                        checklistCode = "predeparture",
+                        date = today,
+                    )
                 )
-            )
+            }
             val vessels = db.vesselDao().allActive()
             computeDue(vessels, _selectedVesselId.value)
         }

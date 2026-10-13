@@ -481,7 +481,14 @@ data class ChecklistItem(
     foreignKeys = [
         ForeignKey(entity = Vessel::class, parentColumns = ["id"], childColumns = ["vesselId"], onDelete = ForeignKey.CASCADE),
     ],
-    indices = [Index("vesselId"), Index("date")]
+    indices = [
+        Index("vesselId"),
+        Index("date"),
+        // Prevents duplicate runs for the same vessel+checklist on the same day.
+        // MIGRATION_2_3 removes any pre-existing duplicates before this index is created,
+        // so the migration cannot fail on a device that already has them.
+        Index(value = ["vesselId", "checklistCode", "date"], unique = true),
+    ]
 )
 data class ChecklistRun(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

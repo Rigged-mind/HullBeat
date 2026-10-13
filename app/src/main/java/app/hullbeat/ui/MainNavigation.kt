@@ -17,6 +17,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -24,12 +26,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +51,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import app.hullbeat.HullBeatApp
 import app.hullbeat.R
 import app.hullbeat.data.catalog.ChecklistsLoader
@@ -64,7 +69,7 @@ import app.hullbeat.ui.journal.JournalViewModel
 import app.hullbeat.ui.now.DepartureChecklistSheet
 import app.hullbeat.ui.now.NowScreen
 import app.hullbeat.ui.now.NowViewModel
-import app.hullbeat.ui.settings.SettingsSheet
+import app.hullbeat.ui.settings.SettingsDrawerSheet
 import app.hullbeat.ui.setup.VesselSetupScreen
 import app.hullbeat.ui.store.StoreScreen
 import app.hullbeat.ui.store.StoreViewModel
@@ -98,7 +103,6 @@ fun HullBeatMainScaffold(
     val nowState by nowViewModel.uiState.collectAsStateWithLifecycle()
     val setupContext = LocalContext.current
     var currentCurrency by remember { mutableStateOf(AppPreferences.getCurrency(setupContext)) }
-    var showSettingsSheet by rememberSaveable { mutableStateOf(false) }
     var showVesselSheet by rememberSaveable { mutableStateOf(false) }
     var showAddVesselScreen by rememberSaveable { mutableStateOf(false) }
 
@@ -219,113 +223,160 @@ fun HullBeatMainScaffold(
         return
     }
 
-    Scaffold(
-        topBar = {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerScope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
             val activeVessels = nowState.vessels.filter { !it.archived }
             val currentVessel = nowState.activeVessel
                 ?: activeVessels.firstOrNull { it.id == nowState.selectedVesselId }
                 ?: activeVessels.firstOrNull()
-
-            val titleText = if (nowState.selectedVesselId == null && activeVessels.size > 1) {
+            val vesselDisplayName = if (nowState.selectedVesselId == null && activeVessels.size > 1) {
                 stringResource(R.string.fleet_all)
             } else {
                 currentVessel?.name ?: stringResource(R.string.app_name)
             }
-            val cdSelect = stringResource(R.string.cd_select_vessel, titleText)
 
-            TopAppBar(
-                title = {
-                    Surface(
-                        onClick = { showVesselSheet = true },
-                        shape = RoundedCornerShape(8.dp),
-                        color = Color.Transparent,
-                        modifier = Modifier
-                            .heightIn(min = 56.dp)
-                            .clearAndSetSemantics {
-                                contentDescription = cdSelect
-                            },
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_nav_boat),
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = titleText,
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(
-                                text = "\u25BE",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
+            SettingsDrawerSheet(
+                currentCurrency = currentCurrency,
+                onCurrencyChanged = { newCurrency ->
+                    currentCurrency = newCurrency
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            pendingOpenLogOnSelect = false
-                            showSearchSheet = true
-                        },
-                        modifier = Modifier.size(56.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_search),
-                            contentDescription = stringResource(R.string.search_hint),
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                    IconButton(
-                        onClick = { showSettingsSheet = true },
-                        modifier = Modifier.size(56.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_settings),
-                            contentDescription = stringResource(R.string.settings_title),
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
+                currentScheme = currentScheme,
+                onSchemeChanged = { newScheme ->
+                    onSchemeChanged?.invoke(newScheme) ?: onCycleScheme()
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                onClose = {
+                    drawerScope.launch { drawerState.close() }
+                },
+                activeVesselId = nowState.activeVessel?.id,
+                activeVesselName = vesselDisplayName,
+                onSwitchVessel = {
+                    drawerScope.launch { drawerState.close() }
+                    showVesselSheet = true
+                },
             )
         },
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.heightIn(min = 56.dp),
-            ) {
-                NavTab.entries.forEach { tab ->
-                    NavigationBarItem(
-                        selected = selectedTab == tab,
-                        onClick = { selectedTab = tab },
-                        icon = {
-                            Icon(
-                                painter = painterResource(tab.iconRes),
-                                contentDescription = stringResource(tab.titleRes),
-                                modifier = Modifier.size(24.dp),
-                            )
-                        },
-                        label = { Text(stringResource(tab.titleRes)) },
-                    )
-                }
-            }
-        },
         modifier = modifier.fillMaxSize(),
-    ) { innerPadding ->
+    ) {
+        Scaffold(
+            topBar = {
+                val activeVessels = nowState.vessels.filter { !it.archived }
+                val currentVessel = nowState.activeVessel
+                    ?: activeVessels.firstOrNull { it.id == nowState.selectedVesselId }
+                    ?: activeVessels.firstOrNull()
+
+                val titleText = if (nowState.selectedVesselId == null && activeVessels.size > 1) {
+                    stringResource(R.string.fleet_all)
+                } else {
+                    currentVessel?.name ?: stringResource(R.string.app_name)
+                }
+                val cdSelect = stringResource(R.string.cd_select_vessel, titleText)
+
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                drawerScope.launch {
+                                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                }
+                            },
+                            modifier = Modifier.size(56.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_menu),
+                                contentDescription = stringResource(R.string.nav_menu_title),
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+                    },
+                    title = {
+                        Surface(
+                            onClick = { showVesselSheet = true },
+                            shape = RoundedCornerShape(8.dp),
+                            color = Color.Transparent,
+                            modifier = Modifier
+                                .heightIn(min = 56.dp)
+                                .clearAndSetSemantics {
+                                    contentDescription = cdSelect
+                                },
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_nav_boat),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(22.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = titleText,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text(
+                                    text = "\u25BE",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (selectedTab == NavTab.NOW) {
+                            IconButton(
+                                onClick = {
+                                    pendingOpenLogOnSelect = false
+                                    showSearchSheet = true
+                                },
+                                modifier = Modifier.size(56.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_search),
+                                    contentDescription = stringResource(R.string.search_hint),
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+                )
+            },
+            bottomBar = {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.heightIn(min = 56.dp),
+                ) {
+                    NavTab.entries.forEach { tab ->
+                        NavigationBarItem(
+                            selected = selectedTab == tab,
+                            onClick = { selectedTab = tab },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(tab.iconRes),
+                                    contentDescription = stringResource(tab.titleRes),
+                                    modifier = Modifier.size(24.dp),
+                                )
+                            },
+                            label = { Text(stringResource(tab.titleRes)) },
+                        )
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -402,7 +453,7 @@ fun HullBeatMainScaffold(
                         if (vessel != null) {
                             val storeViewModel: StoreViewModel = viewModel(
                                 key = "store_${vessel.id}",
-                                factory = StoreViewModel.provideFactory(storeDb, vessel.id),
+                                factory = StoreViewModel.provideFactory(storeDb, vessel.id, context),
                             )
                             StoreScreen(
                                 viewModel = storeViewModel,
@@ -500,21 +551,6 @@ fun HullBeatMainScaffold(
             }
         }
 
-        if (showSettingsSheet) {
-            SettingsSheet(
-                currentCurrency = currentCurrency,
-                onCurrencyChanged = { newCurrency ->
-                    currentCurrency = newCurrency
-                },
-                currentScheme = currentScheme,
-                onSchemeChanged = { newScheme ->
-                    onSchemeChanged?.invoke(newScheme) ?: onCycleScheme()
-                },
-                activeVesselId = nowState.activeVessel?.id,
-                onDismiss = { showSettingsSheet = false },
-            )
-        }
-
         if (showVesselSheet) {
             val overdueCounts = remember(nowState.items) {
                 nowState.items.filter { it.isOverdue }.groupBy { it.vessel.id }.mapValues { it.value.size }
@@ -541,6 +577,7 @@ fun HullBeatMainScaffold(
             )
         }
     }
+}
 }
 
 @Composable

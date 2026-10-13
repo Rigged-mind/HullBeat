@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -31,8 +34,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.categorySectionColor
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -66,6 +73,7 @@ import app.hullbeat.R
 import app.hullbeat.data.db.Attachment
 import app.hullbeat.data.db.DatePrecision
 import app.hullbeat.data.db.categoryDisplayName
+import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.data.db.formatScheduleInterval
@@ -153,10 +161,39 @@ fun JournalScreen(
                     label = { Text(stringResource(R.string.journal_all_categories)) },
                 )
                 sortedCategories.forEach { (catCode, catName) ->
+                    val secColor = categorySectionColor(catCode)
+                    val isColorful = LocalScheme.current == Scheme.COLORFUL
+                    val isSelected = uiState.selectedCategoryCode == catCode
                     FilterChip(
-                        selected = uiState.selectedCategoryCode == catCode,
+                        selected = isSelected,
                         onClick = { viewModel.selectCategory(catCode) },
                         label = { Text(catName) },
+                        leadingIcon = if (isColorful) {
+                            {
+                                Icon(
+                                    painter = painterResource(categoryIconRes(catCode)),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = if (isSelected) secColor.onContainer else secColor.accent,
+                                )
+                            }
+                        } else null,
+                        border = if (isColorful) {
+                            BorderStroke(
+                                1.dp,
+                                if (isSelected) secColor.accent else secColor.accent.copy(alpha = 0.5f)
+                            )
+                        } else FilterChipDefaults.filterChipBorder(enabled = true, selected = isSelected),
+                        colors = if (isColorful) {
+                            FilterChipDefaults.filterChipColors(
+                                containerColor = secColor.container.copy(alpha = 0.35f),
+                                labelColor = MaterialTheme.colorScheme.onSurface,
+                                iconColor = secColor.accent,
+                                selectedContainerColor = secColor.container,
+                                selectedLabelColor = secColor.onContainer,
+                                selectedLeadingIconColor = secColor.onContainer,
+                            )
+                        } else FilterChipDefaults.filterChipColors(),
                     )
                 }
             }
@@ -249,6 +286,7 @@ fun JournalScreen(
                     .weight(1f),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
+                flingBehavior = appFlingBehavior(),
             ) {
                 var prevYear: Int? = null
                 var prevMonth: Int? = null
@@ -566,6 +604,9 @@ private fun JournalRecordRow(
             )
         }
 
+        val secColor = categorySectionColor(entry.component.categoryCode)
+        val isColorful = LocalScheme.current == Scheme.COLORFUL
+
         // Main card
         Card(
             modifier = Modifier.weight(1f),
@@ -573,7 +614,10 @@ private fun JournalRecordRow(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            border = BorderStroke(
+                1.dp,
+                if (isColorful) secColor.accent.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant
+            ),
         ) {
             Column(
                 modifier = Modifier
@@ -613,11 +657,50 @@ private fun JournalRecordRow(
                         } else {
                             categoryName
                         }
-                        Text(
-                            text = subtitle,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        if (isColorful) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = secColor.container,
+                                modifier = Modifier.padding(top = 2.dp),
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                ) {
+                                    Icon(
+                                        painter = painterResource(categoryIconRes(entry.component.categoryCode)),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(13.dp),
+                                        tint = secColor.accent,
+                                    )
+                                    Text(
+                                        text = subtitle,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = secColor.onContainer,
+                                    )
+                                }
+                            }
+                        } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(top = 2.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(categoryIconRes(entry.component.categoryCode)),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Text(
+                                    text = subtitle,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
                     }
 
                     Row(

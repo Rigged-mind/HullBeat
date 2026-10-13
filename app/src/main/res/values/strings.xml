@@ -117,6 +117,7 @@
     <string name="theme_dark">Dark</string>
     <string name="theme_sunlight">Sunlight</string>
     <string name="theme_night">Night</string>
+    <string name="theme_colorful">Color</string>
 
     <!-- Component Detail -->
     <string name="detail_back">Back</string>
@@ -383,6 +384,16 @@
     <string name="import_preview_subtitle">Map columns and preview records</string>
     <string name="import_file_label">File</string>
     <string name="import_btn_commit">Import records</string>
+    <string name="import_btn_commit_with_issues">Review &amp; import</string>
+    <string name="import_issues_banner_title">%d rows have issues</string>
+    <string name="import_issues_banner_subtitle">Unrecognized dates or components will be skipped upon import</string>
+    <string name="import_skip_dialog_title">Skipping problematic rows</string>
+    <string name="import_skip_dialog_subtitle">%d rows have unparsed fields and will not be imported:</string>
+    <string name="import_issue_date">unrecognized date «%s»</string>
+    <string name="import_issue_component">unknown component «%s»</string>
+    <string name="import_issue_row">Row %1$d: %2$s</string>
+    <string name="import_skip_dialog_confirm">Import %1$d of %2$d rows</string>
+    <string name="import_skip_dialog_cancel">Cancel</string>
     <string name="import_history_title">Import history</string>
     <string name="import_history_empty">No imports yet</string>
     <string name="import_rollback_btn">Undo</string>
@@ -419,10 +430,10 @@
     <string name="settings_export_store_csv">Store (CSV)</string>
 
     <!-- Boat Passport PDF -->
-    <string name="settings_export_pdf_passport">Export boat passport (PDF)</string>
+    <string name="settings_export_pdf_passport">Boat passport &amp; service book (PDF)</string>
     <string name="settings_export_pdf_success">Boat passport exported successfully</string>
     <string name="settings_export_pdf_failed">Failed to create PDF document</string>
-    <string name="pdf_passport_title">Vessel Passport &amp; Service Dossier</string>
+    <string name="pdf_passport_title">Vessel Passport &amp; Service Book</string>
     <string name="pdf_section_vessel">Vessel Specifications</string>
     <string name="pdf_section_equipment">Equipment Registry</string>
     <string name="pdf_section_equipment_photos">Equipment</string>
@@ -444,7 +455,12 @@
     <string name="pdf_field_installed">Installed</string>
     <string name="pdf_footer_page">Page %1$d</string>
     <string name="pdf_footer_brand">HullBeat Ship\'s Log</string>
+    <string name="pdf_compiled_by">Compiled by owner via HullBeat</string>
     <string name="now_enter_hours">Enter hours</string>
     <string name="error_photo_save_failed">Could not save the photo</string>
     <string name="action_ok">OK</string>
+    <string name="nav_menu_title">Menu</string>
+    <string name="drawer_switch_vessel">Switch vessel</string>
+    <string name="state_expanded">Expanded</string>
+    <string name="state_collapsed">Collapsed</string>
 </resources>

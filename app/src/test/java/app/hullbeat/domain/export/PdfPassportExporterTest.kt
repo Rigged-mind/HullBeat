@@ -428,4 +428,47 @@ class PdfPassportExporterTest {
             report.serviceRecords.first { it.id == 2L }.workTypes
         )
     }
+
+    // One unit per character keeps the arithmetic visible.
+    private val perChar: (String) -> Float = { it.length.toFloat() }
+
+    @Test
+    fun `short cell stays on one line`() {
+        assertEquals(listOf("Keel bolts"), PdfPassportExporter.wrapLines("Keel bolts", 20f, perChar))
+    }
+
+    @Test
+    fun `long cell wraps at spaces and loses no word`() {
+        val text = "Emergency cutting tool (bolt cutters, hacksaw)"
+        val lines = PdfPassportExporter.wrapLines(text, 20f, perChar)
+        assertTrue(lines.size > 1)
+        assertTrue(lines.all { it.length <= 20 })
+        assertEquals(text, lines.joinToString(" "))
+    }
+
+    @Test
+    fun `a word wider than the column keeps its own line`() {
+        val lines = PdfPassportExporter.wrapLines("a verylongserialnumber b", 8f, perChar)
+        assertEquals(listOf("a", "verylongserialnumber", "b"), lines)
+    }
+
+    @Test
+    fun `blank cell is one empty line, so the row keeps its height`() {
+        assertEquals(listOf(""), PdfPassportExporter.wrapLines("", 20f, perChar))
+    }
+
+    @Test
+    fun `wrapLines breaks on newlines as well as width`() {
+        val multiline = "First line\nSecond line is much longer and will wrap"
+        val lines = PdfPassportExporter.wrapLines(multiline, 15f, perChar)
+        assertEquals("First line", lines[0])
+        assertTrue(lines.size >= 3)
+    }
+
+    @Test
+    fun `passport labels default compiledBy conveys honest owner record origin`() {
+        val labels = PassportLabels()
+        assertEquals("Compiled by owner via HullBeat", labels.compiledBy)
+        assertEquals("", labels.currency)
+    }
 }
