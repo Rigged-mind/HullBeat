@@ -58,6 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.hullbeat.R
+import app.hullbeat.domain.export.formatHours
 import app.hullbeat.data.db.categoryDisplayName
 import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
@@ -515,7 +516,8 @@ fun NowScreen(
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 val readingText = meterInfo.hours?.let {
-                                    "$it ${stringResource(R.string.meter_hours_unit)}"
+                                    "${formatHours(it, context.resources.configuration.locales[0])} " +
+                                        stringResource(R.string.meter_hours_unit)
                                 } ?: "—"
                                 val vName = meterInfo.vessel?.displayName(context) ?: meterInfo.vesselName
                                 Text(
@@ -564,8 +566,11 @@ fun NowScreen(
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
                                 Spacer(Modifier.width(8.dp))
+                                // Double.toString() printed "2.0" in every language;
+                                // the reading follows the locale like the PDF does.
                                 val readingText = uiState.primaryMeterHours?.let {
-                                    "$it ${stringResource(R.string.meter_hours_unit)}"
+                                    "${formatHours(it, context.resources.configuration.locales[0])} " +
+                                        stringResource(R.string.meter_hours_unit)
                                 } ?: "—"
                                 Text(
                                     text = "${stringResource(R.string.field_meter_hours)}: $readingText",
