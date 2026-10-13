@@ -22,33 +22,66 @@ object AppLanguage {
     const val UK = "uk"
     const val EN = "en"
 
+    /**
+     * The languages a person can pick, in the order a picker lists them.
+     *
+     * It must name exactly the locales in res/xml/locales_config.xml, and those
+     * must be exactly the translated `values-<tag>` folders plus English;
+     * tools/check_locales.py fails the build otherwise. A tag is added here
+     * only when its translation has passed a native sailor's review - a
+     * `values-de` folder reaches every phone set to German whether or not it
+     * is listed, so the real gate is not merging that folder before then.
+     */
+    val SUPPORTED: List<String> = listOf(UK, EN)
+
     fun isSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
-    /** The tag in force, or the first system preference when none is set. */
+    /**
+     * The language the app is actually showing: the chosen one, or the first
+     * system preference HullBeat has, or English - which is what `values/`
+     * gives a phone whose languages HullBeat does not ship.
+     *
+     * This used to return the raw system tag. On a German phone that was
+     * "de", matching no option, and the toggle below - "UK if not UK" - then
+     * answered a tap on English by switching to Ukrainian.
+     */
     fun current(context: Context): String {
-        if (!isSupported()) return systemTag()
-        val manager = context.getSystemService(LocaleManager::class.java)
-            ?: return systemTag()
-        val chosen = manager.applicationLocales
-        if (chosen.isEmpty) return systemTag()
-        return chosen[0]?.language ?: systemTag()
+        if (isSupported()) {
+            val chosen = context.getSystemService(LocaleManager::class.java)
+                ?.applicationLocales
+            if (chosen != null && !chosen.isEmpty) return resolve(chosen)
+        }
+        return resolve(LocaleList.getDefault())
     }
 
-    private fun systemTag(): String =
-        LocaleList.getDefault()[0]?.language ?: EN
+    private fun resolve(prefs: LocaleList): String {
+        for (i in 0 until prefs.size()) {
+            val tag = prefs[i]?.language ?: continue
+            if (tag in SUPPORTED) return tag
+        }
+        return EN
+    }
 
-    /**
-     * Two languages, so one button is enough. A list would be the right
-     * control at three, and this file is where that change belongs.
-     */
-    fun toggle(context: Context) {
-        if (!isSupported()) return
+    /** Switch to [tag]; a tag HullBeat does not ship is ignored. */
+    fun set(context: Context, tag: String) {
+        if (!isSupported() || tag !in SUPPORTED) return
         val manager = context.getSystemService(LocaleManager::class.java) ?: return
-        val next = if (current(context) == UK) EN else UK
-        manager.applicationLocales = LocaleList.forLanguageTags(next)
+        manager.applicationLocales = LocaleList.forLanguageTags(tag)
+    }
+
+    /** The next language in [SUPPORTED]; with two, the other one. */
+    fun toggle(context: Context) {
+        set(context, next(context))
+    }
+
+    private fun next(context: Context): String {
+        val i = SUPPORTED.indexOf(current(context))
+        return SUPPORTED[(i + 1) % SUPPORTED.size]
     }
 
     /** What the button shows: the language it will switch TO. */
-    fun glyph(context: Context): String =
-        if (current(context) == UK) "EN" else "UA"
+    fun glyph(context: Context): String = label(next(context))
+
+    /** Short label for a tag. Ukraine's code is UA; the language's is uk. */
+    fun label(tag: String): String = if (tag == UK) "UA" else tag.uppercase()
 }

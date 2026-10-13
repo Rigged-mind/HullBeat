@@ -38,7 +38,7 @@ object SearchIndexBuilder {
         // Category name
         categoryName?.takeIf { it.isNotBlank() }?.let { bodyParts.add(it) }
 
-        // Synonyms across both UK and EN
+        // Synonyms from every locale in the asset
         component.catalogCode?.let { code ->
             val syns = SynonymsLoader.synonymsFor(context, code)
             bodyParts.addAll(syns)

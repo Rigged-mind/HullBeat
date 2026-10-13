@@ -67,4 +67,48 @@ class ColumnMapperTest {
         assertEquals(TargetField.HOURS, mapping[2])
         assertEquals(TargetField.COST, mapping[3])
     }
+
+    @Test
+    fun `suggests mapping based on german headers`() {
+        val headers = listOf(
+            "Datum", "Beschreibung", "Motorstunden", "Kosten",
+            "Durchgeführt von", "Bemerkungen", "Ausrüstung"
+        )
+        val mapping = ColumnMapper.suggestMapping(headers, emptyList())
+
+        assertEquals(TargetField.DATE, mapping[0])
+        assertEquals(TargetField.DESCRIPTION, mapping[1])
+        assertEquals(TargetField.HOURS, mapping[2])
+        assertEquals(TargetField.COST, mapping[3])
+        assertEquals(TargetField.PERFORMED_BY, mapping[4])
+        assertEquals(TargetField.NOTES, mapping[5])
+        assertEquals(TargetField.COMPONENT, mapping[6])
+    }
+
+    @Test
+    fun `suggests mapping based on spanish headers`() {
+        val headers = listOf(
+            "Fecha", "Descripción", "Horas de motor", "Coste",
+            "Realizado por", "Observaciones", "Componente"
+        )
+        val mapping = ColumnMapper.suggestMapping(headers, emptyList())
+
+        assertEquals(TargetField.DATE, mapping[0])
+        assertEquals(TargetField.DESCRIPTION, mapping[1])
+        assertEquals(TargetField.HOURS, mapping[2])
+        assertEquals(TargetField.COST, mapping[3])
+        assertEquals(TargetField.PERFORMED_BY, mapping[4])
+        assertEquals(TargetField.NOTES, mapping[5])
+        assertEquals(TargetField.COMPONENT, mapping[6])
+    }
+
+    @Test
+    fun `a one-letter synonym does not claim a header that merely contains it`() {
+        // "h" is a fine header for engine hours on its own. As a substring it
+        // used to send "Mechanic" and "Mechaniker" to the engine-hours column.
+        val mapping = ColumnMapper.suggestMapping(listOf("Mechaniker", "h"), emptyList())
+
+        assertEquals(TargetField.PERFORMED_BY, mapping[0])
+        assertEquals(TargetField.HOURS, mapping[1])
+    }
 }

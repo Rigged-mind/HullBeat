@@ -385,7 +385,8 @@ def main():
             code = comp["code"]
             uk_name = uk["components"].get(code, [comp["en"]])[0]
             en_name = comp["en"]
-            aliases = sorted(set(synonyms.get("uk", {}).get(code, [])) | set(synonyms.get("en", {}).get(code, [])))
+            # Every locale, like SynonymsLoader.synonymsFor in the app.
+            aliases = sorted({a for loc in synonyms.values() for a in loc.get(code, [])})
             spec_json = None
             notes = None
             if code == "raw_water_impeller":

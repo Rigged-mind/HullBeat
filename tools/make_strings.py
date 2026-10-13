@@ -91,6 +91,56 @@ def profile_keys():
     return rows
 
 
+def profile_terms(locale, glossary, profile):
+    """(resource name, term, confidence) for the vessel profile in one locale.
+
+    The Ukrainian lives in profile_labels.py beside the English, as it always
+    has. Every other locale keeps it where its sailor-reviewer will look: a
+    `profile` block in catalog/i18n/<locale>.json, `key -> [term, confidence]`.
+
+    The loop below used to take the Ukrainian column for EVERY locale file, so
+    a German glossary would have shipped `axis_hull` as «Тип корпусу».
+    """
+    if locale == "uk":
+        return [(key, uk, "check") for key, _, uk in profile]
+    block = glossary.get("profile") or {}
+    return [(key, block[key][0], block[key][1])
+            for key, _, _ in profile if key in block]
+
+
+def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profile):
+    """catalog/i18n/<locale>-review.md for a locale whose reviewer reads English.
+
+    The Ukrainian review file is written in Ukrainian and leaves checklist
+    lines to uk-checklists-review.md, which make_checklists.py produces. No
+    such file exists for any other locale, so here the checklist lines are
+    listed too - otherwise a German reviewer would never see them - and
+    every row carries its English source, not only categories and components.
+    """
+    en_by_key = {f"cat_{c}": e for c, e in cats}
+    en_by_key.update({f"cmp_{c}": e for c, e in comps})
+    en_by_key.update({f"chk_{c}": e for c, e in checks})
+    en_by_key.update({f"hint_{slug}": e for slug, e, _ in hints})
+    en_by_key.update({key: e for key, e, _ in profile})
+
+    review = sorted(k for k, c in confidence.items() if c != "ok")
+    out = os.path.join("catalog", "i18n", f"{locale}-review.md")
+    lines = [f"# Terms to review - {locale}\n",
+             f"\n{len(review)} of {len(terms)} need confirmation from someone "
+             "who sails and maintains a boat in this language. `check` is a "
+             "contested or borrowed term; `descr` means no settled term exists "
+             "and the wording is descriptive.\n",
+             "\nOne question for each: **is this what it is called on the water?**\n",
+             "\n| Key | English | Draft | Status | Correction |\n"
+             "|---|---|---|---|---|\n"]
+    for key in review:
+        en = en_by_key.get(key, "").replace("|", "\\|")
+        lines.append(f"| `{key}` | {en} | **{terms[key]}** | "
+                     f"{confidence[key]} | |\n")
+    io.open(out, "w", encoding="utf-8", newline="\n").writelines(lines)
+    print(f"    review list -> {out}  ({len(review)} terms)")
+
+
 def hint_slug(label):
     """A resource name for an English label like "Alarm threshold (°C)".
 
@@ -196,9 +246,9 @@ def main():
         for key, (term, conf) in glossary.get("checklists", {}).items():
             terms[key] = term
             confidence[key] = conf
-        for key, _, uk in profile:
-            terms[key] = uk
-            confidence[key] = "check"
+        for key, term, conf in profile_terms(locale, glossary, profile):
+            terms[key] = term
+            confidence[key] = conf
         for slug, _, uk in spechint_keys(glossary):
             if uk:
                 terms[f"hint_{slug}"] = uk
@@ -230,7 +280,8 @@ def main():
                  for code, _ in checks if f"chk_{code}" in terms]
         rows += [("passport labels", f"hint_{slug}", uk)
                  for slug, _, uk in spechint_keys(glossary) if uk]
-        rows += [("vessel profile", key, uk) for key, _, uk in profile]
+        rows += [("vessel profile", key, terms[key])
+                 for key, _, _ in profile if key in terms]
         write_xml(os.path.join(RES, f"values-{locale}", "strings_catalog.xml"),
                   rows, f" + catalog/i18n/{name}")
 
@@ -247,6 +298,11 @@ def main():
                   f"{' ...' if len(missing) > 8 else ''}")
         if extra:
             print(f"    EXTRA {len(extra)} (not in catalog): {', '.join(extra[:8])}")
+
+        if locale != "uk":
+            write_review_en(locale, terms, confidence, cats, comps, checks,
+                            hints, profile)
+            continue
 
         # Checklist lines are sentences, not terms, and catalog/i18n/
         # uk-checklists-review.md already presents them with the English, the

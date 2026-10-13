@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Every base-locale string must have a Ukrainian counterpart.
+"""Every base-locale string must have a counterpart in every shipped locale.
 
 This is the one localisation failure Android does NOT report. A missing
 translation is not an error, not a warning, not a lint by default: the
@@ -29,8 +29,8 @@ import os
 import re
 import sys
 
-BASE = os.path.join("app", "src", "main", "res", "values")
-UK = os.path.join("app", "src", "main", "res", "values-uk")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import locales
 
 # HullBeat is a proper noun. `freeboard` used to sit in the do-not-translate
 # list for the same reason and was released back to meaning надводний борт
@@ -49,29 +49,40 @@ def names(folder):
     return found
 
 
-def main():
-    base = names(BASE)
-    uk = names(UK)
+def check_locale(base, locale):
+    """Problems for one locale against the base; prints them as it goes."""
+    folder = locales.values_dir(locale)
+    tr = names(folder)
+    tag = f"values-{locale}"
 
-    missing = sorted(set(base) - set(uk) - ALLOWED_UNTRANSLATED)
-    orphan = sorted(set(uk) - set(base))
+    missing = sorted(set(base) - set(tr) - ALLOWED_UNTRANSLATED)
+    orphan = sorted(set(tr) - set(base))
     # An allowlist entry that is no longer untranslated is stale bookkeeping.
-    stale = sorted(ALLOWED_UNTRANSLATED & set(uk))
+    stale = sorted(ALLOWED_UNTRANSLATED & set(tr))
 
     for n in missing:
-        print("  ERROR %s is in values/%s with no values-uk translation - "
-              "Android falls back to English silently" % (n, base[n]))
+        print("  ERROR %s is in values/%s with no %s translation - "
+              "Android falls back to English silently" % (n, base[n], tag))
     for n in orphan:
-        print("  ERROR %s is in values-uk/%s but not in the base locale, so it "
-              "resolves to nothing" % (n, uk[n]))
+        print("  ERROR %s is in %s/%s but not in the base locale, so it "
+              "resolves to nothing" % (n, tag, tr[n]))
     for n in stale:
-        print("  ERROR %s is on ALLOWED_UNTRANSLATED and now HAS a Ukrainian "
-              "value - drop it from the list" % n)
+        print("  ERROR %s is on ALLOWED_UNTRANSLATED and now HAS a %s "
+              "value - drop it from the list" % (n, tag))
 
     ok = len(base) - len(missing) - len(ALLOWED_UNTRANSLATED & set(base))
     print("%s   %d of %d translated, %d deliberately not"
-          % (UK, ok, len(base), len(ALLOWED_UNTRANSLATED & set(base))))
-    bad = len(missing) + len(orphan) + len(stale)
+          % (folder, ok, len(base), len(ALLOWED_UNTRANSLATED & set(base))))
+    return len(missing) + len(orphan) + len(stale)
+
+
+def main():
+    base = names(locales.values_dir(""))
+    found = locales.resource_locales()
+    if not found:
+        print("FAILED: no values-<locale>/strings.xml at all")
+        return 1
+    bad = sum(check_locale(base, locale) for locale in found)
     if bad:
         print("FAILED: %d problem(s)" % bad)
         return 1
