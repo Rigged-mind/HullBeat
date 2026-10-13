@@ -4,6 +4,36 @@
 
 One question for each: **is this what it is called on the water?**
 
+## Check these first
+
+The places where a wrong word costs most. Each names the rows it is about, with the current draft.
+
+1. **Safety lines: «líneas de vida» (jackstays along the deck) and «líneas de anclaje» (the tether from the harness) sit next to each other in the safety list. Clear enough, or should the tether be «cabo de anclaje» / «cabo de seguridad»?**
+   - `cmp:jackstays` - Líneas de vida y puntos de anclaje
+   - `cmp:harnesses_tethers` - Arneses y líneas de anclaje
+   - `chk:chk_sf_jackstays` - Revisar las líneas de vida de punta a punta y sus puntos de anclaje
+   - `chk:chk_sf_harnesses` - Tirar fuerte de cada costura, cambiar lo que esté descolorido por el sol y anotar la fecha de la etiqueta
+2. **«inversor» means both the gearbox and the DC-AC inverter. The drafts say «Inversor-reductor» and «Inversor de corriente», and the search alias «inversor» finds both. Is that how Spanish owners tell them apart?**
+   - `cmp:gearbox` - Inversor-reductor
+   - `cmp:inverter` - Inversor de corriente
+   - `syn:gearbox` - inversor; reductora; caja de cambios
+   - `syn:inverter` - inversor; inversor de corriente
+3. **ITB and ITV are Spanish institutions. Are these labels acceptable for Spanish-speaking owners elsewhere, or should the main label be neutral with ITB only as an example?**
+   - `cmp:national_inspection` - Inspección técnica (ITB)
+   - `cmp:trailer_documents` - Matrícula e ITV del remolque
+   - `hint:Scheme (ITB/BSS/Revisione/Bootszeugnis)` - Régimen (ITB / BSS / Revisione / Bootszeugnis)
+4. **«patente» or «antifouling»: which should be the name shown, and which only a search alias?**
+   - `cmp:antifouling` - Antifouling (patente)
+   - `chk:chk_cm_antifouling` - Dar patente; enmascarar los ánodos y la cara del transductor
+   - `syn:antifouling` - patente; pintura antiincrustante; antiincrustante; autopulimentable; matriz dura
+5. **«turbina» as a search alias for the raw-water impeller: common on Spanish boats, or confusing next to the turbocharger («turbo»)?**
+   - `syn:raw_water_impeller` - impulsor; rodete; turbina; bomba de agua salada; Jabsco
+   - `cmp:raw_water_impeller` - Impulsor de la bomba de agua salada
+   - `cmp:turbo` - Turbo / intercooler
+
+
+## All terms
+
 | Key | English | Draft | Status | Correction |
 |---|---|---|---|---|
 | `axis_cooling` | Engine cooling | **Refrigeración del motor** | check | |

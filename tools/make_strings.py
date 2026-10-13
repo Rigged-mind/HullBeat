@@ -16,6 +16,7 @@ import sys
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import locales
 import profile_labels
 
 CATALOG = os.path.join("catalog", "catalog.json")
@@ -133,7 +134,9 @@ def write_review_en(locale, terms, confidence, cats, comps, checks, hints, profi
              "and the wording is descriptive.\n",
              "\nOne question for each: **is this what it is called on the water?**\n",
              (f"\n{len(missing)} more keys have no draft yet and are not "
-              "listed.\n" if missing else ""),
+              "listed.\n" if missing else "")]
+    lines += locales.review_priority(locale)
+    lines += ["\n## All terms\n",
              "\n| Key | English | Draft | Status | Correction |\n"
              "|---|---|---|---|---|\n"]
     for key in review:

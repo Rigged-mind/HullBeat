@@ -146,8 +146,12 @@ def check_locale(tag, base_s, base_p):
              "sailor would say, and does it fit a phone screen? Navigation tabs "
              "and buttons have the least room.\n",
              "\n`%s`, `%1$s`, `%d` are filled in by the app; keep them, move them "
-             "freely within the sentence.\n",
-             "\n| Key | English | Draft | Correction |\n|---|---|---|---|\n"]
+             "freely within the sentence.\n"]
+    # The same "check these first" block as <tag>-review.md: some of its
+    # questions are about interface words, and a reviewer may open either file.
+    lines += locales.review_priority(tag)
+    lines += ["\n## All strings\n",
+              "\n| Key | English | Draft | Correction |\n|---|---|---|---|\n"]
     for name in base_s:
         if name in strings:
             lines.append(f"| `{name}` | {md(base_s[name])} | **{md(strings[name])}** | |\n")

@@ -4,6 +4,37 @@
 
 One question for each: **is this what it is called on the water?**
 
+## Check these first
+
+The places where a wrong word costs most. Each names the rows it is about, with the current draft.
+
+1. **Bottom-navigation tab for the maintenance log: is „Wartungsbuch“ what you would call it, and does it fit the tab? „Logbuch“ was rejected because it is the voyage log; the agreed fallback is „Historie“.**
+   - `ui:nav_log` - Wartungsbuch
+   - `ui:placeholder_log` - Wartungsbuch, Zeitleiste und Suche.
+   - `ui:journal_empty_title` - Das Wartungsbuch ist leer
+2. **Snubber: „Kettenkralle“ is the chain hook, not the line that takes the load off the windlass. What do German sailors call the snubber itself, and is „Ankerhahnepot“ right for the bridle?**
+   - `cmp:snubber` - Kettenkralle / Ankerhahnepot
+   - `cmp:anchor_bridle_hook` - Kettenhaken der Hahnepot
+   - `cmp:mooring_snubbers` - Ruckdämpfer für Festmacher
+3. **Country-bound documents: HU, Bootszeugnis and „Technische Prüfung“. Germany has no general periodic inspection for private yachts; Austria and Switzerland have their own rules. Are these labels neutral enough for owners in DE, AT and CH?**
+   - `cmp:national_inspection` - Technische Prüfung (national)
+   - `cmp:trailer_documents` - Zulassung & HU des Anhängers
+   - `cmp:registration` - Registrierung / Flagge
+   - `hint:Scheme (ITB/BSS/Revisione/Bootszeugnis)` - Prüfsystem (ITB / BSS / Revisione / Bootszeugnis)
+4. **Launch / haul-out are „Einkranen“ / „Auskranen“ everywhere. Wrong for a boat slipped from a trailer or lifted by a travel lift? Would „Einwassern“ / „Auswassern“ be the neutral pair?**
+   - `ui:work_type_launch` - Einkranen
+   - `ui:work_type_haul_out` - Auskranen
+   - `ui:defer_option_haul_out` - Bis zum Auskranen
+   - `chk:chk_cm_seacocks` - Jedes Seeventil durchbewegen, fetten und vor dem Einkranen alle schließen
+   - `chk:chk_wz_wash` - Unterwasserschiff gleich nach dem Auskranen abspritzen, bevor der Bewuchs antrocknet
+5. **Jackstay, tether and lifelines: „Strecktaue“ along the deck, „Lifelines“ for the tether (the German sense), „Seereling“ for the guard wires. Will a German reader keep these three apart?**
+   - `cmp:jackstays` - Strecktaue & Einpickpunkte
+   - `cmp:harnesses_tethers` - Sicherheitsgurte & Lifelines
+   - `cmp:deck_rails_lifelines` - Seereling, Relingsstützen, Bug- & Heckkorb
+
+
+## All terms
+
 | Key | English | Draft | Status | Correction |
 |---|---|---|---|---|
 | `axis_cooling` | Engine cooling | **Motorkühlung** | check | |

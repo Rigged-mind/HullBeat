@@ -2,6 +2,51 @@
   "_": "German terminology for the seed catalog. Format: code -> [term, confidence].",
   "_status": "draft",
   "_draft": "Draft: nothing here reaches the app until a native-speaking sailor has reviewed it and this _status line is removed. make_strings.py writes the review list only.",
+  "_reviewPriority": [
+    {
+      "question": "Bottom-navigation tab for the maintenance log: is „Wartungsbuch“ what you would call it, and does it fit the tab? „Logbuch“ was rejected because it is the voyage log; the agreed fallback is „Historie“.",
+      "keys": [
+        "ui:nav_log",
+        "ui:placeholder_log",
+        "ui:journal_empty_title"
+      ]
+    },
+    {
+      "question": "Snubber: „Kettenkralle“ is the chain hook, not the line that takes the load off the windlass. What do German sailors call the snubber itself, and is „Ankerhahnepot“ right for the bridle?",
+      "keys": [
+        "cmp:snubber",
+        "cmp:anchor_bridle_hook",
+        "cmp:mooring_snubbers"
+      ]
+    },
+    {
+      "question": "Country-bound documents: HU, Bootszeugnis and „Technische Prüfung“. Germany has no general periodic inspection for private yachts; Austria and Switzerland have their own rules. Are these labels neutral enough for owners in DE, AT and CH?",
+      "keys": [
+        "cmp:national_inspection",
+        "cmp:trailer_documents",
+        "cmp:registration",
+        "hint:Scheme (ITB/BSS/Revisione/Bootszeugnis)"
+      ]
+    },
+    {
+      "question": "Launch / haul-out are „Einkranen“ / „Auskranen“ everywhere. Wrong for a boat slipped from a trailer or lifted by a travel lift? Would „Einwassern“ / „Auswassern“ be the neutral pair?",
+      "keys": [
+        "ui:work_type_launch",
+        "ui:work_type_haul_out",
+        "ui:defer_option_haul_out",
+        "chk:chk_cm_seacocks",
+        "chk:chk_wz_wash"
+      ]
+    },
+    {
+      "question": "Jackstay, tether and lifelines: „Strecktaue“ along the deck, „Lifelines“ for the tether (the German sense), „Seereling“ for the guard wires. Will a German reader keep these three apart?",
+      "keys": [
+        "cmp:jackstays",
+        "cmp:harnesses_tethers",
+        "cmp:deck_rails_lifelines"
+      ]
+    }
+  ],
   "_confidence": {
     "ok": "settled term, confirmed by a native-speaking sailor",
     "check": "draft or contested - a native-speaking sailor must confirm before release",

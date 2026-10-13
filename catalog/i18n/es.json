@@ -2,6 +2,50 @@
   "_": "Spanish (Spain) terminology for the seed catalog. Format: code -> [term, confidence].",
   "_status": "draft",
   "_draft": "Draft: nothing here reaches the app until a native-speaking sailor has reviewed it and this _status line is removed. make_strings.py writes the review list only.",
+  "_reviewPriority": [
+    {
+      "question": "Safety lines: «líneas de vida» (jackstays along the deck) and «líneas de anclaje» (the tether from the harness) sit next to each other in the safety list. Clear enough, or should the tether be «cabo de anclaje» / «cabo de seguridad»?",
+      "keys": [
+        "cmp:jackstays",
+        "cmp:harnesses_tethers",
+        "chk:chk_sf_jackstays",
+        "chk:chk_sf_harnesses"
+      ]
+    },
+    {
+      "question": "«inversor» means both the gearbox and the DC-AC inverter. The drafts say «Inversor-reductor» and «Inversor de corriente», and the search alias «inversor» finds both. Is that how Spanish owners tell them apart?",
+      "keys": [
+        "cmp:gearbox",
+        "cmp:inverter",
+        "syn:gearbox",
+        "syn:inverter"
+      ]
+    },
+    {
+      "question": "ITB and ITV are Spanish institutions. Are these labels acceptable for Spanish-speaking owners elsewhere, or should the main label be neutral with ITB only as an example?",
+      "keys": [
+        "cmp:national_inspection",
+        "cmp:trailer_documents",
+        "hint:Scheme (ITB/BSS/Revisione/Bootszeugnis)"
+      ]
+    },
+    {
+      "question": "«patente» or «antifouling»: which should be the name shown, and which only a search alias?",
+      "keys": [
+        "cmp:antifouling",
+        "chk:chk_cm_antifouling",
+        "syn:antifouling"
+      ]
+    },
+    {
+      "question": "«turbina» as a search alias for the raw-water impeller: common on Spanish boats, or confusing next to the turbocharger («turbo»)?",
+      "keys": [
+        "syn:raw_water_impeller",
+        "cmp:raw_water_impeller",
+        "cmp:turbo"
+      ]
+    }
+  ],
   "_confidence": {
     "ok": "settled term, confirmed by a native-speaking sailor",
     "check": "draft or contested - a native-speaking sailor must confirm before release",
