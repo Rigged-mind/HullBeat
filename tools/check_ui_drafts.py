@@ -94,12 +94,18 @@ def md(text):
     return (text or "").replace("|", "\\|").replace("\n", " ")
 
 
-def check_locale(tag, base_s, base_p):
-    folder = os.path.join(DRAFTS, f"values-{tag}")
+def check_locale(tag, base_s, base_p, folder=None):
+    """Check one language's interface strings and write its review list.
+
+    `folder` is the draft in catalog/i18n/ui/ by default, or res/values-<tag>
+    for a language released while its review is still open.
+    """
+    released = folder is not None
+    folder = folder or os.path.join(DRAFTS, f"values-{tag}")
     errors = []
     if tag not in locales.PLURAL_FORMS:
         errors.append(f"no CLDR plural rule for '{tag}' in tools/locales.py PLURAL_FORMS")
-    if os.path.exists(os.path.join(locales.RES, f"values-{tag}")):
+    if not released and os.path.exists(os.path.join(locales.RES, f"values-{tag}")):
         errors.append(f"res/values-{tag} also exists - a released language has no draft; "
                       "move the folder, do not keep two copies")
 
@@ -169,18 +175,47 @@ def check_locale(tag, base_s, base_p):
     return errors, len(missing_s) + len(missing_p)
 
 
+def under_review_released(drafts):
+    """Tags shipped in res/ whose glossary still has a term not marked `ok`.
+
+    Ukrainian is left out: its interface was reviewed before this tooling
+    existed, and its open terms live in uk-review.md alone.
+    """
+    import json
+    out = []
+    for name in sorted(os.listdir(os.path.join("catalog", "i18n"))):
+        tag, ext = os.path.splitext(name)
+        if ext != ".json" or tag in ("en", "uk") or tag in drafts:
+            continue
+        if not os.path.exists(os.path.join(locales.values_dir(tag), "strings.xml")):
+            continue
+        g = json.load(io.open(os.path.join("catalog", "i18n", name), encoding="utf-8"))
+        statuses = [v[1] for block in ("categories", "components", "checklists",
+                                       "specHints", "profile")
+                    for v in (g.get(block) or {}).values() if isinstance(v, list)]
+        if any(s != "ok" for s in statuses):
+            out.append(tag)
+    return out
+
+
 def main():
     base_s = raw_texts(os.path.join(locales.values_dir(""), "strings.xml"), "string")
     base_p = load(locales.values_dir(""))[1]
-    if not os.path.isdir(DRAFTS):
-        print("no interface drafts")
-        print("OK")
-        return 0
-    tags = sorted(m.group(1) for m in (DRAFT_DIR.match(n) for n in os.listdir(DRAFTS)) if m)
+    drafts = []
+    if os.path.isdir(DRAFTS):
+        drafts = sorted(m.group(1) for m in (DRAFT_DIR.match(n) for n in os.listdir(DRAFTS)) if m)
     failed = 0
-    for tag in tags:
+    for tag in drafts:
         errors, _ = check_locale(tag, base_s, base_p)
         failed += len(errors)
+    # A language can be released before its review is done (German and
+    # Spanish were). Its interface review list must keep up with res/, or
+    # the reviewer would be correcting strings the app no longer shows.
+    for tag in under_review_released(drafts):
+        errors, _ = check_locale(tag, base_s, base_p, locales.values_dir(tag))
+        failed += len(errors)
+    if not drafts and not under_review_released(drafts):
+        print("no interface drafts, no released language under review")
     if failed:
         print(f"FAILED: {failed} problem(s)")
         return 1

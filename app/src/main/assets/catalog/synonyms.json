@@ -1,4 +1,249 @@
 {
+  "de": {
+    "alternator_belt": [
+      "Keilriemen",
+      "Rippenriemen",
+      "Antriebsriemen"
+    ],
+    "anodes_hull": [
+      "Opferanode",
+      "Zinkanode",
+      "Zink"
+    ],
+    "antifouling": [
+      "Unterwasseranstrich",
+      "Bewuchsschutz",
+      "Hartantifouling",
+      "selbstpolierend"
+    ],
+    "bilge_pump_auto": [
+      "Bilgepumpe",
+      "Lenzpumpe",
+      "Tauchpumpe"
+    ],
+    "boom": [
+      "Baum",
+      "Großbaum",
+      "Lümmel"
+    ],
+    "chartplotter": [
+      "Plotter",
+      "Kartenplotter",
+      "MFD"
+    ],
+    "control_lines": [
+      "Dirk",
+      "Reffleine",
+      "Cunningham"
+    ],
+    "deck_rails_lifelines": [
+      "Reling",
+      "Seereling",
+      "Relingsdraht",
+      "Relingsstütze",
+      "Bugkorb",
+      "Heckkorb"
+    ],
+    "drogue": [
+      "Treibanker",
+      "Bremstrosse",
+      "Jordan-Drogue"
+    ],
+    "epirb": [
+      "Seenotfunkbake",
+      "Notfunkbake",
+      "Bake",
+      "EPIRB",
+      "PLB"
+    ],
+    "exhaust_hose": [
+      "Wassersammler",
+      "Auspuffschlauch"
+    ],
+    "fenders": [
+      "Fender",
+      "Fenderbrett"
+    ],
+    "flares": [
+      "Signalraketen",
+      "Handfackeln",
+      "Rauchtopf",
+      "Pyrotechnik"
+    ],
+    "fuel_prefilter": [
+      "Vorfilter",
+      "Wasserabscheider",
+      "Racor",
+      "Dieselvorfilter",
+      "Schauglas"
+    ],
+    "gas_bottles": [
+      "Gasflasche",
+      "Propan",
+      "Butan",
+      "Gaskasten"
+    ],
+    "gearbox": [
+      "Getriebe",
+      "Wendegetriebe",
+      "Umsteuergetriebe"
+    ],
+    "halyards": [
+      "Fall",
+      "Großfall",
+      "Fockfall",
+      "Spifall"
+    ],
+    "harnesses_tethers": [
+      "Lifebelt",
+      "Sicherheitsgurt",
+      "Lifeline",
+      "Sorgleine",
+      "Sicherheitsleine"
+    ],
+    "heads_pump": [
+      "Bordtoilette",
+      "Toilettenpumpe",
+      "WC"
+    ],
+    "headsail_furler": [
+      "Rollreff",
+      "Rollanlage",
+      "Furlex"
+    ],
+    "holding_tank": [
+      "Fäkalientank",
+      "Schwarzwassertank"
+    ],
+    "house_batteries": [
+      "Verbraucherbatterie",
+      "Bordbatterie",
+      "Servicebatterie"
+    ],
+    "inverter": [
+      "Wechselrichter",
+      "Inverter"
+    ],
+    "jackstays": [
+      "Strecktau",
+      "Streckgurt",
+      "Jackline"
+    ],
+    "liferaft": [
+      "Rettungsinsel",
+      "Rettungsfloß",
+      "Insel"
+    ],
+    "mixing_elbow": [
+      "Krümmer",
+      "Mischkrümmer",
+      "Einspritzkrümmer"
+    ],
+    "mooring_cleats": [
+      "Klampe",
+      "Poller",
+      "Lippklampe"
+    ],
+    "mooring_lines": [
+      "Festmacher",
+      "Leine",
+      "Spring",
+      "Achterleine",
+      "Vorleine"
+    ],
+    "raw_water_impeller": [
+      "Impeller",
+      "Flügelrad",
+      "Seewasserpumpe",
+      "Jabsco"
+    ],
+    "raw_water_strainer": [
+      "Seewasserfilter",
+      "Kühlwasserfilter"
+    ],
+    "sail_covers": [
+      "Lazy Bag",
+      "Lazy Jacks",
+      "Großsegelpersenning"
+    ],
+    "sea_anchor": [
+      "Seeanker",
+      "Fallschirmanker",
+      "Para-Anker"
+    ],
+    "seacocks": [
+      "Seeventil",
+      "Kugelhahn",
+      "Bordventil",
+      "Absperrhahn"
+    ],
+    "shaft_anode": [
+      "Wellenzink",
+      "Wellenanode"
+    ],
+    "sheets": [
+      "Schot",
+      "Großschot",
+      "Fockschot",
+      "Genuaschot"
+    ],
+    "shore_cable": [
+      "Landstromkabel",
+      "Landanschluss",
+      "CEE-Stecker"
+    ],
+    "snuffer": [
+      "Bergeschlauch",
+      "Spi-Socke"
+    ],
+    "stuffing_box": [
+      "Stopfbuchse",
+      "Wellendichtung",
+      "Wellenabdichtung",
+      "PSS",
+      "Stevenrohrdichtung",
+      "Tresse"
+    ],
+    "through_hulls": [
+      "Borddurchführung",
+      "Durchlass"
+    ],
+    "vang": [
+      "Kicker",
+      "Niederholer",
+      "Rodkicker",
+      "Baumniederholer"
+    ],
+    "vhf": [
+      "UKW",
+      "Funkgerät",
+      "Seefunk",
+      "DSC"
+    ],
+    "washboards": [
+      "Steckschott",
+      "Steckbrett",
+      "Niedergangsschott"
+    ],
+    "watermaker": [
+      "Wassermacher",
+      "Entsalzungsanlage",
+      "Umkehrosmose"
+    ],
+    "winches": [
+      "Winsch",
+      "Schotwinsch",
+      "Fallwinsch",
+      "selbstholend"
+    ],
+    "windlass": [
+      "Ankerwinde",
+      "Ankerspill",
+      "Spill",
+      "Kettennuss",
+      "Bugwinde"
+    ]
+  },
   "en": {
     "aircon": [
       "air con",
@@ -635,6 +880,239 @@
       "softwood plugs",
       "tapered plugs",
       "emergency plugs"
+    ]
+  },
+  "es": {
+    "alternator_belt": [
+      "correa",
+      "correa del alternador",
+      "correa de la bomba"
+    ],
+    "anodes_hull": [
+      "ánodo de sacrificio",
+      "zinc",
+      "ánodo"
+    ],
+    "antifouling": [
+      "patente",
+      "pintura antiincrustante",
+      "antiincrustante",
+      "autopulimentable",
+      "matriz dura"
+    ],
+    "bilge_pump_auto": [
+      "bomba de achique",
+      "bomba de sentina"
+    ],
+    "boom": [
+      "botavara",
+      "pinzote"
+    ],
+    "chartplotter": [
+      "plóter",
+      "plotter",
+      "GPS",
+      "MFD"
+    ],
+    "control_lines": [
+      "amantillo",
+      "cabo de rizo",
+      "cunningham"
+    ],
+    "deck_rails_lifelines": [
+      "guardamancebos",
+      "candelero",
+      "púlpito",
+      "balcón de popa"
+    ],
+    "drogue": [
+      "ancla de retención",
+      "drogue",
+      "cono de frenado"
+    ],
+    "epirb": [
+      "radiobaliza",
+      "baliza",
+      "EPIRB",
+      "PLB"
+    ],
+    "exhaust_hose": [
+      "waterlock",
+      "vaso de escape",
+      "manguera de escape"
+    ],
+    "fenders": [
+      "defensa",
+      "tabla de defensas"
+    ],
+    "flares": [
+      "bengalas",
+      "cohetes",
+      "señales fumígenas",
+      "pirotecnia"
+    ],
+    "fuel_prefilter": [
+      "prefiltro",
+      "separador de agua",
+      "decantador",
+      "Racor",
+      "filtro primario"
+    ],
+    "gas_bottles": [
+      "bombona",
+      "butano",
+      "propano"
+    ],
+    "gearbox": [
+      "inversor",
+      "reductora",
+      "caja de cambios"
+    ],
+    "halyards": [
+      "driza",
+      "driza de mayor",
+      "driza de génova",
+      "driza de spi"
+    ],
+    "harnesses_tethers": [
+      "arnés",
+      "línea de anclaje",
+      "cabo de seguridad"
+    ],
+    "heads_pump": [
+      "WC",
+      "inodoro marino",
+      "bomba del WC"
+    ],
+    "headsail_furler": [
+      "enrollador",
+      "enrollador de génova",
+      "Furlex"
+    ],
+    "holding_tank": [
+      "depósito de aguas negras",
+      "tanque de aguas negras"
+    ],
+    "house_batteries": [
+      "batería de servicio",
+      "baterías de servicio"
+    ],
+    "inverter": [
+      "inversor",
+      "inversor de corriente"
+    ],
+    "jackstays": [
+      "línea de vida",
+      "jackline",
+      "cinta de seguridad"
+    ],
+    "liferaft": [
+      "balsa",
+      "balsa salvavidas"
+    ],
+    "mixing_elbow": [
+      "codo de escape",
+      "codo mezclador"
+    ],
+    "mooring_cleats": [
+      "cornamusa",
+      "bita",
+      "guía"
+    ],
+    "mooring_lines": [
+      "amarra",
+      "cabo de amarre",
+      "spring"
+    ],
+    "raw_water_impeller": [
+      "impulsor",
+      "rodete",
+      "turbina",
+      "bomba de agua salada",
+      "Jabsco"
+    ],
+    "raw_water_strainer": [
+      "filtro de agua salada",
+      "filtro de refrigeración"
+    ],
+    "sail_covers": [
+      "lazy bag",
+      "lazy jacks",
+      "funda de mayor"
+    ],
+    "sea_anchor": [
+      "ancla de capa",
+      "ancla paracaídas",
+      "paracaídas de mar"
+    ],
+    "seacocks": [
+      "grifo de fondo",
+      "válvula de fondo",
+      "llave de fondo",
+      "válvula de bola"
+    ],
+    "shaft_anode": [
+      "zinc del eje"
+    ],
+    "sheets": [
+      "escota",
+      "escota de mayor",
+      "escota de génova"
+    ],
+    "shore_cable": [
+      "cable de pantalán",
+      "toma de corriente",
+      "enchufe de pantalán"
+    ],
+    "snuffer": [
+      "calcetín",
+      "manga de spi"
+    ],
+    "stuffing_box": [
+      "prensaestopas",
+      "cierre de eje",
+      "bocina seca",
+      "retén de eje",
+      "empaquetadura",
+      "PSS"
+    ],
+    "through_hulls": [
+      "pasacascos",
+      "toma de mar"
+    ],
+    "vang": [
+      "contra",
+      "trapa",
+      "contra rígida",
+      "kicker"
+    ],
+    "vhf": [
+      "VHF",
+      "radio",
+      "emisora",
+      "LSD",
+      "DSC"
+    ],
+    "washboards": [
+      "tablas de cierre",
+      "tablas de entrada",
+      "tambucho"
+    ],
+    "watermaker": [
+      "potabilizadora",
+      "desalinizadora",
+      "ósmosis inversa"
+    ],
+    "winches": [
+      "winche",
+      "winch",
+      "winche autoadrizante"
+    ],
+    "windlass": [
+      "molinete",
+      "molinete de ancla",
+      "cabrestante",
+      "barbotén"
     ]
   },
   "uk": {

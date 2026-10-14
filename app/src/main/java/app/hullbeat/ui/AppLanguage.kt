@@ -22,8 +22,6 @@ object AppLanguage {
 
     const val UK = "uk"
     const val EN = "en"
-    // Drafted, not shipped: see catalog/i18n/ui/. Named here so the picker can
-    // label them the day they join SUPPORTED.
     const val DE = "de"
     const val ES = "es"
 
@@ -32,12 +30,16 @@ object AppLanguage {
      *
      * It must name exactly the locales in res/xml/locales_config.xml, and those
      * must be exactly the translated `values-<tag>` folders plus English;
-     * tools/check_locales.py fails the build otherwise. A tag is added here
-     * only when its translation has passed a native sailor's review - a
-     * `values-de` folder reaches every phone set to German whether or not it
-     * is listed, so the real gate is not merging that folder before then.
+     * tools/check_locales.py fails the build otherwise.
+     *
+     * German and Spanish were released on 2026-10-14 by the owner's decision,
+     * BEFORE a native sailor reviewed them: every term in catalog/i18n/de.json
+     * and es.json is still `check`, and catalog/i18n/<tag>-review.md and
+     * <tag>-ui-review.md are the open review. A new language should wait for
+     * that review - a `values-<tag>` folder reaches every phone set to that
+     * language whether or not it is listed here.
      */
-    val SUPPORTED: List<String> = listOf(UK, EN)
+    val SUPPORTED: List<String> = listOf(UK, EN, DE, ES)
 
     fun isSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 

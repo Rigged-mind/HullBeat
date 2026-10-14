@@ -105,12 +105,16 @@ for _name in sorted(os.listdir(os.path.join("catalog", "i18n"))):
     GENERATED.append(os.path.join("catalog", "i18n", f"{_locale}-review.md"))
     GENERATED.append(os.path.join("app", "src", "main", "res", f"values-{_locale}",
                                   "strings_catalog.xml"))
-# check_ui_drafts writes a review list per draft in catalog/i18n/ui/.
+# check_ui_drafts writes <tag>-ui-review.md for every draft in
+# catalog/i18n/ui/ and every released language still under review.
 _ui = os.path.join("catalog", "i18n", "ui")
 for _name in sorted(os.listdir(_ui)) if os.path.isdir(_ui) else []:
     if _name.startswith("values-"):
         GENERATED.append(os.path.join("catalog", "i18n",
                                       f"{_name[len('values-'):]}-ui-review.md"))
+for _name in sorted(os.listdir(os.path.join("catalog", "i18n"))):
+    if _name.endswith("-ui-review.md"):
+        GENERATED.append(os.path.join("catalog", "i18n", _name))
 GENERATED = list(dict.fromkeys(GENERATED))
 
 

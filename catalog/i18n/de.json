@@ -1,6 +1,5 @@
 {
   "_": "German terminology for the seed catalog. Format: code -> [term, confidence].",
-  "_status": "draft",
   "_draft": "Draft: nothing here reaches the app until a native-speaking sailor has reviewed it and this _status line is removed. make_strings.py writes the review list only.",
   "_reviewPriority": [
     {
