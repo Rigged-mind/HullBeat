@@ -72,8 +72,12 @@ def review_priority(locale):
     if not items:
         return []
 
+    # A draft lives in catalog/i18n/ui/; a released language in res/. Looking
+    # only at the first made the generator stop the day a language was moved.
     ui = {}
     ui_path = os.path.join("catalog", "i18n", "ui", f"values-{locale}", "strings.xml")
+    if not os.path.exists(ui_path):
+        ui_path = os.path.join(values_dir(locale), "strings.xml")
     if os.path.exists(ui_path):
         src = re.sub(r"<!--.*?-->", "", io.open(ui_path, encoding="utf-8").read(), flags=re.S)
         ui = dict(re.findall(r'<string\s+name="([^"]+)"[^>]*>(.*?)</string>', src, re.S))
