@@ -15,6 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.data.search.SearchIndexFreshness
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import app.hullbeat.ui.HullBeatMainScaffold
 import app.hullbeat.ui.now.NowViewModel
 import app.hullbeat.ui.theme.HullBeatTheme
@@ -56,6 +60,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         currentScheme = AppPreferences.getThemeScheme(this)
+        // Here, not in the Application: this Context carries the app's own
+        // language, and a language switch recreates the activity.
+        lifecycleScope.launch(Dispatchers.IO) {
+            runCatching {
+                SearchIndexFreshness.refreshIfStale(this@MainActivity, (application as HullBeatApp).database)
+            }
+        }
         requestNotificationPermissionIfNeeded()
         handle(intent)
         setContent {

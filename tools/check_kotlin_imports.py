@@ -45,6 +45,7 @@ STDLIB = {
     "Pair", "Result", "RuntimeException", "Sequence", "Set", "Short",
     "String", "StringBuilder", "Throwable", "Triple", "UInt", "ULong", "Unit",
     "Regex", "Lazy", "Deprecated", "JvmStatic", "JvmField", "JvmOverloads",
+    "ByteArray", "IntArray", "LongArray", "FloatArray", "DoubleArray", "CharArray",
     # java.lang is implicit on Kotlin/JVM, exactly as in Java.
     "System", "Math", "Runtime", "Thread", "Object", "Class",
     "Suppress", "OptIn", "Volatile", "Synchronized", "Transient",
