@@ -152,6 +152,10 @@ object ImportEngine {
         preview: ImportPreview,
         mapping: Map<Int, TargetField>,
         db: AppDatabase,
+        // What the costs in the file were paid in, as ServiceRecord.currency
+        // stores it. A spreadsheet has no currency column, so it is the one
+        // the owner keeps their accounts in now - AppPreferences.getCurrencyCode.
+        currency: String,
         // 1-based row indices that the user has chosen to skip (problematic rows
         // identified by analyzeRows() and confirmed in the UI). Skipped rows are
         // recorded in import_row with parseStatus="SKIPPED" but are not written
@@ -316,7 +320,7 @@ object ImportEngine {
                 workTypes = workType.name,
                 description = description,
                 cost = cost,
-                currency = null,
+                currency = if (cost != null) currency else null,
                 meterReadingId = meterReadingId,
                 performedBy = performedBy,
                 notes = notes,

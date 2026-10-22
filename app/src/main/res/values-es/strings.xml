@@ -216,7 +216,7 @@
     <string name="journal_empty_title">El historial está vacío</string>
     <string name="journal_empty_desc">Aquí se guarda todo el mantenimiento, las reparaciones y las inspecciones hechas. Al tocar «Hecho» en Pulso o en la ficha de un componente se escribe un registro con fecha, horas de motor y foto.</string>
     <string name="journal_all_categories">Todos los componentes</string>
-    <string name="journal_spent_total">%1$s %2$s gastados</string>
+    <string name="journal_spent_total">%1$s gastados</string>
     <string name="journal_gap_after_previous">%1$s después del anterior</string>
     <string name="journal_gap_and">y</string>
     <string name="journal_imported_from">importado · hoja «%1$s», fila %2$d</string>
@@ -383,6 +383,7 @@
     <string name="field_map_work_type">Tipo de trabajo</string>
     <string name="field_map_hours">Horas</string>
     <string name="field_map_cost">Coste</string>
+    <string name="field_map_currency">Moneda</string>
     <string name="field_map_who">Realizado por</string>
     <string name="field_map_notes">Notas</string>
     <string name="field_map_component">Componente</string>

@@ -442,7 +442,6 @@ fun HullBeatMainScaffold(
                                 activeComponentInitialRenew = false
                                 activeComponentOriginTitle = navLogTitle
                             },
-                            currency = currentCurrency,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }

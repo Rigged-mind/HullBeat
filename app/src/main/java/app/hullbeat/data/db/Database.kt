@@ -759,6 +759,15 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         const val NAME = "hullbeat.db"
 
+        /**
+         * Gives every cost that has no currency the one Settings holds now,
+         * as [app.hullbeat.data.preferences.AppPreferences.getCurrencyCode]
+         * returns it. Records without a cost are left alone: there is
+         * nothing to label.
+         */
+        const val BACKFILL_RECORD_CURRENCY_SQL =
+            "UPDATE service_record SET currency = ? WHERE currency IS NULL AND cost IS NOT NULL"
+
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE service_record ADD COLUMN scheduleId INTEGER REFERENCES service_schedule(id) ON DELETE SET NULL")

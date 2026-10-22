@@ -15,6 +15,8 @@ data class ServiceRecordExportItem(
     val performedBy: String? = null,
     val meterHours: Double? = null,
     val cost: Double? = null,
+    /** As stored on the record: an ISO code, or the owner's own text. */
+    val currency: String? = null,
     val description: String = "",
     val notes: String? = null,
 )
@@ -23,7 +25,7 @@ object ExcelExporter {
 
     val DEFAULT_JOURNAL_HEADERS = listOf(
         "Date", "Component", "Work Type", "Performed By",
-        "Hours", "Cost", "Description", "Notes"
+        "Hours", "Cost", "Currency", "Description", "Notes"
     )
 
     val DEFAULT_STORE_HEADERS = listOf(
@@ -200,8 +202,11 @@ object ExcelExporter {
                 } else {
                     writeStringCell(sheet1Sb, "F", rowIdx, "")
                 }
-                writeStringCell(sheet1Sb, "G", rowIdx, rec.description)
-                writeStringCell(sheet1Sb, "H", rowIdx, rec.notes ?: "")
+                // Its own column, next to the amount: a spreadsheet sums
+                // column F, and a sum across ₴ and € is a number of nothing.
+                writeStringCell(sheet1Sb, "G", rowIdx, if (rec.cost != null) rec.currency ?: "" else "")
+                writeStringCell(sheet1Sb, "H", rowIdx, rec.description)
+                writeStringCell(sheet1Sb, "I", rowIdx, rec.notes ?: "")
                 sheet1Sb.append("    </row>\n")
                 rowIdx++
             }

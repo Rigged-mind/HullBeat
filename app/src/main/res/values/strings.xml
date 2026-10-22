@@ -226,7 +226,7 @@
     <string name="journal_empty_title">Ship\'s log is empty</string>
     <string name="journal_empty_desc">All completed maintenance, service, repairs, and inspections are recorded here. Tapping \"Done\" on Pulse or inside a component card writes an entry here with date, engine hours, and photo.</string>
     <string name="journal_all_categories">All components</string>
-    <string name="journal_spent_total">%1$s %2$s spent</string>
+    <string name="journal_spent_total">%1$s spent</string>
     <string name="journal_gap_after_previous">%1$s after previous</string>
     <string name="journal_gap_and">and</string>
     <string name="journal_imported_from">from import · sheet \"%1$s\", row %2$d</string>
@@ -406,6 +406,7 @@
     <string name="field_map_work_type">Work type</string>
     <string name="field_map_hours">Hours</string>
     <string name="field_map_cost">Cost</string>
+    <string name="field_map_currency">Currency</string>
     <string name="field_map_who">Performed by</string>
     <string name="field_map_notes">Notes</string>
     <string name="field_map_component">Component</string>

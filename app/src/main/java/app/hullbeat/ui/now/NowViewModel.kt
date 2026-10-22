@@ -503,6 +503,7 @@ class NowViewModel(
                         context.getString(R.string.action_mark_done)
                     },
                     cost = cost,
+                    currency = if (cost != null) AppPreferences.getCurrencyCode(context) else null,
                     notes = notes,
                     meterReadingId = meterReadingId,
                 )

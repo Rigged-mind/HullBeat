@@ -228,7 +228,7 @@
     <string name="journal_empty_title">Судновий журнал порожній</string>
     <string name="journal_empty_desc">Тут фіксуються всі виконані роботи, ТО, ремонти та огляди. Кожне «Зроблено» на екрані «Пульс» або в картці вузла записує сюди подію — з датою, мотогодинами та фото.</string>
     <string name="journal_all_categories">Усі вузли</string>
-    <string name="journal_spent_total">%1$s %2$s витрачено</string>
+    <string name="journal_spent_total">%1$s витрачено</string>
     <string name="journal_gap_after_previous">через %1$s після попереднього</string>
     <string name="journal_gap_and">і</string>
     <string name="journal_imported_from">з імпорту · аркуш «%1$s», рядок %2$d</string>
@@ -404,6 +404,7 @@
     <string name="field_map_work_type">Тип робіт</string>
     <string name="field_map_hours">Мотогодини</string>
     <string name="field_map_cost">Вартість</string>
+    <string name="field_map_currency">Валюта</string>
     <string name="field_map_who">Виконавець</string>
     <string name="field_map_notes">Нотатки</string>
     <string name="field_map_component">Вузол</string>

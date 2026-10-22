@@ -14,6 +14,10 @@ import app.hullbeat.data.db.AttachmentKind
 import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.Vessel
+import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.domain.CurrencyTotal
+import app.hullbeat.domain.costTotals
+import app.hullbeat.domain.formatCostTotals
 import app.hullbeat.ui.components.decodeSampledBitmapFromUri
 import android.util.Log
 import java.io.ByteArrayOutputStream
@@ -76,6 +80,8 @@ data class PassportServiceRecordInfo(
     val performedBy: String? = null,
     val meterHours: Double? = null,
     val cost: Double? = null,
+    /** As stored on the record: an ISO code, or the owner's own text. */
+    val currency: String? = null,
     val description: String = "",
     val notes: String? = null,
     val photoUris: List<String> = emptyList(),
@@ -85,7 +91,8 @@ data class PassportReportData(
     val vessel: PassportVesselInfo,
     val components: List<PassportComponentInfo>,
     val serviceRecords: List<PassportServiceRecordInfo>,
-    val totalCost: Double,
+    /** Per currency, never one sum across them. */
+    val costTotals: List<CurrencyTotal>,
     val generatedDate: String,
 )
 
@@ -127,7 +134,6 @@ data class PassportLabels(
      * the footer of every page, since pages get printed and handed on alone.
      */
     val compiledBy: String = "Compiled by owner via HullBeat",
-    val currency: String = "",
     /** Unit after engine hours, from R.string.meter_hours_unit ("год", "Std.", "h"). */
     val hoursUnit: String = "h",
     /**
@@ -175,6 +181,7 @@ object PdfPassportExporter {
     private const val COLOR_BORDER_LIGHT = -0x2f232a // 0xFFD0DCD6
     private const val COLOR_WHITE = -0x1 // 0xFFFFFFFF
     private const val COLOR_CARD_BG = -0x80507 // 0xFFF7FAF9
+    private const val SUMMARY_LINE_HEIGHT = 12f
 
     // Four across the content width to the pixel: 4 x 124 + 3 x 9 = 523.
     private const val THUMB_W = 124f
@@ -277,12 +284,8 @@ object PdfPassportExporter {
             )
         }.sortedWith(compareBy({ it.categoryName }, { it.name }))
 
-        var sumCost = 0.0
         val recordInfos = records.map { r ->
             val costVal = r.cost
-            if (costVal != null) {
-                sumCost += costVal
-            }
             val compName = componentDisplayNames[r.componentId] ?: ""
             val reading = r.meterReadingId?.let { meters[it] }
             val attUris = imageUris(recordAttachments[r.id])
@@ -296,6 +299,7 @@ object PdfPassportExporter {
                 performedBy = r.performedBy?.ifBlank { null },
                 meterHours = reading,
                 cost = costVal,
+                currency = r.currency,
                 description = r.description,
                 notes = r.notes?.ifBlank { null },
                 photoUris = attUris,
@@ -306,7 +310,7 @@ object PdfPassportExporter {
             vessel = vesselInfo,
             components = componentInfos,
             serviceRecords = recordInfos,
-            totalCost = sumCost,
+            costTotals = costTotals(records.map { it.cost to it.currency }),
             generatedDate = generatedDate,
         )
     }
@@ -599,10 +603,19 @@ object PdfPassportExporter {
 
     private fun drawSummaryCard(pdf: PdfContext, data: PassportReportData, labels: PassportLabels) {
         val paint = pdfPaint()
+        val colW = pdf.contentWidth / 3f
 
-        pdf.ensureSpace(44f)
+        // Measured before the card is drawn: a boat kept in several
+        // currencies can need more than one line for its expenses.
+        paint.textSize = 9f
+        paint.typeface = Typeface.DEFAULT
+        val totalsText = formatCostTotals(data.costTotals) { formatAmount(it, labels.locale) }
+        val costLines = summaryCostLines(totalsText, labels.fieldTotalCost, colW - 16f) { paint.measureText(it) }
+        val extraHeight = (costLines.size - 1) * SUMMARY_LINE_HEIGHT
 
-        val cardRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 36f)
+        pdf.ensureSpace(44f + extraHeight)
+
+        val cardRect = RectF(pdf.leftMargin, pdf.y, pdf.rightMargin, pdf.y + 36f + extraHeight)
         paint.color = COLOR_CARD_BG
         pdf.c.drawRoundRect(cardRect, 4f, 4f, paint)
 
@@ -612,7 +625,6 @@ object PdfPassportExporter {
         pdf.c.drawRoundRect(cardRect, 4f, 4f, paint)
         paint.style = Paint.Style.FILL
 
-        val colW = pdf.contentWidth / 3f
         val yText = pdf.y + 22.5f
 
         // Metric 1: Components
@@ -626,13 +638,30 @@ object PdfPassportExporter {
         val m2 = String.format(labels.fieldRecordsCount, data.serviceRecords.size)
         pdf.c.drawText(m2, pdf.leftMargin + colW + 12f, yText, paint)
 
-        // Metric 3: Total cost
-        val costFormatted = formatAmount(data.totalCost, labels.locale)
-        val costWithCurrency = if (labels.currency.isNotBlank()) "$costFormatted ${labels.currency}" else costFormatted
-        val m3 = String.format(labels.fieldTotalCost, costWithCurrency)
-        pdf.c.drawText(m3, pdf.leftMargin + (colW * 2) + 12f, yText, paint)
+        // Metric 3: Total cost, one line per currency when they do not fit on one
+        costLines.forEachIndexed { index, line ->
+            pdf.c.drawText(line, pdf.leftMargin + (colW * 2) + 12f, yText + index * SUMMARY_LINE_HEIGHT, paint)
+        }
 
-        pdf.y += 48f
+        pdf.y += 48f + extraHeight
+    }
+
+    /**
+     * The expenses metric as lines: "Total expenses: 243 023 ₴ · 450 €" when
+     * it fits [maxWidth], otherwise the label with the first currency and
+     * each further currency on a line of its own - a third column that ran
+     * off the page would cut the passport's total in half.
+     */
+    internal fun summaryCostLines(
+        totalsText: String,
+        fieldTotalCost: String,
+        maxWidth: Float,
+        measure: (String) -> Float,
+    ): List<String> {
+        val oneLine = String.format(fieldTotalCost, totalsText)
+        if (measure(oneLine) <= maxWidth) return listOf(oneLine)
+        val parts = totalsText.split(" · ")
+        return listOf(String.format(fieldTotalCost, parts.first())) + parts.drop(1)
     }
 
     private fun drawEquipmentSection(pdf: PdfContext, components: List<PassportComponentInfo>, labels: PassportLabels) {
@@ -884,7 +913,8 @@ object PdfPassportExporter {
             }
             if (rec.cost != null) {
                 val formattedCost = formatAmount(rec.cost, labels.locale)
-                val costStr = if (labels.currency.isNotBlank()) "$formattedCost ${labels.currency}" else formattedCost
+                val symbol = AppPreferences.currencySymbol(rec.currency)
+                val costStr = if (symbol.isNotBlank()) "$formattedCost $symbol" else formattedCost
                 detailsList.add("${labels.colCost}: $costStr")
             }
             if (!rec.performedBy.isNullOrBlank()) {

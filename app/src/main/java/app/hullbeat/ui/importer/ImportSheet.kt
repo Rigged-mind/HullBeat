@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.hullbeat.R
 import app.hullbeat.data.db.AppDatabase
+import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.importer.ImportEngine
 import app.hullbeat.domain.importer.TargetField
 import kotlinx.coroutines.Dispatchers
@@ -181,6 +182,7 @@ fun ImportSheet(
                                     preview = p,
                                     mapping = mapping,
                                     db = database,
+                                    currency = AppPreferences.getCurrencyCode(context),
                                     skipRows = skipIndices,
                                 )
                                 withContext(Dispatchers.Main) {
@@ -433,6 +435,7 @@ fun ImportSheet(
                                                 preview = p,
                                                 mapping = mapping,
                                                 db = database,
+                                                currency = AppPreferences.getCurrencyCode(context),
                                             )
                                             withContext(Dispatchers.Main) {
                                                 isImporting = false

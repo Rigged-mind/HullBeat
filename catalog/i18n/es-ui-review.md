@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-396 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+397 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -213,7 +213,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `journal_empty_title` | Ship\'s log is empty | **El historial está vacío** | |
 | `journal_empty_desc` | All completed maintenance, service, repairs, and inspections are recorded here. Tapping \"Done\" on Pulse or inside a component card writes an entry here with date, engine hours, and photo. | **Aquí se guarda todo el mantenimiento, las reparaciones y las inspecciones hechas. Al tocar «Hecho» en Pulso o en la ficha de un componente se escribe un registro con fecha, horas de motor y foto.** | |
 | `journal_all_categories` | All components | **Todos los componentes** | |
-| `journal_spent_total` | %1$s %2$s spent | **%1$s %2$s gastados** | |
+| `journal_spent_total` | %1$s spent | **%1$s gastados** | |
 | `journal_gap_after_previous` | %1$s after previous | **%1$s después del anterior** | |
 | `journal_gap_and` | and | **y** | |
 | `journal_imported_from` | from import · sheet \"%1$s\", row %2$d | **importado · hoja «%1$s», fila %2$d** | |
@@ -373,6 +373,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `field_map_work_type` | Work type | **Tipo de trabajo** | |
 | `field_map_hours` | Hours | **Horas** | |
 | `field_map_cost` | Cost | **Coste** | |
+| `field_map_currency` | Currency | **Moneda** | |
 | `field_map_who` | Performed by | **Realizado por** | |
 | `field_map_notes` | Notes | **Notas** | |
 | `field_map_component` | Component | **Componente** | |

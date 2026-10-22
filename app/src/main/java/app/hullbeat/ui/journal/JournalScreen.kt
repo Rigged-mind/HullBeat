@@ -79,6 +79,7 @@ import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.data.db.formatScheduleInterval
 import app.hullbeat.data.db.formatWorkTypes
 import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.domain.formatCostTotals
 import app.hullbeat.ui.components.rememberSampledBitmap
 import app.hullbeat.ui.detail.EditServiceRecordSheet
 import java.text.NumberFormat
@@ -102,7 +103,6 @@ fun JournalScreen(
      */
     onSelectVessel: (Long?) -> Unit,
     modifier: Modifier = Modifier,
-    currency: String = AppPreferences.getCurrency(LocalContext.current),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -227,9 +227,11 @@ fun JournalScreen(
                         fontWeight = FontWeight.Medium,
                     )
 
-                    val formattedCost = NumberFormat.getInstance().format(uiState.totalCost.toLong())
+                    val formattedCost = formatCostTotals(uiState.costTotals) {
+                        NumberFormat.getInstance().format(it.toLong())
+                    }
                     Text(
-                        text = stringResource(R.string.journal_spent_total, formattedCost, currency),
+                        text = stringResource(R.string.journal_spent_total, formattedCost),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
@@ -334,7 +336,6 @@ fun JournalScreen(
                             viewingPhotoIndex = index
                         },
                         showVesselName = uiState.selectedVesselId == null && uiState.vessels.size > 1,
-                        currency = currency,
                     )
 
                     if (entry.daysSincePrev != null) {
@@ -576,7 +577,6 @@ private fun JournalRecordRow(
     onPhotoClick: (List<Attachment>, Int) -> Unit,
     showVesselName: Boolean = false,
     modifier: Modifier = Modifier,
-    currency: String = AppPreferences.getCurrency(context),
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -787,7 +787,8 @@ private fun JournalRecordRow(
                     }
                     entry.record.cost?.let { c ->
                         val cStr = if (c % 1.0 == 0.0) c.toLong().toString() else c.toString()
-                        metaParts.add("$cStr $currency")
+                        val symbol = AppPreferences.currencySymbol(entry.record.currency)
+                        metaParts.add(if (symbol.isBlank()) cStr else "$cStr $symbol")
                     }
                     if (entry.attachments.isNotEmpty()) {
                         metaParts.add(

@@ -74,6 +74,7 @@ enum class TemperatureUnit(val symbol: String, val nameRes: Int, val shortNameRe
 object AppPreferences {
     private const val PREFS_NAME = "hullbeat_prefs"
     private const val KEY_CURRENCY = "currency_symbol"
+    private const val KEY_CURRENCY_CODE = "currency_code"
     private const val KEY_LENGTH_UNIT = "unit_length"
     private const val KEY_DISTANCE_UNIT = "unit_distance"
     private const val KEY_VOLUME_UNIT = "unit_volume"
@@ -110,10 +111,42 @@ object AppPreferences {
     fun getCurrency(context: Context): String =
         prefs(context).getString(KEY_CURRENCY, DEFAULT_CURRENCY) ?: DEFAULT_CURRENCY
 
-    fun setCurrency(context: Context, symbol: String) {
+    /**
+     * [code] is the ISO code of a listed currency, or null for a custom one.
+     * It is kept next to the symbol because the symbol alone cannot tell
+     * SEK from NOK: both are "kr".
+     */
+    fun setCurrency(context: Context, symbol: String, code: String? = null) {
         val clean = symbol.trim().ifEmpty { DEFAULT_CURRENCY }
-        prefs(context).edit().putString(KEY_CURRENCY, clean).apply()
+        prefs(context).edit()
+            .putString(KEY_CURRENCY, clean)
+            .apply { if (code != null) putString(KEY_CURRENCY_CODE, code) else remove(KEY_CURRENCY_CODE) }
+            .apply()
     }
+
+    /**
+     * What a new cost is stored with in [app.hullbeat.data.db.ServiceRecord.currency]:
+     * the ISO code of a listed currency, or the owner's own text for a custom one.
+     */
+    fun getCurrencyCode(context: Context): String {
+        val p = prefs(context)
+        return p.getString(KEY_CURRENCY_CODE, null)
+            ?: currencyCodeFor(p.getString(KEY_CURRENCY, DEFAULT_CURRENCY) ?: DEFAULT_CURRENCY)
+    }
+
+    /**
+     * The code for a symbol saved before the code was. A symbol two listed
+     * currencies share ("kr") stays as text: guessing SEK would put the
+     * wrong country on a Norwegian owner's history.
+     */
+    fun currencyCodeFor(symbol: String): String {
+        val matches = AVAILABLE_CURRENCIES.filter { it.symbol == symbol }
+        return matches.singleOrNull()?.code ?: symbol
+    }
+
+    /** The symbol to print after an amount stored with [currency]. */
+    fun currencySymbol(currency: String?): String =
+        AVAILABLE_CURRENCIES.firstOrNull { it.code == currency }?.symbol ?: currency.orEmpty()
 
     // Units
     fun getLengthUnit(context: Context): LengthUnit =

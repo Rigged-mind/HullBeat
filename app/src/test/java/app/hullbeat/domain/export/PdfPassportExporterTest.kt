@@ -6,6 +6,7 @@ import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.ParentType
 import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.Vessel
+import app.hullbeat.domain.CurrencyTotal
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -60,7 +61,7 @@ class PdfPassportExporterTest {
         assertEquals("11.5 m", report.vessel.lengthLabel)
         assertEquals("Saildrive", report.vessel.driveType)
         assertEquals("content://media/vessel.jpg", report.vessel.photoUri)
-        assertEquals(0.0, report.totalCost, 0.001)
+        assertEquals(emptyList<CurrencyTotal>(), report.costTotals)
         assertEquals("2026-09-15", report.generatedDate)
     }
 
@@ -150,6 +151,7 @@ class PdfPassportExporterTest {
             workTypes = "SCHEDULED",
             description = "Engine oil change",
             cost = 150.0,
+            currency = "UAH",
             meterReadingId = 501L,
             performedBy = "Skipper"
         )
@@ -160,6 +162,7 @@ class PdfPassportExporterTest {
             workTypes = "REPAIR",
             description = "Impeller replacement",
             cost = 85.5,
+            currency = "EUR",
             notes = "Spare from locker A"
         )
         val rec3 = ServiceRecord(
@@ -206,7 +209,12 @@ class PdfPassportExporterTest {
         assertEquals(103L, report.serviceRecords[2].id)
         assertNull(report.serviceRecords[2].cost)
 
-        assertEquals(235.5, report.totalCost, 0.001)
+        assertEquals("EUR", report.serviceRecords[0].currency)
+        // Hryvnias and euros stay apart: 235.5 of nothing is not a total.
+        assertEquals(
+            listOf(CurrencyTotal("UAH", 150.0), CurrencyTotal("EUR", 85.5)),
+            report.costTotals,
+        )
     }
 
     @Test
@@ -469,6 +477,21 @@ class PdfPassportExporterTest {
     fun `passport labels default compiledBy conveys honest owner record origin`() {
         val labels = PassportLabels()
         assertEquals("Compiled by owner via HullBeat", labels.compiledBy)
-        assertEquals("", labels.currency)
+    }
+
+    @Test
+    fun `summary keeps all currencies on one line when they fit`() {
+        val lines = PdfPassportExporter.summaryCostLines(
+            "243 023 ₴ · 450 €", "Total expenses: %1\$s", 1000f, perChar,
+        )
+        assertEquals(listOf("Total expenses: 243 023 ₴ · 450 €"), lines)
+    }
+
+    @Test
+    fun `summary puts each further currency on its own line when the column is narrow`() {
+        val lines = PdfPassportExporter.summaryCostLines(
+            "243 023 ₴ · 450 € · 120 £", "Total expenses: %1\$s", 30f, perChar,
+        )
+        assertEquals(listOf("Total expenses: 243 023 ₴", "450 €", "120 £"), lines)
     }
 }

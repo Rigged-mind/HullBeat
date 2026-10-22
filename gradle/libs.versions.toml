@@ -39,6 +39,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitText" }
 mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcode" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+# Runs the real SQL of a schema in a JVM test; the version Room's compiler already pulls in.
+sqlite-jdbc = { group = "org.xerial", name = "sqlite-jdbc", version = "3.41.2.2" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestJunit" }
 
 [plugins]

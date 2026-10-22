@@ -11,6 +11,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import app.hullbeat.data.db.AppDatabase
+import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.notify.MaintenanceCheckWorker
 import java.time.Duration
 import java.time.LocalDateTime
@@ -49,6 +50,18 @@ class HullBeatApp : Application() {
                     db.execSQL("UPDATE component SET categoryCode = 'engine_main' WHERE categoryCode = 'engine'")
                     db.execSQL("UPDATE component SET categoryCode = 'elec_dc' WHERE categoryCode = 'electrical'")
                     db.execSQL("UPDATE component SET categoryCode = 'hull' WHERE categoryCode = 'hull_deck'")
+
+                    // Costs saved before a record kept its own currency were
+                    // shown in whatever Settings said, so the currency they
+                    // were entered in is the one Settings says now. Written
+                    // once, then fixed: switching to € later must not turn
+                    // last year's hryvnias into euros. Every open, not once
+                    // per install, because a backup made before this
+                    // restores the same nulls.
+                    db.execSQL(
+                        AppDatabase.BACKFILL_RECORD_CURRENCY_SQL,
+                        arrayOf(AppPreferences.getCurrencyCode(applicationContext)),
+                    )
 
                     // Re-attach misplaced 'Engine' meters from non-engine components to the engine component if present
                     db.execSQL("""

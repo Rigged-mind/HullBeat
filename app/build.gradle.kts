@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.mlkit.barcode.scanning)
 
     testImplementation(libs.junit)
+    testImplementation(libs.sqlite.jdbc)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.room.testing)
 }

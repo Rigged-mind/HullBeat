@@ -90,7 +90,11 @@ fun EditServiceRecordSheet(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val currency = remember { AppPreferences.getCurrency(context) }
+    // A record keeps the currency it was paid in: correcting last year's
+    // ₴ invoice after switching to € must not turn it into euros. A record
+    // that had no cost yet takes the current one, as a new record would.
+    val currencyCode = remember { record.currency ?: AppPreferences.getCurrencyCode(context) }
+    val currency = AppPreferences.currencySymbol(currencyCode)
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val parsedWorkType = record.workTypes.split(",")
@@ -435,6 +439,7 @@ fun EditServiceRecordSheet(
                             date = date,
                             workTypes = workType.name,
                             cost = cost,
+                            currency = if (cost != null) currencyCode else null,
                             notes = notes,
                         )
                         val removedPhotoIds = currentPhotos.map { it.id }.filter { id -> remainingPhotos.none { it.id == id } }

@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-396 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+397 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -214,7 +214,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `journal_empty_title` | Ship\'s log is empty | **Das Wartungsbuch ist leer** | |
 | `journal_empty_desc` | All completed maintenance, service, repairs, and inspections are recorded here. Tapping \"Done\" on Pulse or inside a component card writes an entry here with date, engine hours, and photo. | **Hier stehen alle erledigten Wartungen, Reparaturen und Inspektionen. Ein Tipp auf „Erledigt“ in „Puls“ oder auf der Komponentenkarte schreibt einen Eintrag mit Datum, Motorstunden und Foto.** | |
 | `journal_all_categories` | All components | **Alle Komponenten** | |
-| `journal_spent_total` | %1$s %2$s spent | **%1$s %2$s ausgegeben** | |
+| `journal_spent_total` | %1$s spent | **%1$s ausgegeben** | |
 | `journal_gap_after_previous` | %1$s after previous | **%1$s nach dem vorigen** | |
 | `journal_gap_and` | and | **und** | |
 | `journal_imported_from` | from import · sheet \"%1$s\", row %2$d | **aus Import · Blatt „%1$s“, Zeile %2$d** | |
@@ -374,6 +374,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `field_map_work_type` | Work type | **Art der Arbeit** | |
 | `field_map_hours` | Hours | **Stunden** | |
 | `field_map_cost` | Cost | **Kosten** | |
+| `field_map_currency` | Currency | **Währung** | |
 | `field_map_who` | Performed by | **Ausgeführt von** | |
 | `field_map_notes` | Notes | **Notizen** | |
 | `field_map_component` | Component | **Komponente** | |

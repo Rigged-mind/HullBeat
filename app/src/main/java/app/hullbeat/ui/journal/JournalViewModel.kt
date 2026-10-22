@@ -24,6 +24,8 @@ import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.categoryDisplayName
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.domain.CurrencyTotal
+import app.hullbeat.domain.costTotals
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +67,8 @@ data class JournalUiState(
     val categoriesWithRecords: List<String> = emptyList(),
     val entries: List<JournalEntryItem> = emptyList(),
     val totalCount: Int = 0,
-    val totalCost: Double = 0.0,
+    /** One entry per currency the shown records were paid in. */
+    val costTotals: List<CurrencyTotal> = emptyList(),
     val dateSpan: String = "",
     val isLoading: Boolean = true,
 )
@@ -259,7 +262,7 @@ class JournalViewModel(
                         allItems.filter { it.component.categoryCode == selectedCategoryCode }
                     }
 
-                    val totalSpent = filteredItems.mapNotNull { it.record.cost }.sum()
+                    val totalSpent = costTotals(filteredItems.map { it.record.cost to it.record.currency })
 
                     val span = if (filteredItems.isNotEmpty()) {
                         val oldestYear = filteredItems.last().record.date.year
@@ -274,7 +277,7 @@ class JournalViewModel(
                         categoriesWithRecords = categoriesWithRecords,
                         entries = filteredItems,
                         totalCount = filteredItems.size,
-                        totalCost = totalSpent,
+                        costTotals = totalSpent,
                         dateSpan = span,
                         isLoading = false,
                     )

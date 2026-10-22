@@ -216,7 +216,7 @@
     <string name="journal_empty_title">Das Wartungsbuch ist leer</string>
     <string name="journal_empty_desc">Hier stehen alle erledigten Wartungen, Reparaturen und Inspektionen. Ein Tipp auf „Erledigt“ in „Puls“ oder auf der Komponentenkarte schreibt einen Eintrag mit Datum, Motorstunden und Foto.</string>
     <string name="journal_all_categories">Alle Komponenten</string>
-    <string name="journal_spent_total">%1$s %2$s ausgegeben</string>
+    <string name="journal_spent_total">%1$s ausgegeben</string>
     <string name="journal_gap_after_previous">%1$s nach dem vorigen</string>
     <string name="journal_gap_and">und</string>
     <string name="journal_imported_from">aus Import · Blatt „%1$s“, Zeile %2$d</string>
@@ -383,6 +383,7 @@
     <string name="field_map_work_type">Art der Arbeit</string>
     <string name="field_map_hours">Stunden</string>
     <string name="field_map_cost">Kosten</string>
+    <string name="field_map_currency">Währung</string>
     <string name="field_map_who">Ausgeführt von</string>
     <string name="field_map_notes">Notizen</string>
     <string name="field_map_component">Komponente</string>

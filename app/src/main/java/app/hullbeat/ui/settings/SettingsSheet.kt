@@ -131,6 +131,7 @@ fun SettingsDrawerSheet(
 
     // Currency state
     var selectedCurrency by remember { mutableStateOf(currentCurrency) }
+    var selectedCurrencyCode by remember { mutableStateOf(AppPreferences.getCurrencyCode(context)) }
     var customCurrencyText by remember {
         mutableStateOf(
             if (AppPreferences.AVAILABLE_CURRENCIES.none { it.symbol == currentCurrency }) currentCurrency else ""
@@ -265,6 +266,7 @@ fun SettingsDrawerSheet(
                         performedBy = r.performedBy,
                         meterHours = r.meterReadingId?.let { meters[it]?.value },
                         cost = r.cost,
+                        currency = r.currency,
                         description = formatRecordDescription(context, r.description),
                         notes = r.notes,
                     )
@@ -299,6 +301,7 @@ fun SettingsDrawerSheet(
                     context.getString(R.string.field_map_who),
                     context.getString(R.string.field_map_hours),
                     context.getString(R.string.field_map_cost),
+                    context.getString(R.string.field_map_currency),
                     context.getString(R.string.field_map_desc),
                     context.getString(R.string.field_map_notes),
                 )
@@ -576,13 +579,14 @@ fun SettingsDrawerSheet(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
-                    // ⚠️ Matched by SYMBOL because that is what the preference
-                    // stores. SEK and NOK are both "kr", so whichever comes
-                    // first wins the label here. Harmless for money - the
-                    // symbol printed is right either way - but the row can
-                    // read "Swedish krona" to someone who picked Norwegian.
-                    val selectedCurrencyOption = AppPreferences.AVAILABLE_CURRENCIES
-                        .firstOrNull { !isCustomSelected && it.symbol == selectedCurrency }
+                    // Matched by CODE: SEK and NOK are both "kr", and the code
+                    // is what every new cost is stored with. A "kr" saved
+                    // before the code was has none; it falls back to the
+                    // symbol, and the first "kr" wins the label until the
+                    // owner picks again.
+                    val selectedCurrencyOption = if (isCustomSelected) null else
+                        AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.code == selectedCurrencyCode }
+                            ?: AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.symbol == selectedCurrency }
 
                     // Built with a plain if rather than ?.let: stringResource is
                     // composable, and reading it inside a lambda is a rule about
@@ -610,7 +614,8 @@ fun SettingsDrawerSheet(
                                     currencyMenuOpen = false
                                     isCustomSelected = false
                                     selectedCurrency = option.symbol
-                                    AppPreferences.setCurrency(context, option.symbol)
+                                    selectedCurrencyCode = option.code
+                                    AppPreferences.setCurrency(context, option.symbol, option.code)
                                     onCurrencyChanged(option.symbol)
                                 },
                             )
@@ -626,6 +631,7 @@ fun SettingsDrawerSheet(
                                 isCustomSelected = true
                                 if (customCurrencyText.isNotBlank()) {
                                     selectedCurrency = customCurrencyText.trim()
+                                    selectedCurrencyCode = selectedCurrency
                                     AppPreferences.setCurrency(context, selectedCurrency)
                                     onCurrencyChanged(selectedCurrency)
                                 }
@@ -643,6 +649,7 @@ fun SettingsDrawerSheet(
                                 val trimmed = input.trim()
                                 if (trimmed.isNotEmpty()) {
                                     selectedCurrency = trimmed
+                                    selectedCurrencyCode = trimmed
                                     AppPreferences.setCurrency(context, trimmed)
                                     onCurrencyChanged(trimmed)
                                 }
