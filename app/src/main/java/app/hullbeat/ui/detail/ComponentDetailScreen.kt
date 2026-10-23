@@ -1518,7 +1518,7 @@ private fun ViewPhotoDialog(
                     ) {
                         FilledTonalIconButton(
                             onClick = { onDelete(currentPhoto) },
-                            modifier = Modifier.size(36.dp),
+                            modifier = Modifier.size(56.dp),
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f),
                                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -1533,7 +1533,7 @@ private fun ViewPhotoDialog(
 
                         FilledTonalIconButton(
                             onClick = onDismiss,
-                            modifier = Modifier.size(36.dp),
+                            modifier = Modifier.size(56.dp),
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                 contentColor = MaterialTheme.colorScheme.onSurface,
@@ -1554,7 +1554,7 @@ private fun ViewPhotoDialog(
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
                                 .padding(start = 8.dp)
-                                .size(40.dp),
+                                .size(56.dp),
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                 contentColor = MaterialTheme.colorScheme.onSurface,
@@ -1575,7 +1575,7 @@ private fun ViewPhotoDialog(
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
                                 .padding(end = 8.dp)
-                                .size(40.dp),
+                                .size(56.dp),
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                 contentColor = MaterialTheme.colorScheme.onSurface,
