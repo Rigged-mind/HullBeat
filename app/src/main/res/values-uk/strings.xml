@@ -305,6 +305,13 @@
     <string name="unit_short_psi">psi</string>
     <string name="unit_short_celsius">°C</string>
     <string name="unit_short_fahrenheit">°F</string>
+    <string name="unit_short_mm">мм</string>
+    <string name="unit_short_in">дюйм</string>
+    <string name="unit_short_l_min">л/хв</string>
+    <string name="unit_short_gal_us_h">US gal/год</string>
+    <string name="unit_short_gal_uk_h">UK gal/год</string>
+    <string name="passport_unit_recorded">Записано в %1$s</string>
+    <string name="spec_label_amount_used">Витрачено</string>
 
     <!-- Maintenance notifications -->
     <string name="settings_notifications_title">Сповіщення про ТО</string>

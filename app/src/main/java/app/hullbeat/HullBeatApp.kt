@@ -11,6 +11,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import app.hullbeat.data.db.AppDatabase
+import app.hullbeat.data.db.SpecUnitsBackfill
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.notify.MaintenanceCheckWorker
 import java.time.Duration
@@ -42,7 +43,7 @@ class HullBeatApp : Application() {
 
     private fun buildDatabase(): AppDatabase {
         return Room.databaseBuilder(applicationContext, AppDatabase::class.java, AppDatabase.NAME)
-            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onOpen(db: SupportSQLiteDatabase) {
                     super.onOpen(db)
@@ -62,6 +63,10 @@ class HullBeatApp : Application() {
                         AppDatabase.BACKFILL_RECORD_CURRENCY_SQL,
                         arrayOf(AppPreferences.getCurrencyCode(applicationContext)),
                     )
+
+                    // The same for passport measurements: each keeps the
+                    // unit it was typed in, not the one Settings says later.
+                    SpecUnitsBackfill.run(db, applicationContext)
 
                     // Re-attach misplaced 'Engine' meters from non-engine components to the engine component if present
                     db.execSQL("""

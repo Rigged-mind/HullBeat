@@ -89,7 +89,10 @@ import app.hullbeat.data.db.Criticality
 import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.ServiceSchedule
 import app.hullbeat.data.db.WorkType
+import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DueCalculator
+import app.hullbeat.domain.SpecUnit
+import app.hullbeat.domain.SpecUnits
 import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.RecordMeterDialog
 import app.hullbeat.ui.components.rememberSampledBitmap
@@ -764,8 +767,8 @@ fun ComponentDetailScreen(
                     editingField = null
                     addingField = false
                 },
-                onSave = { key, value ->
-                    if (key.isNotEmpty()) viewModel.setPassportField(key, value)
+                onSave = { key, value, shownUnit ->
+                    if (key.isNotEmpty()) viewModel.setPassportField(key, value, shownUnit)
                     editingField = null
                     addingField = false
                 },
@@ -1150,13 +1153,28 @@ private fun HistoryRow(
 private fun PassportEditor(
     field: PassportField?,
     onDismiss: () -> Unit,
-    onSave: (String, String) -> Unit,
+    onSave: (String, String, SpecUnit?) -> Unit,
 ) {
     val context = LocalContext.current
     val known = field != null
     val fieldLabel = remember(field?.key, context) { field?.displayLabel(context) ?: "" }
     var name by remember(field?.key) { mutableStateOf(fieldLabel) }
-    var text by remember(field?.key) { mutableStateOf(field?.value ?: "") }
+
+    // The unit is Settings' at the moment the form opens, and that is the
+    // one saved. A value typed in another unit is shown converted to it; one
+    // that is not a number cannot be, and keeps its own unit until edited.
+    val shownUnit = remember(field?.key) {
+        field?.quantity?.let { AppPreferences.getUnitSettings(context).unitFor(it) }
+    }
+    val storedUnit = field?.unit
+    val converted = remember(field?.key) {
+        if (field == null || storedUnit == null || shownUnit == null) null
+        else SpecUnits.convertForEdit(field.value, storedUnit, shownUnit, context.resources.configuration.locales[0])
+    }
+    val unconvertible = storedUnit != null && shownUnit != null && storedUnit != shownUnit && converted == null
+    var text by remember(field?.key) { mutableStateOf(converted ?: field?.value ?: "") }
+    val untouched = text.trim() == field?.value?.trim()
+    val unitNow = if (unconvertible && untouched) storedUnit else shownUnit
     var showDatePicker by remember { mutableStateOf(false) }
 
     val dateWord = stringResource(R.string.field_date)
@@ -1197,6 +1215,10 @@ private fun PassportEditor(
                     value = text,
                     onValueChange = { text = it },
                     placeholder = { if (isDate) Text("YYYY-MM-DD") },
+                    suffix = unitNow?.let { { Text(stringResource(it.shortNameRes)) } },
+                    supportingText = if (unconvertible && untouched && storedUnit != null) {
+                        { Text(stringResource(R.string.passport_unit_recorded, stringResource(storedUnit.shortNameRes))) }
+                    } else null,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -1231,7 +1253,7 @@ private fun PassportEditor(
         },
         confirmButton = {
             TextButton(
-                onClick = { onSave(if (known) field.key else name.trim(), text) },
+                onClick = { onSave(if (known) field.key else name.trim(), text, unitNow) },
                 enabled = if (known) true else name.trim().isNotEmpty(),
             ) {
                 Text(stringResource(R.string.action_save))
@@ -1313,8 +1335,14 @@ private fun PassportRow(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+                // As typed, in the unit it was typed in - not converted to
+                // today's Settings, so the screen shows what was recorded.
+                val unitSuffix = field.unit
+                    ?.takeUnless { SpecUnits.mentionsUnit(field.value, it.quantity) }
+                    ?.let { " " + stringResource(it.shortNameRes) }
+                    .orEmpty()
                 Text(
-                    text = if (field.value.isNotBlank()) field.value else "—",
+                    text = if (field.value.isNotBlank()) field.value + unitSuffix else "—",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = if (field.value.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline,

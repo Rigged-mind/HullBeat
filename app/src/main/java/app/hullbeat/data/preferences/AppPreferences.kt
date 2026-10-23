@@ -3,6 +3,7 @@ package app.hullbeat.data.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import app.hullbeat.R
+import app.hullbeat.domain.UnitSettings
 import app.hullbeat.ui.theme.Scheme
 import java.util.Locale
 
@@ -193,6 +194,14 @@ object AppPreferences {
     fun setTemperatureUnit(context: Context, unit: TemperatureUnit) {
         prefs(context).edit().putString(KEY_TEMPERATURE_UNIT, unit.name).apply()
     }
+
+    /** The units Settings holds right now, as one value a passport save keeps. */
+    fun getUnitSettings(context: Context): UnitSettings = UnitSettings(
+        length = getLengthUnit(context),
+        volume = getVolumeUnit(context),
+        pressure = getPressureUnit(context),
+        temperature = getTemperatureUnit(context),
+    )
 
     // Presets
     fun applyMetricPreset(context: Context) {

@@ -48,6 +48,11 @@ ALLOWED = {
     "Штурманський стіл",
     "Форпік",
     "Камбуз",
+    # Unit words an owner may have typed after a passport number ("40 л"),
+    # read by SpecUnits to tell which unit it is in. Parsed, never shown.
+    "м", "метр", "метри", "метрів", "фут", "фути", "футів",
+    "мм", "дюйм", "дюйми", "дюймів",
+    "л", "літр", "літри", "літрів", "гал", "л/хв", "бар",
 }
 
 CYRILLIC = re.compile(r"[Ѐ-ӿ]")

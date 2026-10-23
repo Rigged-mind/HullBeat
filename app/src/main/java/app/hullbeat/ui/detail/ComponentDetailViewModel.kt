@@ -24,6 +24,9 @@ import app.hullbeat.data.db.StorageLocation
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.DueEngine
+import app.hullbeat.domain.SpecQuantity
+import app.hullbeat.domain.SpecUnit
+import app.hullbeat.domain.SpecUnits
 import app.hullbeat.notify.MaintenanceCheckWorker
 import app.hullbeat.ui.store.saveInventoryPart
 import java.time.LocalDate
@@ -43,9 +46,18 @@ data class PassportField(
     val key: String,
     val value: String,
     val displayLabel: String = key,
+    /** What the value measures, when Settings has a unit for it; null for text fields. */
+    val quantity: SpecQuantity? = null,
+    /** The unit [value] was typed in. Null while the field is empty. */
+    val unit: SpecUnit? = null,
 ) {
+    /**
+     * The label without a unit in it: "Обʼєм (л)" would contradict a value
+     * shown in gallons, so the unit is printed after the value instead.
+     */
     fun displayLabel(context: Context): String =
-        app.hullbeat.data.db.displayPassportLabel(context, key)
+        if (key == "Litres used") context.getString(R.string.spec_label_amount_used)
+        else SpecUnits.stripLabelUnit(key, app.hullbeat.data.db.displayPassportLabel(context, key))
 }
 
 data class ComponentDetailUiState(
@@ -123,8 +135,12 @@ class ComponentDetailViewModel(
      * and hand-built JSON is how a stray quote corrupts a row.
      *
      * Reindexes afterwards, because specJson feeds the search index.
+     *
+     * [shownUnit] is the unit the form displayed - Settings at the moment it
+     * opened - and is stored for this field only; every other field keeps
+     * the unit it was typed in.
      */
-    fun setPassportField(key: String, value: String) {
+    fun setPassportField(key: String, value: String, shownUnit: SpecUnit? = null) {
         viewModelScope.launch {
             val comp = _uiState.value.component ?: return@launch
             val obj = if (comp.specJson.isNullOrBlank()) {
@@ -132,12 +148,16 @@ class ComponentDetailViewModel(
             } else {
                 runCatching { JSONObject(comp.specJson) }.getOrElse { JSONObject() }
             }
-            obj.put(key, value.trim())
+            val (text, unit) = SpecUnits.normalizeInput(value, SpecUnits.quantityOf(key), shownUnit)
+            obj.put(key, text)
+            val units = SpecUnits.readUnits(comp.specUnitsJson).toMutableMap()
+            if (unit != null) units[key] = unit else units.remove(key)
             val label = CatalogLoader.hintString(context, key)
             if (label != key && obj.has(label)) {
                 obj.remove(label)
+                units.remove(label)
             }
-            val updated = comp.copy(specJson = obj.toString())
+            val updated = comp.copy(specJson = obj.toString(), specUnitsJson = SpecUnits.writeUnits(units))
             db.componentDao().update(updated)
             app.hullbeat.data.search.SearchRepository(db, context)
                 .indexComponent(updated)
@@ -555,17 +575,23 @@ class ComponentDetailViewModel(
             runCatching { JSONObject(component.specJson) }.getOrNull()
         } else null
 
+        val units = SpecUnits.readUnits(component.specUnitsJson)
         val processedKeys = mutableSetOf<String>()
 
         // 1. Catalog hints first (always visible!)
         for (hint in rawHints) {
             val label = CatalogLoader.hintString(context, hint)
-            val value = jsonObj?.let {
-                if (it.has(hint)) it.optString(hint, "")
-                else if (it.has(label)) it.optString(label, "")
-                else ""
-            } ?: ""
-            fields += PassportField(key = hint, value = value, displayLabel = label)
+            val sourceKey = jsonObj?.let {
+                if (it.has(hint)) hint else if (it.has(label)) label else null
+            }
+            val value = sourceKey?.let { jsonObj.optString(it, "") } ?: ""
+            fields += PassportField(
+                key = hint,
+                value = value,
+                displayLabel = label,
+                quantity = SpecUnits.quantityOf(hint),
+                unit = if (value.isBlank()) null else sourceKey?.let { units[it] },
+            )
             processedKeys.add(hint)
             processedKeys.add(label)
         }
@@ -578,7 +604,13 @@ class ComponentDetailViewModel(
                 if (k !in processedKeys) {
                     val v = jsonObj.optString(k, "")
                     val label = CatalogLoader.hintString(context, k)
-                    fields += PassportField(key = k, value = v, displayLabel = label)
+                    fields += PassportField(
+                        key = k,
+                        value = v,
+                        displayLabel = label,
+                        quantity = SpecUnits.quantityOf(k),
+                        unit = if (v.isBlank()) null else units[k],
+                    )
                     processedKeys.add(k)
                     processedKeys.add(label)
                 }

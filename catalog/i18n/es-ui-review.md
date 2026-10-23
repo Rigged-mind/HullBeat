@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-397 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+404 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -284,6 +284,13 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `unit_short_psi` | psi | **psi** | |
 | `unit_short_celsius` | °C | **°C** | |
 | `unit_short_fahrenheit` | °F | **°F** | |
+| `unit_short_mm` | mm | **mm** | |
+| `unit_short_in` | in | **pulg.** | |
+| `unit_short_l_min` | l/min | **l/min** | |
+| `unit_short_gal_us_h` | US gal/h | **gal EE. UU./h** | |
+| `unit_short_gal_uk_h` | UK gal/h | **gal imp./h** | |
+| `passport_unit_recorded` | Recorded in %1$s | **Registrado en %1$s** | |
+| `spec_label_amount_used` | Amount used | **Cantidad usada** | |
 | `settings_notifications_title` | Maintenance reminders | **Avisos de mantenimiento** | |
 | `settings_notifications_subtitle` | Daily background check of overdue and upcoming service | **Comprobación diaria en segundo plano del mantenimiento vencido y próximo** | |
 | `settings_notifications_enabled` | Enable reminders | **Activar avisos** | |

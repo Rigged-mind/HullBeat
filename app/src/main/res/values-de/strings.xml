@@ -291,6 +291,13 @@
     <string name="unit_short_psi">psi</string>
     <string name="unit_short_celsius">°C</string>
     <string name="unit_short_fahrenheit">°F</string>
+    <string name="unit_short_mm">mm</string>
+    <string name="unit_short_in">in</string>
+    <string name="unit_short_l_min">l/min</string>
+    <string name="unit_short_gal_us_h">US gal/h</string>
+    <string name="unit_short_gal_uk_h">UK gal/h</string>
+    <string name="passport_unit_recorded">Erfasst in %1$s</string>
+    <string name="spec_label_amount_used">Verbrauchte Menge</string>
 
     <!-- Maintenance notifications -->
     <string name="settings_notifications_title">Wartungserinnerungen</string>

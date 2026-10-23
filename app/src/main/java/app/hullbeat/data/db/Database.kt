@@ -739,7 +739,7 @@ interface ChecklistDao {
         Attachment::class, ImportSession::class, ImportRow::class,
         SearchIndex::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -797,6 +797,15 @@ abstract class AppDatabase : RoomDatabase() {
                     ON checklist_run(vesselId, checklistCode, date)
                     """.trimIndent()
                 )
+            }
+        }
+
+        const val MIGRATION_3_4_SQL = "ALTER TABLE component ADD COLUMN specUnitsJson TEXT"
+
+        /** Passport values get their units beside them; filled on open, see SpecUnitsBackfill. */
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(MIGRATION_3_4_SQL)
             }
         }
     }

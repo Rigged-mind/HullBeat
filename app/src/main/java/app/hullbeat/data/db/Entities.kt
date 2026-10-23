@@ -179,6 +179,17 @@ data class Component(
      * chandlery, so it sits third on the component screen - see ui-spec.md p.5.
      */
     val specJson: String? = null,
+    /**
+     * The unit each measured passport value was typed in, keyed like
+     * [specJson]: `{"Capacity (L)":"LITRE"}`. Taken from Settings when the
+     * value is saved and fixed after that, so switching Settings to gallons
+     * does not turn a 40-litre tank into a 40-gallon one. Names of
+     * [app.hullbeat.domain.SpecUnit]; see [app.hullbeat.domain.SpecUnits].
+     *
+     * A column of its own rather than a key inside specJson: specJson is
+     * indexed for search and listed field by field on the screen.
+     */
+    val specUnitsJson: String? = null,
     val notes: String? = null,
     /**
      * Who owns this row, which is a different question from what it is.
