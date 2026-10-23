@@ -68,6 +68,9 @@ data class ComponentDetailUiState(
     val hasMeter: Boolean = false,
     val primaryMeterId: Long? = null,
     val latestMeterReading: MeterReading? = null,
+    /** For the log sheet; see NowItem.meterEstimate. */
+    val meterEstimate: Double? = null,
+    val lastMeterReading: Double? = null,
     val isLoading: Boolean = true,
 )
 
@@ -224,6 +227,10 @@ class ComponentDetailViewModel(
                 hasMeter = hasMeter,
                 primaryMeterId = primaryMeter?.id,
                 latestMeterReading = latestReading,
+                meterEstimate = DueCalculator.estimateMeter(
+                    readings, LocalDate.now(), vessel?.seasonStartMonth, vessel?.seasonEndMonth,
+                ),
+                lastMeterReading = DueCalculator.lastMeter(readings),
                 isLoading = false,
             )
 

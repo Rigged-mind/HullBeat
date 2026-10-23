@@ -21,6 +21,13 @@ data class NowItem(
     val deferReason: String?,
     val criticality: Criticality,
     val hasMeter: Boolean,
+    /**
+     * Prefilled into the meter field: last reading plus the trend. Null when
+     * there is no trend to extrapolate - see DueCalculator.estimateMeter.
+     */
+    val meterEstimate: Double? = null,
+    /** Shown as the field's hint when there is no estimate. Never saved. */
+    val lastMeterReading: Double? = null,
 ) {
     val isOverdue: Boolean
         get() = state == DueCalculator.State.OVERDUE

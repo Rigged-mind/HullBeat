@@ -765,6 +765,8 @@ fun ComponentDetailScreen(
                 deferReason = schedule.deferReason,
                 criticality = component.criticality,
                 hasMeter = schedule.intervalHours != null,
+                meterEstimate = state.meterEstimate,
+                lastMeterReading = state.lastMeterReading,
             )
 
             QuickLogSheet(

@@ -193,6 +193,44 @@ object DueCalculator {
         )
     }
 
+    /**
+     * What the meter probably reads on [day], to prefill the quick log with
+     * (ui-spec.md §4: "останнє відоме + прогноз наробітку", the owner edits).
+     *
+     * The last reading of the current gauge, plus the trend over the SAILING
+     * days since - the same rule every prediction here follows, so a boat
+     * ashore all winter is not credited with a winter of engine hours. A
+     * guess is rounded to whole hours; a reading taken on [day] itself is
+     * returned as typed.
+     *
+     * Null without a usable trend - deliberately NOT the last reading. Saved
+     * unedited on a later date, the last reading says "no hours used since",
+     * the trend flattens to zero and every hour-driven item on that engine
+     * goes DORMANT. Show it as a hint instead (see [lastMeter]); a hint is
+     * never written to the database.
+     */
+    fun estimateMeter(
+        readings: List<Reading>,
+        day: LocalDate,
+        seasonStartMonth: Int? = null,
+        seasonEndMonth: Int? = null,
+    ): Double? {
+        val last = usableSegment(readings)?.lastOrNull() ?: return null
+        if (!last.date.isBefore(day)) return last.value
+        val input = Input(today = day, seasonStartMonth = seasonStartMonth, seasonEndMonth = seasonEndMonth)
+        val rate = wearRate(input, readings, day)?.ratePerDay?.takeIf { it > 0 } ?: return null
+        val sailing = seasonDaysBetween(input, last.date, day)
+        // Nothing sailed since - ashore all along. A repeat of the last
+        // reading would be a measurement nobody took; leave it as a hint.
+        if (sailing == 0L) return null
+        // Never below the last reading: rounding 1245.4 + 0.05 down to 1245
+        // and saving it would read as a meter reset in usableSegment.
+        return maxOf((last.value + rate * sailing).roundToLong().toDouble(), last.value)
+    }
+
+    /** The current gauge's last reading, as typed. For a hint, never for a value. */
+    fun lastMeter(readings: List<Reading>): Double? = currentMeter(readings)
+
     // ------------------------------------------------------------ internals
 
     private data class Candidate(

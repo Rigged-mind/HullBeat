@@ -112,7 +112,9 @@ fun QuickLogSheet(
     var workTypeName by rememberSaveable { mutableStateOf(WorkType.SCHEDULED.name) }
     val workType = runCatching { WorkType.valueOf(workTypeName) }.getOrDefault(WorkType.SCHEDULED)
     var workTypeExpanded by rememberSaveable { mutableStateOf(false) }
-    var meterText by rememberSaveable { mutableStateOf("") }
+    // ui-spec.md §4: last known + the trend, for the owner to correct. Unlike
+    // the expiry below, hours are something the app can honestly estimate.
+    var meterText by rememberSaveable { mutableStateOf(item.meterEstimate?.let(::formatMeterInput) ?: "") }
     var costText by rememberSaveable { mutableStateOf("") }
     var notesText by rememberSaveable { mutableStateOf("") }
     var photoUriStrings by rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
@@ -239,9 +241,23 @@ fun QuickLogSheet(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     isError = !meterOk,
-                    supportingText = if (!meterOk) {
-                        { Text(stringResource(R.string.error_number_invalid)) }
-                    } else null,
+                    // No trend, so no estimate: the last reading is stated under
+                    // the field, always visible, never in it. As a value, saved
+                    // unedited on a later day, it would claim no hours were run.
+                    supportingText = when {
+                        !meterOk -> {
+                            { Text(stringResource(R.string.error_number_invalid)) }
+                        }
+                        item.meterEstimate == null && item.lastMeterReading != null -> {
+                            {
+                                Text(
+                                    "${stringResource(R.string.meter_current_reading)}: " +
+                                        "${formatMeterInput(item.lastMeterReading)} ${stringResource(R.string.meter_hours_unit)}"
+                                )
+                            }
+                        }
+                        else -> null
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -460,3 +476,7 @@ fun QuickLogSheet(
         )
     }
 }
+
+/** 1250.0 as "1250", 1245.5 as typed: what the owner would have written. */
+private fun formatMeterInput(hours: Double): String =
+    if (hours % 1.0 == 0.0) hours.toLong().toString() else hours.toString()

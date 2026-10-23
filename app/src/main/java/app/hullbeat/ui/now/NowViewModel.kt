@@ -189,6 +189,11 @@ class NowViewModel(
                     } ?: emptyList()
                 }
 
+                val meterEstimate = DueCalculator.estimateMeter(
+                    readings, today, vessel.seasonStartMonth, vessel.seasonEndMonth,
+                )
+                val lastMeterReading = DueCalculator.lastMeter(readings)
+
                 val evaluation = DueEngine.evaluate(
                     componentId = component.id,
                     schedules = schedules,
@@ -246,6 +251,8 @@ class NowViewModel(
                         deferReason = schedule.deferReason,
                         criticality = component.criticality,
                         hasMeter = meters.isNotEmpty() || schedule.intervalHours != null,
+                        meterEstimate = meterEstimate,
+                        lastMeterReading = lastMeterReading,
                     )
                 } else if (evaluation.isUpcoming) {
                     val schedule = evaluation.primarySchedule
@@ -272,6 +279,8 @@ class NowViewModel(
                             deferReason = null,
                             criticality = component.criticality,
                             hasMeter = meters.isNotEmpty() || schedule.intervalHours != null,
+                            meterEstimate = meterEstimate,
+                            lastMeterReading = lastMeterReading,
                         )
                     }
                 }

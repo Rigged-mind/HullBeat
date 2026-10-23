@@ -16,7 +16,10 @@ import androidx.compose.ui.graphics.Color
  * - Hull & Anchoring: Baltic emerald / dark petrol teal (HullBeat brand)
  * - Plumbing & Bilge: Deep fjord cyan (seawater, seacocks, bilges)
  * - Rigging & Sails: Dacron navy / offshore midnight (storm sky & sails)
- * - Safety: SOLAS International Orange (lifesaving equipment standards)
+ * - Safety: deep magenta. NOT the SOLAS orange or red it would naturally be:
+ *   red is "overdue" and amber is "due soon" in every scheme, and a liferaft
+ *   card framed in either reads as a status it does not have. Hue 316 sits
+ *   in the one band no status and no other section uses.
  * - Navigation: Chart ultramarine (night navigation displays & charts)
  * - General / Other: Weathered teak & canvas slate
  */
@@ -59,9 +62,9 @@ object SectionColors {
     )
 
     val Safety = SectionColor(
-        accent = Color(0xFFB43418),
-        container = Color(0xFFFCEEEB),
-        onContainer = Color(0xFF6B1B09),
+        accent = Color(0xFF9C1F7A),
+        container = Color(0xFFFAEDF6),
+        onContainer = Color(0xFF5C0F47),
     )
 
     val Navigation = SectionColor(
