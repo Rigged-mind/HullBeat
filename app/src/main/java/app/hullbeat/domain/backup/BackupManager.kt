@@ -3,6 +3,7 @@ package app.hullbeat.domain.backup
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
+import android.util.Log
 import app.hullbeat.HullBeatApp
 import app.hullbeat.data.db.AppDatabase
 import app.hullbeat.data.db.Attachment
@@ -54,6 +55,8 @@ data class VesselPhotoEntry(
 data class BackupResult(val success: Boolean, val skippedFiles: Int = 0)
 
 object BackupManager {
+
+    private const val TAG = "BackupManager"
 
     val SQLITE_HEADER: ByteArray = "SQLite format 3\u0000".toByteArray(Charsets.US_ASCII)
     val ZIP_MAGIC: ByteArray = byteArrayOf(0x50.toByte(), 0x4B.toByte(), 0x03.toByte(), 0x04.toByte())
@@ -169,7 +172,8 @@ object BackupManager {
             zipOut.finish()
             zipOut.flush()
             BackupResult(success = true, skippedFiles = skippedFiles)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(TAG, "Backup failed", e)
             BackupResult(success = false)
         }
     }
@@ -196,11 +200,13 @@ object BackupManager {
                 isZipHeader(header) -> restoreZipBackup(context, tempInputFile)
                 isSqliteHeader(header) -> restoreSqliteBackup(context, tempInputFile)
                 else -> {
+                    Log.w(TAG, "Restore: neither a zip nor an SQLite file")
                     tempInputFile.delete()
                     false
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore failed while reading the file", e)
             tempInputFile.delete()
             return false
         }
@@ -221,7 +227,7 @@ object BackupManager {
             )
             try {
                 checkpointDb.rawQuery("PRAGMA wal_checkpoint(TRUNCATE)", null).use { it.moveToFirst() }
-                checkpointDb.execSQL("PRAGMA journal_mode = DELETE")
+                checkpointDb.rawQuery("PRAGMA journal_mode = DELETE", null).use { it.moveToFirst() }
             } catch (_: Exception) {
             } finally {
                 checkpointDb.close()
@@ -243,7 +249,8 @@ object BackupManager {
 
             AppPreferences.setSelectedVesselId(context, null)
             return true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore of an SQLite file failed", e)
             tempDbFile.delete()
             File(tempDbFile.path + "-wal").delete()
             File(tempDbFile.path + "-shm").delete()
@@ -395,7 +402,10 @@ object BackupManager {
                     )
                 }
                 writeDb.rawQuery("PRAGMA wal_checkpoint(TRUNCATE)", null).use { it.moveToFirst() }
-                writeDb.execSQL("PRAGMA journal_mode = DELETE")
+                // rawQuery, not execSQL: this PRAGMA answers with a row, and
+                // Android's execSQL throws on any statement that returns one.
+                // It did, here, outside any try - so every .zip restore failed.
+                writeDb.rawQuery("PRAGMA journal_mode = DELETE", null).use { it.moveToFirst() }
             } finally {
                 writeDb.close()
             }
@@ -419,7 +429,8 @@ object BackupManager {
             AppPreferences.setSelectedVesselId(context, null)
 
             return true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore of a zip backup failed", e)
             tempDbFile.delete()
             File(tempDbFile.path + "-wal").delete()
             File(tempDbFile.path + "-shm").delete()
@@ -449,8 +460,10 @@ object BackupManager {
             }
             cursor.close()
             testDb.close()
+            if (!isIntegrityOk) Log.w(TAG, "Restore: quick_check did not return ok")
             isIntegrityOk
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore: the database in the backup could not be opened", e)
             false
         }
     }
