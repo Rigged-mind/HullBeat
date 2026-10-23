@@ -310,9 +310,9 @@
     <string name="unit_short_gal_us_h">US gal/h</string>
     <string name="unit_short_gal_uk_h">UK gal/h</string>
     <!-- Under a passport value that is not a number, so could not be converted: the unit it was typed in. -->
-    <string name="passport_unit_recorded">Recorded in %1$s</string>
+    <string name="passport_unit_recorded">Unit recorded: %1$s</string>
     <!-- The antifouling "Litres used" passport field, shown without the unit in its name. -->
-    <string name="spec_label_amount_used">Amount used</string>
+    <string name="spec_label_amount_used">Paint used</string>
 
     <!-- Maintenance notifications -->
     <string name="settings_notifications_title">Maintenance reminders</string>

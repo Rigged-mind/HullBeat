@@ -296,8 +296,8 @@
     <string name="unit_short_l_min">l/min</string>
     <string name="unit_short_gal_us_h">gal EE. UU./h</string>
     <string name="unit_short_gal_uk_h">gal imp./h</string>
-    <string name="passport_unit_recorded">Registrado en %1$s</string>
-    <string name="spec_label_amount_used">Cantidad usada</string>
+    <string name="passport_unit_recorded">Unidad registrada: %1$s</string>
+    <string name="spec_label_amount_used">Pintura usada</string>
 
     <!-- Maintenance notifications -->
     <string name="settings_notifications_title">Avisos de mantenimiento</string>

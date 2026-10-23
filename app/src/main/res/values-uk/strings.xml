@@ -310,8 +310,8 @@
     <string name="unit_short_l_min">л/хв</string>
     <string name="unit_short_gal_us_h">US gal/год</string>
     <string name="unit_short_gal_uk_h">UK gal/год</string>
-    <string name="passport_unit_recorded">Записано в %1$s</string>
-    <string name="spec_label_amount_used">Витрачено</string>
+    <string name="passport_unit_recorded">Одиниця запису: %1$s</string>
+    <string name="spec_label_amount_used">Витрачено фарби</string>
 
     <!-- Maintenance notifications -->
     <string name="settings_notifications_title">Сповіщення про ТО</string>

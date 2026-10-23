@@ -290,8 +290,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `unit_short_l_min` | l/min | **l/min** | |
 | `unit_short_gal_us_h` | US gal/h | **US gal/h** | |
 | `unit_short_gal_uk_h` | UK gal/h | **UK gal/h** | |
-| `passport_unit_recorded` | Recorded in %1$s | **Erfasst in %1$s** | |
-| `spec_label_amount_used` | Amount used | **Verbrauchte Menge** | |
+| `passport_unit_recorded` | Unit recorded: %1$s | **Erfasste Einheit: %1$s** | |
+| `spec_label_amount_used` | Paint used | **Verbrauchte Farbe** | |
 | `settings_notifications_title` | Maintenance reminders | **Wartungserinnerungen** | |
 | `settings_notifications_subtitle` | Daily background check of overdue and upcoming service | **Tägliche Prüfung im Hintergrund auf überfällige und anstehende Wartung** | |
 | `settings_notifications_enabled` | Enable reminders | **Erinnerungen aktivieren** | |
