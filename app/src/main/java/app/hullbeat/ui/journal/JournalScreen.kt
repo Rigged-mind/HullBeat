@@ -495,7 +495,7 @@ fun JournalScreen(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
                                 .padding(8.dp)
-                                .size(36.dp),
+                                .size(56.dp),
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                 contentColor = MaterialTheme.colorScheme.onSurface,
@@ -515,7 +515,7 @@ fun JournalScreen(
                                 modifier = Modifier
                                     .align(Alignment.CenterStart)
                                     .padding(start = 8.dp)
-                                    .size(40.dp),
+                                    .size(56.dp),
                                 colors = IconButtonDefaults.filledTonalIconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -536,7 +536,7 @@ fun JournalScreen(
                                 modifier = Modifier
                                     .align(Alignment.CenterEnd)
                                     .padding(end = 8.dp)
-                                    .size(40.dp),
+                                    .size(56.dp),
                                 colors = IconButtonDefaults.filledTonalIconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                                     contentColor = MaterialTheme.colorScheme.onSurface,
