@@ -25,6 +25,7 @@ import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.export.PassportLabels
 import app.hullbeat.domain.export.PdfPassportExporter
 import app.hullbeat.domain.export.VesselProfileLabels
+import app.hullbeat.ui.detail.resolvePassportFields
 import java.time.LocalDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -187,6 +188,13 @@ private suspend fun exportPassport(context: Context, requestedVesselId: Long?, u
             workTypeNames = workTypeNames,
             recordAttachments = recordAttachments,
             componentAttachments = componentAttachments,
+            // The same fields, labels and units the node screen shows; only
+            // the filled ones, since a passport of dashes says nothing.
+            componentSpecs = components.associate { c ->
+                c.id to resolvePassportFields(context, c, includeIdentity = false).mapNotNull { f ->
+                    f.displayValue(context).ifBlank { null }?.let { f.displayLabel(context) to it }
+                }
+            }.filterValues { it.isNotEmpty() },
         )
 
         // `generatePdf` returns null for SUCCESS and openOutputStream

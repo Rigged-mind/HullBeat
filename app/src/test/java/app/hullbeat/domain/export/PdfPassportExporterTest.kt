@@ -132,6 +132,30 @@ class PdfPassportExporterTest {
         assertEquals(10L, second.id)
         assertEquals("Rigging", second.categoryName)
         assertEquals("Forestay and Shrouds", second.name)
+        assertTrue(second.specs.isEmpty())
+    }
+
+    @Test
+    fun `passport values reach the component as given, in their own units`() {
+        val tank = Component(id = 30L, vesselId = 1L, categoryCode = "fuel", name = "Fuel tank")
+        val pump = Component(id = 40L, vesselId = 1L, categoryCode = "plumbing", name = "Bilge pump")
+        val report = PdfPassportExporter.preparePassportData(
+            vessel = Vessel(id = 1L, name = "Bug", hullType = "GRP", engine = "diesel", drive = "shaft"),
+            components = listOf(tank, pump),
+            componentCategoryNames = emptyMap(),
+            componentDisplayNames = emptyMap(),
+            records = emptyList(),
+            meters = emptyMap(),
+            vesselProfile = VesselProfileLabels(),
+            workTypeNames = emptyMap(),
+            recordAttachments = emptyMap(),
+            componentAttachments = emptyMap(),
+            componentSpecs = mapOf(30L to listOf("Обʼєм" to "40 л", "Матеріал" to "сталь")),
+        )
+        val byId = report.components.associateBy { it.id }
+        assertEquals(listOf("Обʼєм" to "40 л", "Матеріал" to "сталь"), byId.getValue(30L).specs)
+        assertTrue(byId.getValue(40L).specs.isEmpty())
+        assertEquals("Обʼєм: 40 л · Матеріал: сталь", PdfPassportExporter.specLine(byId.getValue(30L).specs))
     }
 
     @Test

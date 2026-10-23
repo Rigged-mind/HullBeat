@@ -1335,14 +1335,8 @@ private fun PassportRow(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                // As typed, in the unit it was typed in - not converted to
-                // today's Settings, so the screen shows what was recorded.
-                val unitSuffix = field.unit
-                    ?.takeUnless { SpecUnits.mentionsUnit(field.value, it.quantity) }
-                    ?.let { " " + stringResource(it.shortNameRes) }
-                    .orEmpty()
                 Text(
-                    text = if (field.value.isNotBlank()) field.value + unitSuffix else "—",
+                    text = field.displayValue(context).ifBlank { "—" },
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = if (field.value.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline,

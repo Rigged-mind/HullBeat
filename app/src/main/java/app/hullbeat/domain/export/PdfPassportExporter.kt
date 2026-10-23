@@ -70,6 +70,11 @@ data class PassportComponentInfo(
     val serial: String? = null,
     val yearInstalled: Int? = null,
     val photoUris: List<String> = emptyList(),
+    /**
+     * The filled passport fields, label to value, each value in the unit it
+     * was typed in ("Обʼєм" to "40 л"). Resolved where a Context exists.
+     */
+    val specs: List<Pair<String, String>> = emptyList(),
 )
 
 data class PassportServiceRecordInfo(
@@ -204,6 +209,8 @@ object PdfPassportExporter {
     private const val SPEC_PITCH = 23f       // the vessel specification grid (was 20f)
     private const val RECORD_LINE = 20f      // lines inside a service card (was 17f)
     private const val WRAP_LINE = 15f        // wrapped description and notes (was 13f)
+    private const val SPEC_LINE = 12f        // a line of passport values under an equipment row
+    private const val SPEC_TEXT = 7.5f
 
     // Air inside service cards
     private const val CARD_TOP = 17f         // first baseline inside a card (was 15f)
@@ -250,6 +257,8 @@ object PdfPassportExporter {
         workTypeNames: Map<String, String>,
         recordAttachments: Map<Long, List<Attachment>>,
         componentAttachments: Map<Long, List<Attachment>>,
+        /** Component id -> its filled passport fields, see [PassportComponentInfo.specs]. */
+        componentSpecs: Map<Long, List<Pair<String, String>>> = emptyMap(),
         generatedDate: String = LocalDate.now().toString(),
     ): PassportReportData {
         val makeModelStr = listOfNotNull(vessel.make, vessel.model)
@@ -281,6 +290,7 @@ object PdfPassportExporter {
                 serial = c.serial?.ifBlank { null },
                 yearInstalled = c.yearInstalled,
                 photoUris = imageUris(componentAttachments[c.id]),
+                specs = componentSpecs[c.id].orEmpty(),
             )
         }.sortedWith(compareBy({ it.categoryName }, { it.name }))
 
@@ -714,8 +724,15 @@ object PdfPassportExporter {
             val makeLines = wrapLines(makeModel, col3X - col2X - cellGap, paint)
             val serialLines = wrapLines(comp.serial ?: "—", col4X - col3X - cellGap, paint)
 
+            // The passport values under the row, across the whole table:
+            // what an owner needs in a chandlery is the 40-litre tank, not
+            // only who made it.
+            paint.textSize = SPEC_TEXT
+            val specLines = if (comp.specs.isEmpty()) emptyList() else
+                wrapLines(specLine(comp.specs), pdf.rightMargin - col1X - 6f, paint)
+
             val lineCount = maxOf(nameLines.size, makeLines.size, serialLines.size)
-            val rowHeight = ROW_PITCH + (lineCount - 1) * WRAP_LINE
+            val rowHeight = ROW_PITCH + (lineCount - 1) * WRAP_LINE + specLines.size * SPEC_LINE
 
             if (pdf.y + rowHeight > pdf.bottomMargin) {
                 pdf.newPage()
@@ -742,6 +759,12 @@ object PdfPassportExporter {
             makeLines.forEachIndexed { i, line -> pdf.c.drawText(line, col2X, rowY + i * WRAP_LINE, paint) }
             serialLines.forEachIndexed { i, line -> pdf.c.drawText(line, col3X, rowY + i * WRAP_LINE, paint) }
             pdf.c.drawText(comp.yearInstalled?.toString() ?: "—", col4X, rowY, paint)
+
+            if (specLines.isNotEmpty()) {
+                paint.textSize = SPEC_TEXT
+                val firstSpecY = rowY + (lineCount - 1) * WRAP_LINE + SPEC_LINE
+                specLines.forEachIndexed { i, line -> pdf.c.drawText(line, col1X, firstSpecY + i * SPEC_LINE, paint) }
+            }
 
             paint.color = COLOR_BORDER_LIGHT
             paint.strokeWidth = 0.5f
@@ -773,6 +796,10 @@ object PdfPassportExporter {
      * stretched to fill it - a distorted photograph of a seacock is worse
      * than no photograph.
      */
+    /** "Обʼєм: 40 л · Матеріал: сталь" - one line for the equipment table, wrapped by the caller. */
+    internal fun specLine(specs: List<Pair<String, String>>): String =
+        specs.joinToString(" · ") { (label, value) -> "$label: $value" }
+
     private fun drawComponentGallery(
         context: Context,
         pdf: PdfContext,
