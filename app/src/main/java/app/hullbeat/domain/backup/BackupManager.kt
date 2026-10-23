@@ -246,6 +246,7 @@ object BackupManager {
             tempDbFile.delete()
             File(targetDb.path + "-wal").delete()
             File(targetDb.path + "-shm").delete()
+            pruneUnreferencedMedia(context, targetDb)
 
             AppPreferences.setSelectedVesselId(context, null)
             return true
@@ -424,6 +425,7 @@ object BackupManager {
             File(targetDb.path + "-wal").delete()
             File(targetDb.path + "-shm").delete()
             zipFileToRestore.delete()
+            pruneUnreferencedMedia(context, targetDb)
 
             // Clear selected vessel so app selects restored vessel
             AppPreferences.setSelectedVesselId(context, null)
@@ -438,6 +440,68 @@ object BackupManager {
             return false
         }
     }
+
+    /**
+     * The folders the app copies attachments and vessel photos into. Nothing
+     * else writes there, and only `attachment.fileUri` and `vessel.photoUri`
+     * point into them.
+     */
+    private val MEDIA_DIRS = listOf("attachments", "vessels")
+
+    /**
+     * After a restore, deletes the files in [MEDIA_DIRS] that the restored
+     * database no longer points to: the previous data's photographs, which
+     * nothing can open any more and which otherwise pile up with every
+     * restore. If the references cannot be read, nothing is deleted - a
+     * cleanup must never cost a photograph that is still in use.
+     */
+    private fun pruneUnreferencedMedia(context: Context, restoredDb: File) {
+        val uris = try {
+            val db = SQLiteDatabase.openDatabase(restoredDb.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
+            try {
+                val list = mutableListOf<String?>()
+                db.rawQuery("SELECT fileUri FROM attachment", null).use { c -> while (c.moveToNext()) list += c.getString(0) }
+                db.rawQuery("SELECT photoUri FROM vessel", null).use { c -> while (c.moveToNext()) list += c.getString(0) }
+                list
+            } finally {
+                db.close()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore: references unreadable, media left as it was", e)
+            return
+        }
+        val referenced = referencedPaths(uris)
+        var deleted = 0
+        for (dir in MEDIA_DIRS) {
+            val files = File(context.filesDir, dir).listFiles()?.filter { it.isFile } ?: continue
+            for (file in filesToPrune(files, referenced)) {
+                if (file.delete()) deleted++
+            }
+        }
+        if (deleted > 0) Log.i(TAG, "Restore: removed $deleted media file(s) the restored data does not use")
+    }
+
+    /**
+     * Canonical paths of the local files among [uris]; content:// and blanks
+     * are not ours. A uri that does not parse is read as a bare path rather
+     * than dropped: dropping it would delete a file that is still in use.
+     */
+    internal fun referencedPaths(uris: List<String?>): Set<String> =
+        uris.mapNotNull { uri ->
+            if (uri.isNullOrBlank()) return@mapNotNull null
+            val path = runCatching {
+                val parsed = java.net.URI(uri)
+                when (parsed.scheme) {
+                    "file" -> parsed.path
+                    null -> uri
+                    else -> return@mapNotNull null
+                }
+            }.getOrElse { uri.removePrefix("file://") }
+            runCatching { File(path).canonicalPath }.getOrNull()
+        }.toSet()
+
+    internal fun filesToPrune(files: List<File>, referenced: Set<String>): List<File> =
+        files.filter { runCatching { it.canonicalPath }.getOrNull()?.let { p -> p !in referenced } ?: false }
 
     fun verifyDatabaseIntegrity(dbFile: File): Boolean {
         if (!dbFile.exists() || dbFile.length() < 100) return false
