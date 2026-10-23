@@ -24,7 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.hullbeat.R
+import app.hullbeat.domain.DecimalInput
 import app.hullbeat.ui.theme.LocalExtendedColors
 import java.time.LocalDate
 
@@ -45,14 +46,18 @@ fun RecordMeterDialog(
     modifier: Modifier = Modifier,
 ) {
     val extended = LocalExtendedColors.current
-    var date by remember { mutableStateOf<LocalDate>(LocalDate.now()) }
+    // Saveable, like the sheets: a rotation used to drop what was typed.
+    var dateString by rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
+    val date = runCatching { LocalDate.parse(dateString) }.getOrDefault(LocalDate.now())
     val initialHours: String = currentHours?.let { if (it % 1.0 == 0.0) it.toLong().toString() else it.toString() } ?: ""
-    var hoursText by remember { mutableStateOf<String>(initialHours) }
-    var decreaseAcknowledged by remember { mutableStateOf(false) }
+    var hoursText by rememberSaveable { mutableStateOf(initialHours) }
+    var decreaseAcknowledged by rememberSaveable { mutableStateOf(false) }
 
-    val parsedHours = hoursText.toDoubleOrNull()
+    val parsedHours = DecimalInput.parse(hoursText)
     val isDecrease = currentHours != null && parsedHours != null && parsedHours < currentHours
-    val canSave = parsedHours != null && parsedHours > 0.0 && (!isDecrease || decreaseAcknowledged)
+    // Zero is a reading: a replaced counter starts there. Going below the
+    // last reading still needs the box ticked, so a stray 0 cannot slip in.
+    val canSave = parsedHours != null && (!isDecrease || decreaseAcknowledged)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -70,7 +75,7 @@ fun RecordMeterDialog(
             ) {
                 DateSelectionRow(
                     selectedDate = date,
-                    onDateChange = { date = it },
+                    onDateChange = { dateString = it.toString() },
                 )
 
                 if (currentHours != null) {
@@ -84,7 +89,9 @@ fun RecordMeterDialog(
                 OutlinedTextField(
                     value = hoursText,
                     onValueChange = { input ->
-                        if (input.isEmpty() || input.matches(Regex("""^\d*\.?\d*$"""))) {
+                        // A comma too: it is the decimal key on uk/de/es keyboards,
+                        // and this filter used to swallow it without a trace.
+                        if (DecimalInput.isPartialInput(input)) {
                             hoursText = input
                         }
                     },

@@ -467,6 +467,8 @@
     <string name="pdf_compiled_by">Складено власником за даними HullBeat</string>
     <string name="now_enter_hours">Внести мотогодини</string>
     <string name="error_photo_save_failed">Не вдалося зберегти фотографію</string>
+    <string name="error_number_invalid">Це не число</string>
+    <string name="error_record_save_failed">Не вдалося зберегти запис. Введене не втрачено - спробуйте ще раз.</string>
     <string name="action_ok">Зрозуміло</string>
     <string name="nav_menu_title">Меню</string>
     <string name="drawer_switch_vessel">Змінити судно</string>

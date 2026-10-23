@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -85,16 +86,21 @@ fun VesselSetupScreen(
     val scope = rememberCoroutineScope()
     val vocabulary = remember { CatalogLoader.get(context).profileVocabulary }
 
-    var name by remember { mutableStateOf("") }
-    var hull by remember { mutableStateOf("monohull_sail") }
-    var engine by remember { mutableStateOf("diesel") }
-    var drive by remember { mutableStateOf("saildrive") }
-    var cooling by remember { mutableStateOf("raw_water") }
-    var rig by remember { mutableStateOf("sloop") }
-    var keel by remember { mutableStateOf("fin") }
-    var storage by remember { mutableStateOf("hauled_winter") }
-    var water by remember { mutableStateOf("salt") }
-    var extras by remember { mutableStateOf(setOf("cabin", "fresh_water")) }
+    // Saveable: the first screen of the app is the last one that should
+    // forget a half-filled boat because the phone was turned.
+    var name by rememberSaveable { mutableStateOf("") }
+    var hull by rememberSaveable { mutableStateOf("monohull_sail") }
+    var engine by rememberSaveable { mutableStateOf("diesel") }
+    var drive by rememberSaveable { mutableStateOf("saildrive") }
+    var cooling by rememberSaveable { mutableStateOf("raw_water") }
+    var rig by rememberSaveable { mutableStateOf("sloop") }
+    var keel by rememberSaveable { mutableStateOf("fin") }
+    var storage by rememberSaveable { mutableStateOf("hauled_winter") }
+    var water by rememberSaveable { mutableStateOf("salt") }
+    // A List, not a Set, in the bundle: what setOf() returns is not
+    // guaranteed to be a type the saved-state Bundle accepts.
+    var extrasList by rememberSaveable { mutableStateOf(listOf("cabin", "fresh_water")) }
+    val extras = extrasList.toSet()
     var saving by remember { mutableStateOf(false) }
 
     val isSail = hull in SAIL_HULLS
@@ -160,7 +166,7 @@ fun VesselSetupScreen(
             Axis(context, "water", vocabulary["water"], water) { water = it }
 
             MultiAxis(context, "extras", vocabulary["extras"], extras) { value ->
-                extras = if (value in extras) extras - value else extras + value
+                extrasList = (if (value in extras) extras - value else extras + value).toList()
             }
 
             Spacer(Modifier.height(24.dp))

@@ -101,6 +101,7 @@ fun HullBeatMainScaffold(
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(NavTab.NOW) }
     val nowState by nowViewModel.uiState.collectAsStateWithLifecycle()
+    val quickLogStatus by nowViewModel.quickLogStatus.collectAsStateWithLifecycle()
     val setupContext = LocalContext.current
     var currentCurrency by remember { mutableStateOf(AppPreferences.getCurrency(setupContext)) }
     var showVesselSheet by rememberSaveable { mutableStateOf(false) }
@@ -215,6 +216,8 @@ fun HullBeatMainScaffold(
                         },
                     )
                 },
+                quickLogStatus = quickLogStatus,
+                onQuickLogHandled = { nowViewModel.acknowledgeQuickLog() },
                 modifier = Modifier
                     .fillMaxSize()
                     .widthIn(max = 840.dp),

@@ -66,6 +66,7 @@ import app.hullbeat.data.db.WorkType
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.labelRes
 import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.domain.DecimalInput
 import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.DateSelectionRow
 import app.hullbeat.ui.components.rememberSampledBitmap
@@ -93,6 +94,14 @@ fun QuickLogSheet(
         photoUris: List<Uri>,
     ) -> Unit,
     currency: String = AppPreferences.getCurrency(LocalContext.current),
+    /**
+     * The caller is writing what [onSave] handed it. The sheet stays up and
+     * keeps every field until the write is done: it used to close on the tap,
+     * so a write that failed took the owner's typing with it.
+     */
+    isSaving: Boolean = false,
+    /** The last write failed. The fields are still here to try again. */
+    saveFailed: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -139,10 +148,14 @@ fun QuickLogSheet(
         null
     }
 
-    val canSave = !item.needsNewExpiry || parsedNewExpiry != null
+    // A field that holds something that is not a number blocks Save. It used
+    // to be read as blank, and the record went in without the meter reading.
+    val meterOk = !item.hasMeter || DecimalInput.isAcceptable(meterText)
+    val costOk = DecimalInput.isAcceptable(costText)
+    val canSave = (!item.needsNewExpiry || parsedNewExpiry != null) && meterOk && costOk && !isSaving
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!isSaving) onDismiss() },
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
@@ -225,6 +238,10 @@ fun QuickLogSheet(
                     label = { Text(stringResource(R.string.field_meter_hours)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
+                    isError = !meterOk,
+                    supportingText = if (!meterOk) {
+                        { Text(stringResource(R.string.error_number_invalid)) }
+                    } else null,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -235,6 +252,10 @@ fun QuickLogSheet(
                 label = { Text("${stringResource(R.string.field_cost)} ($currency)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
+                isError = !costOk,
+                supportingText = if (!costOk) {
+                    { Text(stringResource(R.string.error_number_invalid)) }
+                } else null,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -381,12 +402,21 @@ fun QuickLogSheet(
 
             Spacer(Modifier.height(8.dp))
 
+            if (saveFailed) {
+                Text(
+                    text = stringResource(R.string.error_record_save_failed),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
                     onClick = onDismiss,
+                    enabled = !isSaving,
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = 56.dp),
@@ -397,8 +427,8 @@ fun QuickLogSheet(
 
                 Button(
                     onClick = {
-                        val hours = meterText.toDoubleOrNull()
-                        val cost = costText.toDoubleOrNull()
+                        val hours = if (item.hasMeter) DecimalInput.parse(meterText) else null
+                        val cost = DecimalInput.parse(costText)
                         val notes = notesText.ifBlank { null }
                         onSave(date, workType, hours, cost, notes, parsedNewExpiry, photoUris)
                     },
@@ -408,7 +438,11 @@ fun QuickLogSheet(
                         .heightIn(min = 56.dp),
                     shape = RoundedCornerShape(8.dp),
                 ) {
-                    Text(stringResource(R.string.action_save))
+                    if (isSaving) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                    } else {
+                        Text(stringResource(R.string.action_save))
+                    }
                 }
             }
 

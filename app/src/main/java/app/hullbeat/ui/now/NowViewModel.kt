@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -32,6 +33,7 @@ import app.hullbeat.domain.DueEngine
 import app.hullbeat.notify.MaintenanceCheckWorker
 import app.hullbeat.notify.MaintenanceNotification
 import java.time.LocalDate
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,12 +57,33 @@ class NowViewModel(
     val uiState: StateFlow<NowUiState> = _uiState.asStateFlow()
 
     private val _selectedVesselId = MutableStateFlow<Long?>(AppPreferences.getSelectedVesselId(context))
+
+    /**
+     * Where the last [saveQuickLog] is. Held here, not in the screen: the
+     * sheet waits for the write, and a rotation during it recreates the
+     * screen - a callback into the old one would leave the new sheet
+     * spinning forever, or open over a record that is already saved.
+     */
+    private val _quickLogStatus = MutableStateFlow<QuickLogStatus>(QuickLogStatus.Idle)
+    val quickLogStatus: StateFlow<QuickLogStatus> = _quickLogStatus.asStateFlow()
+
+    /** The screen has closed the sheet for a [QuickLogStatus.Saved], or dropped a failure. */
+    fun acknowledgeQuickLog() {
+        _quickLogStatus.value = QuickLogStatus.Idle
+    }
+
     private var lastComputedDate: LocalDate? = null
 
     init {
         viewModelScope.launch {
-            db.vesselDao().observeAll().collectLatest { vessels ->
-                val activeVessels = vessels.filter { !it.archived }
+            // Every table a card is computed from, not just the boats. This
+            // observed `vessel` alone, so a record edited or deleted in the
+            // journal or on a node's card left "Зараз" showing the old
+            // status - an item already closed still overdue, or a new
+            // overdue one missing - until the date changed or a quick log
+            // happened to recompute it.
+            db.invalidationTracker.createFlow(*OBSERVED_TABLES).collectLatest {
+                val activeVessels = db.vesselDao().allActive()
                 val savedId = _selectedVesselId.value
                 val validatedId = if (savedId != null && activeVessels.any { it.id == savedId }) {
                     savedId
@@ -455,16 +478,24 @@ class NowViewModel(
         photoUris: List<Uri> = emptyList(),
         photoUri: Uri? = null,
         scheduleId: Long? = null,
+        /**
+         * The record was NOT written. Nothing half-done is left behind: the
+         * transaction rolled back and the copied photos are deleted again, so
+         * the owner can simply press Save once more.
+         */
+        onFailed: () -> Unit = {},
         onSaved: (QuickLogUndo) -> Unit,
     ) {
         val allUris = if (photoUris.isNotEmpty()) photoUris else listOfNotNull(photoUri)
+        if (_quickLogStatus.value is QuickLogStatus.Saving) return
+        _quickLogStatus.value = QuickLogStatus.Saving(scheduleId)
         viewModelScope.launch(Dispatchers.IO) {
             val savedUris = allUris.mapNotNull { uri ->
                 AttachmentStorage.copyToInternalStorage(context, uri, "attachments")
             }
             val failedPhotoCount = allUris.size - savedUris.size
 
-            val undo = db.withTransaction {
+            val undo = try { db.withTransaction {
                 var meterReadingId: Long? = null
                 var createdMeterId: Long? = null
                 if (meterHours != null) {
@@ -525,11 +556,9 @@ class NowViewModel(
                 val expiryBefore = mutableListOf<ServiceSchedule>()
                 if (newExpiry != null) {
                     val schedules = db.scheduleDao().forComponent(componentId)
-                    for (s in schedules) {
-                        if (s.expiresOn != null) {
-                            expiryBefore += s
-                            db.scheduleDao().update(s.copy(expiresOn = newExpiry, deferredUntil = null, deferReason = null))
-                        }
+                    for (s in schedulesToRenew(schedules, scheduleId)) {
+                        expiryBefore += s
+                        db.scheduleDao().update(s.copy(expiresOn = newExpiry, deferredUntil = null, deferReason = null))
                     }
                 }
 
@@ -544,6 +573,14 @@ class NowViewModel(
                     attachmentId = attachmentIds.firstOrNull(),
                     failedPhotoCount = failedPhotoCount,
                 )
+            } } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e("NowViewModel", "Quick log for component $componentId was not saved", e)
+                savedUris.forEach { AttachmentStorage.deleteInternalFile(context, it.toString()) }
+                _quickLogStatus.value = QuickLogStatus.Failed(scheduleId)
+                withContext(Dispatchers.Main) { onFailed() }
+                return@launch
             }
 
             MaintenanceCheckWorker.runNow(context)
@@ -555,6 +592,7 @@ class NowViewModel(
             val vessels = db.vesselDao().allActive()
             computeDue(vessels, _selectedVesselId.value)
 
+            _quickLogStatus.value = QuickLogStatus.Saved(scheduleId, undo)
             withContext(Dispatchers.Main) {
                 onSaved(undo)
             }
@@ -747,6 +785,11 @@ class NowViewModel(
     }
 
     companion object {
+        private val OBSERVED_TABLES = arrayOf(
+            "vessel", "component", "meter", "meter_reading",
+            "service_schedule", "service_record", "checklist_run",
+        )
+
         fun provideFactory(db: AppDatabase, context: Context): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -755,4 +798,31 @@ class NowViewModel(
                 }
             }
     }
+}
+
+/**
+ * The schedules a renewal writes the new expiry into: the one being closed,
+ * and nothing else. A component can carry more than one schedule with an
+ * expiry, and renewing one used to move every other one's date too - so the
+ * app stopped reminding about a document nobody had touched.
+ *
+ * [scheduleId] null is a caller that did not say which schedule it closes.
+ * Every expiring schedule is renewed then, as before: guessing one would be
+ * worse than the old behaviour, not better.
+ */
+internal fun schedulesToRenew(
+    schedules: List<ServiceSchedule>,
+    scheduleId: Long?,
+): List<ServiceSchedule> {
+    val expiring = schedules.filter { it.expiresOn != null }
+    if (scheduleId == null) return expiring
+    return expiring.filter { it.id == scheduleId }
+}
+
+/** See [NowViewModel.quickLogStatus]. [scheduleId] tells a sheet whether it is its own save. */
+sealed interface QuickLogStatus {
+    data object Idle : QuickLogStatus
+    data class Saving(val scheduleId: Long?) : QuickLogStatus
+    data class Failed(val scheduleId: Long?) : QuickLogStatus
+    data class Saved(val scheduleId: Long?, val undo: NowViewModel.QuickLogUndo) : QuickLogStatus
 }

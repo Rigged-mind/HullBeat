@@ -445,6 +445,8 @@
     <string name="pdf_footer_brand">HullBeat Wartungsbuch</string>
     <string name="now_enter_hours">Stunden eintragen</string>
     <string name="error_photo_save_failed">Foto konnte nicht gespeichert werden</string>
+    <string name="error_number_invalid">Keine gültige Zahl</string>
+    <string name="error_record_save_failed">Eintrag konnte nicht gespeichert werden. Nichts ist verloren - bitte erneut versuchen.</string>
     <string name="action_ok">OK</string>
 
     <!-- Added on main after 44e7713 -->

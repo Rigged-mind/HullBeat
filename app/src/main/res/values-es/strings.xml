@@ -445,6 +445,8 @@
     <string name="pdf_footer_brand">HullBeat · historial del barco</string>
     <string name="now_enter_hours">Introducir horas</string>
     <string name="error_photo_save_failed">No se pudo guardar la foto</string>
+    <string name="error_number_invalid">No es un número</string>
+    <string name="error_record_save_failed">No se pudo guardar el registro. No se perdió nada: inténtelo de nuevo.</string>
     <string name="action_ok">Aceptar</string>
 
     <!-- Added on main after 44e7713 -->

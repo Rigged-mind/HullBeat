@@ -44,7 +44,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -90,19 +92,86 @@ fun NowScreen(
     val ctx = context
     val extended = LocalExtendedColors.current
 
-    var quickLogItem by remember { mutableStateOf<NowItem?>(null) }
-    var deferItem by remember { mutableStateOf<NowItem?>(null) }
-    var showMeterDialog by remember { mutableStateOf(false) }
-    var meterDialogTargetVesselId by remember { mutableStateOf<Long?>(null) }
-    var meterDialogCurrentHours by remember { mutableStateOf<Double?>(null) }
-    var showUnrecordedSheet by remember { mutableStateOf(false) }
+    // Which card's sheet is open, kept as the schedule id and looked up
+    // again in the state. A NowItem cannot be saved across a rotation, and
+    // with plain `remember` the sheet - and everything typed into it - was
+    // gone the moment the phone turned.
+    var quickLogScheduleId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var deferScheduleId by rememberSaveable { mutableStateOf<Long?>(null) }
+    val quickLogItem = quickLogScheduleId?.let { id -> uiState.findBySchedule(id) }
+    val deferItem = deferScheduleId?.let { id -> uiState.findBySchedule(id) }
+    val quickLogStatus by viewModel.quickLogStatus.collectAsStateWithLifecycle()
+    // A failure belongs to the sheet it happened in; a fresh one starts clean.
+    fun openQuickLog(scheduleId: Long) {
+        if (quickLogStatus is QuickLogStatus.Failed) viewModel.acknowledgeQuickLog()
+        quickLogScheduleId = scheduleId
+    }
+    val quickLogSaving = (quickLogStatus as? QuickLogStatus.Saving)?.scheduleId.let { it != null && it == quickLogScheduleId }
+    val quickLogFailed = (quickLogStatus as? QuickLogStatus.Failed)?.scheduleId.let { it != null && it == quickLogScheduleId }
 
+    // A card that left the list while its sheet was not saving - logged
+    // from a notification, the boat switched - takes its sheet with it, and
+    // must not reopen it the day the same schedule comes due again.
+    LaunchedEffect(uiState.isLoading, quickLogItem == null, deferItem == null, quickLogSaving) {
+        if (uiState.isLoading) return@LaunchedEffect
+        if (quickLogScheduleId != null && quickLogItem == null && !quickLogSaving) quickLogScheduleId = null
+        if (deferScheduleId != null && deferItem == null) deferScheduleId = null
+    }
+
+    // The write this sheet waited for is done: close it and offer the undo.
+    // Read from the ViewModel so it still lands after a rotation mid-save.
+    LaunchedEffect(quickLogStatus) {
+        val saved = quickLogStatus as? QuickLogStatus.Saved ?: return@LaunchedEffect
+        // Taken down even when it is not this sheet's: a node's card that
+        // was left mid-save cannot, and a Saved left standing would shut the
+        // next sheet opened for that schedule the moment it appeared.
+        viewModel.acknowledgeQuickLog()
+        if (saved.scheduleId != quickLogScheduleId) return@LaunchedEffect
+        quickLogScheduleId = null
+        val undo = saved.undo
+        // "Скасувати" deletes the record, the reading and any meter this save
+        // created, and puts back the expiry it overwrote. It used to call
+        // refresh(), which changes nothing - so a mistaken tap was
+        // irreversible and the journal kept a service that never happened.
+        // ui-spec.md §4 requires this button to work, and §5.4 records the
+        // last time it did not.
+        scope.launch {
+            val res = snackbarHostState.showSnackbar(
+                // A photo the owner chose and the app could not copy is
+                // worth interrupting the confirmation for.
+                message = if (undo.failedPhotoCount > 0) {
+                    ctx.resources.getQuantityString(
+                        R.plurals.snack_logged_photos_failed,
+                        undo.failedPhotoCount,
+                        undo.failedPhotoCount,
+                    )
+                } else {
+                    ctx.getString(R.string.snack_logged)
+                },
+                actionLabel = ctx.getString(R.string.action_undo),
+                duration = SnackbarDuration.Short,
+            )
+            if (res == SnackbarResult.ActionPerformed) {
+                viewModel.undoQuickLog(undo)
+            }
+        }
+    }
+    var showMeterDialog by rememberSaveable { mutableStateOf(false) }
+    var meterDialogTargetVesselId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var meterDialogCurrentHours by rememberSaveable { mutableStateOf<Double?>(null) }
+    var showUnrecordedSheet by rememberSaveable { mutableStateOf(false) }
+
+    // Once per notification tap. Keyed on the items as well, so it can wait
+    // for the first computation - which also made it reopen the sheet after
+    // every save, and after every rotation once the sheet was saveable.
+    var openedForPending by rememberSaveable { mutableStateOf<Long?>(null) }
     LaunchedEffect(pendingComponentId, uiState.items) {
-        if (pendingComponentId != null && pendingComponentId > 0) {
+        if (pendingComponentId != null && pendingComponentId > 0 && openedForPending != pendingComponentId) {
             val match = uiState.items.find { it.component.id == pendingComponentId }
                 ?: uiState.upcomingItems.find { it.component.id == pendingComponentId }
             if (match != null) {
-                quickLogItem = match
+                openQuickLog(match.schedule.id)
+                openedForPending = pendingComponentId
             }
         }
     }
@@ -352,8 +421,8 @@ fun NowScreen(
                     NowCard(
                         item = item,
                         showVesselBadge = isFleetView,
-                        onDone = { quickLogItem = item },
-                        onDefer = { deferItem = item },
+                        onDone = { openQuickLog(item.schedule.id) },
+                        onDefer = { deferScheduleId = item.schedule.id },
                         onUndefer = {
                             viewModel.undeferSchedule(item.schedule.id) {
                                 scope.launch {
@@ -386,7 +455,7 @@ fun NowScreen(
                     UpcomingMaintenanceCard(
                         item = upcomingItem,
                         showVesselBadge = isFleetView,
-                        onLog = { quickLogItem = upcomingItem },
+                        onLog = { openQuickLog(upcomingItem.schedule.id) },
                         onOpenDetail = { onOpenComponent(upcomingItem.component.id) },
                     )
                 }
@@ -593,9 +662,16 @@ fun NowScreen(
         quickLogItem?.let { item ->
             QuickLogSheet(
                 item = item,
-                onDismiss = { quickLogItem = null },
+                isSaving = quickLogSaving,
+                saveFailed = quickLogFailed,
+                onDismiss = {
+                    quickLogScheduleId = null
+                    if (quickLogFailed) viewModel.acknowledgeQuickLog()
+                },
                 onSave = { date, workType, hours, cost, notes, newExpiry, photoUris ->
-                    quickLogItem = null
+                    // The sheet stays open until quickLogStatus says Saved:
+                    // closing here lost the owner's typing whenever the write
+                    // then failed.
                     viewModel.saveQuickLog(
                         componentId = item.component.id,
                         vesselId = item.vessel.id,
@@ -607,36 +683,7 @@ fun NowScreen(
                         newExpiry = newExpiry,
                         photoUris = photoUris,
                         scheduleId = item.schedule.id,
-                        // "Скасувати" now deletes the record, the reading and
-                        // any meter this save created, and puts back the expiry
-                        // it overwrote. It used to call refresh(), which changes
-                        // nothing - so a mistaken tap was irreversible and the
-                        // journal kept a service that never happened. ui-spec.md
-                        // §4 requires this button to work, and §5.4 records the
-                        // last time it did not.
-                        onSaved = { undo ->
-                            scope.launch {
-                                val res = snackbarHostState.showSnackbar(
-                                    // A photo the owner chose and the app
-                                    // could not copy is worth interrupting
-                                    // the confirmation for.
-                                    message = if (undo.failedPhotoCount > 0) {
-                                        ctx.resources.getQuantityString(
-                                            R.plurals.snack_logged_photos_failed,
-                                            undo.failedPhotoCount,
-                                            undo.failedPhotoCount,
-                                        )
-                                    } else {
-                                        ctx.getString(R.string.snack_logged)
-                                    },
-                                    actionLabel = ctx.getString(R.string.action_undo),
-                                    duration = SnackbarDuration.Short,
-                                )
-                                if (res == SnackbarResult.ActionPerformed) {
-                                    viewModel.undoQuickLog(undo)
-                                }
-                            }
-                        },
+                        onSaved = {},
                     )
                 },
             )
@@ -645,9 +692,9 @@ fun NowScreen(
         deferItem?.let { item ->
             DeferSheet(
                 item = item,
-                onDismiss = { deferItem = null },
+                onDismiss = { deferScheduleId = null },
                 onDefer = { until, reason ->
-                    deferItem = null
+                    deferScheduleId = null
                     viewModel.deferSchedule(item.schedule.id, until, reason) {
                         scope.launch {
                             val res = snackbarHostState.showSnackbar(

@@ -117,4 +117,9 @@ data class NowUiState(
             ?: vessels.firstOrNull { it.id !in departureDoneVesselIds }
             ?: vessels.firstOrNull { it.id == lastDepartedVesselId }
             ?: vessels.firstOrNull()
+
+    /** The card for [scheduleId], urgent or upcoming, if it is still listed. */
+    fun findBySchedule(scheduleId: Long): NowItem? =
+        items.firstOrNull { it.schedule.id == scheduleId }
+            ?: upcomingItems.firstOrNull { it.schedule.id == scheduleId }
 }

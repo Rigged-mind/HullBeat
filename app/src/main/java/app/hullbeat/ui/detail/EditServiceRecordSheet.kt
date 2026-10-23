@@ -67,6 +67,7 @@ import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.WorkType
 import app.hullbeat.data.db.labelRes
 import app.hullbeat.data.preferences.AppPreferences
+import app.hullbeat.domain.DecimalInput
 import app.hullbeat.ui.components.DateSelectionRow
 import app.hullbeat.ui.components.rememberSampledBitmap
 import java.time.LocalDate
@@ -119,6 +120,11 @@ fun EditServiceRecordSheet(
     var costText by rememberSaveable { mutableStateOf(initialCost) }
 
     var notesText by rememberSaveable { mutableStateOf(record.notes ?: "") }
+
+    // Read as blank, "12,5" here did not just go unsaved - it erased the
+    // cost the record already had. Save waits for a number instead.
+    val meterOk = !hasMeter || DecimalInput.isAcceptable(meterText)
+    val costOk = DecimalInput.isAcceptable(costText)
 
     var removedPhotoIds by rememberSaveable { mutableStateOf<List<Long>>(emptyList()) }
     val remainingPhotos = remember(currentPhotos, removedPhotoIds) {
@@ -207,6 +213,10 @@ fun EditServiceRecordSheet(
                     label = { Text(stringResource(R.string.field_meter_hours)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
+                    isError = !meterOk,
+                    supportingText = if (!meterOk) {
+                        { Text(stringResource(R.string.error_number_invalid)) }
+                    } else null,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -217,6 +227,10 @@ fun EditServiceRecordSheet(
                 label = { Text("${stringResource(R.string.field_cost)} ($currency)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
+                isError = !costOk,
+                supportingText = if (!costOk) {
+                    { Text(stringResource(R.string.error_number_invalid)) }
+                } else null,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -432,8 +446,8 @@ fun EditServiceRecordSheet(
 
                 Button(
                     onClick = {
-                        val hours = meterText.toDoubleOrNull()
-                        val cost = costText.toDoubleOrNull()
+                        val hours = DecimalInput.parse(meterText)
+                        val cost = DecimalInput.parse(costText)
                         val notes = notesText.ifBlank { null }
                         val updated = record.copy(
                             date = date,
@@ -445,6 +459,7 @@ fun EditServiceRecordSheet(
                         val removedPhotoIds = currentPhotos.map { it.id }.filter { id -> remainingPhotos.none { it.id == id } }
                         onSave(updated, hours, newPhotoUris, removedPhotoIds)
                     },
+                    enabled = meterOk && costOk,
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = 56.dp),

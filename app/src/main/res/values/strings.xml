@@ -471,6 +471,8 @@
     <string name="pdf_compiled_by">Compiled by owner via HullBeat</string>
     <string name="now_enter_hours">Enter hours</string>
     <string name="error_photo_save_failed">Could not save the photo</string>
+    <string name="error_number_invalid">Not a number</string>
+    <string name="error_record_save_failed">Could not save the record. Nothing was lost - try again.</string>
     <string name="action_ok">OK</string>
     <string name="nav_menu_title">Menu</string>
     <string name="drawer_switch_vessel">Switch vessel</string>

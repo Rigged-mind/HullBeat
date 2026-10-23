@@ -68,6 +68,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,6 +98,7 @@ import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.RecordMeterDialog
 import app.hullbeat.ui.components.rememberSampledBitmap
 import app.hullbeat.ui.now.NowItem
+import app.hullbeat.ui.now.QuickLogStatus
 import app.hullbeat.ui.now.QuickLogSheet
 import app.hullbeat.ui.store.AddEditPartSheet
 import app.hullbeat.ui.store.AddLocationDialog
@@ -138,6 +140,10 @@ fun ComponentDetailScreen(
         photoUris: List<Uri>,
         onSaved: () -> Unit,
     ) -> Unit,
+    /** Where the save handed to [onSaveQuickLog] is; the sheet waits on it. */
+    quickLogStatus: QuickLogStatus = QuickLogStatus.Idle,
+    /** The sheet has closed for a Saved, or dropped a Failed. */
+    onQuickLogHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -146,23 +152,28 @@ fun ComponentDetailScreen(
     // Which passport field is open for editing, if any. A dialog rather
     // than an inline field: the ui-spec forbids an action that exists only
     // as a gesture, and a row that silently saves on focus loss is one.
-    var editingField by remember { mutableStateOf<PassportField?>(null) }
+    // Saved by key and looked up again: a rotation recreated the screen and
+    // closed every sheet and dialog below, with whatever was typed in it.
+    var editingFieldKey by rememberSaveable { mutableStateOf<String?>(null) }
+    val editingField = editingFieldKey?.let { key -> state.passportFields.firstOrNull { it.key == key } }
     // Non-null when the owner is naming a NEW field rather than filling a
     // catalog one. Kept separate so the editor never has to guess.
-    var addingField by remember { mutableStateOf(false) }
+    var addingField by rememberSaveable { mutableStateOf(false) }
 
-    var showLogSheet by remember { mutableStateOf(initialOpenLog) }
-    var showRenameDialog by remember { mutableStateOf(false) }
-    var showHideFromBoatDialog by remember { mutableStateOf(false) }
-    var showMeterDialog by remember { mutableStateOf(false) }
+    var showLogSheet by rememberSaveable { mutableStateOf(initialOpenLog) }
+    var showRenameDialog by rememberSaveable { mutableStateOf(false) }
+    var showHideFromBoatDialog by rememberSaveable { mutableStateOf(false) }
+    var showMeterDialog by rememberSaveable { mutableStateOf(false) }
     var viewingPhotos by remember { mutableStateOf<List<Attachment>>(emptyList()) }
     var viewingPhotoIndex by remember { mutableIntStateOf(0) }
     var showDeleteConfirmPhoto by remember { mutableStateOf<Attachment?>(null) }
-    var editingRecord by remember { mutableStateOf<ServiceRecord?>(null) }
+    var editingRecordId by rememberSaveable { mutableStateOf<Long?>(null) }
+    val editingRecord = editingRecordId?.let { id -> state.history.firstOrNull { it.id == id } }
     var editingRecordMeterHours by remember { mutableStateOf<Double?>(null) }
-    var recordToDelete by remember { mutableStateOf<ServiceRecord?>(null) }
-    var showAddSpareSheet by remember { mutableStateOf(false) }
-    var showAddLocationDialog by remember { mutableStateOf(false) }
+    var recordToDeleteId by rememberSaveable { mutableStateOf<Long?>(null) }
+    val recordToDelete = recordToDeleteId?.let { id -> state.history.firstOrNull { it.id == id } }
+    var showAddSpareSheet by rememberSaveable { mutableStateOf(false) }
+    var showAddLocationDialog by rememberSaveable { mutableStateOf(false) }
 
     val galleryPhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia()
@@ -180,7 +191,26 @@ fun ComponentDetailScreen(
 
     val component = state.component
     val vessel = state.vessel
-    val schedule = state.schedules.firstOrNull()
+    // The schedule the urgency line is about, and so the one the sheet must
+    // describe: its verb, whether a new expiry is required, whether it asks
+    // for the meter. `schedules.firstOrNull()` is the raw query order: on a
+    // node with an expiry and a periodic check it could offer "Виконати"
+    // under a status line about the expired certificate, and never ask for
+    // the new date.
+    val schedule = state.primarySchedule
+
+    val logSaving = (quickLogStatus as? QuickLogStatus.Saving)?.scheduleId.let { it != null && it == schedule?.id }
+    val logFailed = (quickLogStatus as? QuickLogStatus.Failed)?.scheduleId.let { it != null && it == schedule?.id }
+    LaunchedEffect(quickLogStatus) {
+        val saved = quickLogStatus as? QuickLogStatus.Saved ?: return@LaunchedEffect
+        // Acknowledged even when it is another sheet's, which can no longer
+        // do it: left standing, it would shut the next sheet for that
+        // schedule as soon as it opened.
+        onQuickLogHandled()
+        if (saved.scheduleId != null && saved.scheduleId == schedule?.id) {
+            showLogSheet = false
+        }
+    }
 
     var renameText by remember(component?.customName) {
         mutableStateOf(component?.customName ?: "")
@@ -370,7 +400,11 @@ fun ComponentDetailScreen(
                         }
 
                         Button(
-                            onClick = { showLogSheet = true },
+                            onClick = {
+                                // A failure belongs to the sheet it happened in.
+                                if (quickLogStatus is QuickLogStatus.Failed) onQuickLogHandled()
+                                showLogSheet = true
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .heightIn(min = 56.dp),
@@ -443,7 +477,7 @@ fun ComponentDetailScreen(
                 }
             } else {
                 items(state.passportFields, key = { it.key }) { field ->
-                    PassportRow(field = field, onEdit = { editingField = field })
+                    PassportRow(field = field, onEdit = { editingFieldKey = field.key })
                 }
             }
             item(key = "passport_add") {
@@ -598,8 +632,8 @@ fun ComponentDetailScreen(
                             viewingPhotos = photos
                             viewingPhotoIndex = index
                         },
-                        onEditClick = { editingRecord = record },
-                        onDeleteClick = { recordToDelete = record },
+                        onEditClick = { editingRecordId = record.id },
+                        onDeleteClick = { recordToDeleteId = record.id },
                     )
                 }
             }
@@ -735,17 +769,21 @@ fun ComponentDetailScreen(
 
             QuickLogSheet(
                 item = nowItem,
-                onDismiss = { showLogSheet = false },
-                onSave = { date, workType, hours, cost, notes, newExpiry, photoUris ->
+                isSaving = logSaving,
+                saveFailed = logFailed,
+                onDismiss = {
                     showLogSheet = false
+                    if (logFailed) onQuickLogHandled()
+                },
+                onSave = { date, workType, hours, cost, notes, newExpiry, photoUris ->
+                    // Stays open until quickLogStatus says Saved, so a failed
+                    // write does not take the owner's typing with it.
                     onSaveQuickLog(
                         component.id,
                         vessel.id,
-                        // The schedule whose due date this screen is
-                        // showing - NOT schedules.firstOrNull(), which is
-                        // the raw query order and picks an arbitrary one on
-                        // a component that has several.
-                        state.primaryScheduleId,
+                        // The same schedule the sheet was built from, so the
+                        // form and the record can never disagree about it.
+                        schedule.id,
                         date,
                         workType,
                         hours,
@@ -764,12 +802,12 @@ fun ComponentDetailScreen(
             PassportEditor(
                 field = editingField,
                 onDismiss = {
-                    editingField = null
+                    editingFieldKey = null
                     addingField = false
                 },
                 onSave = { key, value, shownUnit ->
                     if (key.isNotEmpty()) viewModel.setPassportField(key, value, shownUnit)
-                    editingField = null
+                    editingFieldKey = null
                     addingField = false
                 },
             )
@@ -882,9 +920,9 @@ fun ComponentDetailScreen(
                 hasMeter = state.hasMeter,
                 initialMeterHours = editingRecordMeterHours,
                 currentPhotos = recordPhotos,
-                onDismiss = { editingRecord = null },
+                onDismiss = { editingRecordId = null },
                 onSave = { updatedRecord, meterHours, newPhotoUris, removedPhotoIds ->
-                    editingRecord = null
+                    editingRecordId = null
                     viewModel.updateServiceRecord(
                         record = updatedRecord,
                         meterHours = meterHours,
@@ -894,16 +932,15 @@ fun ComponentDetailScreen(
                     )
                 },
                 onDeleteRequest = {
-                    val rec = editingRecord
-                    editingRecord = null
-                    recordToDelete = rec
+                    recordToDeleteId = editingRecordId
+                    editingRecordId = null
                 },
             )
         }
 
         recordToDelete?.let { record ->
             AlertDialog(
-                onDismissRequest = { recordToDelete = null },
+                onDismissRequest = { recordToDeleteId = null },
                 title = { Text(stringResource(R.string.dialog_delete_record_title)) },
                 text = {
                     Text(
@@ -918,7 +955,7 @@ fun ComponentDetailScreen(
                     Button(
                         onClick = {
                             val id = record.id
-                            recordToDelete = null
+                            recordToDeleteId = null
                             viewModel.deleteServiceRecord(id, onDone = onLogSaved)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
@@ -927,7 +964,7 @@ fun ComponentDetailScreen(
                     }
                 },
                 dismissButton = {
-                    OutlinedButton(onClick = { recordToDelete = null }) {
+                    OutlinedButton(onClick = { recordToDeleteId = null }) {
                         Text(stringResource(R.string.action_cancel))
                     }
                 },
