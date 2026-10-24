@@ -320,6 +320,8 @@
     <string name="settings_about_version">Versión %1$s</string>
     <string name="settings_about_desc">HullBeat es un historial de mantenimiento y planificador sin conexión para veleros y yates a motor.</string>
     <string name="settings_about_github">Repositorio en GitHub</string>
+    <string name="settings_feedback">Sugerencias y comentarios</string>
+    <string name="settings_feedback_no_mail_app">No hay ninguna app de correo en este teléfono. Escriba a %1$s</string>
 
     <!-- Store / Spares -->
     <string name="store_tab_all">Todos los repuestos</string>

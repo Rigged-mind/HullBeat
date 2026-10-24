@@ -1156,8 +1156,29 @@ fun SettingsDrawerSheet(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                     )
+                    // From the package, not a literal: this said "1.0.0" while
+                    // the build was 0.1.0, so a bug report quoted the wrong release.
+                    val appVersion = remember { appVersionName(context) }
+                    // Above the version, as asked: the one place an owner who
+                    // wants to say something will look. mailto: rather than a
+                    // form - the app has no network access, by design.
+                    OutlinedButton(
+                        onClick = { sendFeedbackEmail(context, appVersion) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 56.dp),
+                        shape = RoundedCornerShape(8.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_mail),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.settings_feedback))
+                    }
                     Text(
-                        text = stringResource(R.string.settings_about_version, "1.0.0"),
+                        text = stringResource(R.string.settings_about_version, appVersion),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -1466,3 +1487,36 @@ fun SettingsSheet(
     )
 }
 
+
+private const val FEEDBACK_EMAIL = "riggedmind2049@gmail.com"
+
+private fun appVersionName(context: Context): String =
+    runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }
+        .getOrNull() ?: "?"
+
+/**
+ * Opens the owner's mail app on a new message to the developer. The footer
+ * names the release and the phone, which is the first question asked about
+ * any bug report, and it is visible and editable before anything is sent.
+ */
+private fun sendFeedbackEmail(context: Context, appVersion: String) {
+    val subject = "HullBeat $appVersion"
+    val body = "\n\n--\nHullBeat $appVersion · Android ${android.os.Build.VERSION.RELEASE} · " +
+        "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:")
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(FEEDBACK_EMAIL))
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    try {
+        context.startActivity(intent)
+    } catch (_: android.content.ActivityNotFoundException) {
+        Toast.makeText(
+            context,
+            context.getString(R.string.settings_feedback_no_mail_app, FEEDBACK_EMAIL),
+            Toast.LENGTH_LONG,
+        ).show()
+    }
+}

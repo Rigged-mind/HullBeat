@@ -320,6 +320,8 @@
     <string name="settings_about_version">Version %1$s</string>
     <string name="settings_about_desc">HullBeat ist ein Offline-Wartungsbuch und Wartungsplaner für Segelboote und Motoryachten.</string>
     <string name="settings_about_github">GitHub-Repository</string>
+    <string name="settings_feedback">Vorschläge &amp; Feedback</string>
+    <string name="settings_feedback_no_mail_app">Keine E-Mail-App auf diesem Telefon. Schreiben Sie an %1$s</string>
 
     <!-- Store / Spares -->
     <string name="store_tab_all">Alle Ersatzteile</string>

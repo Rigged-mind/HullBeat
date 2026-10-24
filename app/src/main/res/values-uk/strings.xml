@@ -334,6 +334,8 @@
     <string name="settings_about_version">Версія %1$s</string>
     <string name="settings_about_desc">HullBeat — автономний судновий журнал та планувальник технічного обслуговування для вітрильних і моторних яхт.</string>
     <string name="settings_about_github">Репозиторій GitHub</string>
+    <string name="settings_feedback">Пропозиції та зворотний зв\'язок</string>
+    <string name="settings_feedback_no_mail_app">На телефоні немає поштового застосунку. Напишіть на %1$s</string>
 
     <!-- Store / Spares -->
     <string name="store_tab_all">Усі деталі</string>
