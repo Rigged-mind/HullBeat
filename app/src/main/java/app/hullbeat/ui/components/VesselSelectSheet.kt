@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import app.hullbeat.R
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.displayName
+import app.hullbeat.data.db.profileOptionLabel
 import app.hullbeat.ui.theme.LocalExtendedColors
 
 /**
@@ -234,7 +235,10 @@ fun VesselSelectSheet(
                                     vessel.make.takeIf { !it.isNullOrBlank() },
                                     vessel.model.takeIf { !it.isNullOrBlank() },
                                 ).joinToString(" ").ifBlank {
+                                    // The stored value is a catalog code, not words:
+                                    // shown raw it read "monohull_sail" in every language.
                                     vessel.hullType.ifBlank { null }
+                                        ?.let { profileOptionLabel(context, "hull", it) }
                                 }
                                 val statusText = when {
                                     overdue > 0 -> "${stringResource(R.string.status_overdue)}: $overdue"
