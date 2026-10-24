@@ -28,6 +28,8 @@ data class NowItem(
     val meterEstimate: Double? = null,
     /** Shown as the field's hint when there is no estimate. Never saved. */
     val lastMeterReading: Double? = null,
+    /** The meter's history, so the sheet can tell a value below the previous reading. */
+    val meterReadings: List<DueCalculator.Reading> = emptyList(),
 ) {
     val isOverdue: Boolean
         get() = state == DueCalculator.State.OVERDUE

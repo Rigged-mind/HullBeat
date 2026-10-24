@@ -61,6 +61,27 @@ class MeterEstimateTest {
     }
 
     @Test
+    fun `previous reading is the last one on or before the day`() {
+        assertEquals(1060.0, DueCalculator.previousMeter(trend, d(6, 10))!!, 0.0)
+        assertEquals(1060.0, DueCalculator.previousMeter(trend, d(5, 31))!!, 0.0)
+    }
+
+    @Test
+    fun `a service logged after the fact is compared with what came before it`() {
+        // Dated 15 May: 1030 is between the two readings and is no decrease,
+        // although it is below the last reading of all.
+        assertEquals(1000.0, DueCalculator.previousMeter(trend, d(5, 15))!!, 0.0)
+        assertNull(DueCalculator.previousMeter(trend, d(4, 1)))
+    }
+
+    @Test
+    fun `previous reading belongs to the current gauge`() {
+        // Replaced on 1 June: the old gauge's 1060 is not a floor for the new one.
+        val replaced = trend + Reading(d(6, 1), 5.0)
+        assertEquals(5.0, DueCalculator.previousMeter(replaced, d(6, 10))!!, 0.0)
+    }
+
+    @Test
     fun `no readings, nothing to say`() {
         assertNull(DueCalculator.estimateMeter(emptyList(), d(6, 10)))
         assertNull(DueCalculator.lastMeter(emptyList()))

@@ -768,35 +768,42 @@ abstract class AppDatabase : RoomDatabase() {
         const val BACKFILL_RECORD_CURRENCY_SQL =
             "UPDATE service_record SET currency = ? WHERE currency IS NULL AND cost IS NOT NULL"
 
+        // Each migration's SQL is a list beside it, and the migration only runs
+        // the list: MigrationChainTest replays exactly these statements over the
+        // exported schemas, so a test cannot pass against a copy that drifted.
+        val MIGRATION_1_2_SQL = listOf(
+            "ALTER TABLE service_record ADD COLUMN scheduleId INTEGER REFERENCES service_schedule(id) ON DELETE SET NULL",
+            "CREATE INDEX IF NOT EXISTS index_service_record_scheduleId ON service_record(scheduleId)",
+        )
+
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE service_record ADD COLUMN scheduleId INTEGER REFERENCES service_schedule(id) ON DELETE SET NULL")
-                db.execSQL("CREATE INDEX IF NOT EXISTS index_service_record_scheduleId ON service_record(scheduleId)")
+                MIGRATION_1_2_SQL.forEach(db::execSQL)
             }
         }
 
+        // Remove duplicate checklist runs before adding the unique index.
+        // Order matters: creating the index first would throw a constraint
+        // violation on any device where duplicates already exist.
+        val MIGRATION_2_3_SQL = listOf(
+            """
+            DELETE FROM checklist_run
+            WHERE id NOT IN (
+                SELECT MIN(id)
+                FROM checklist_run
+                GROUP BY vesselId, checklistCode, date
+            )
+            """.trimIndent(),
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS
+            index_checklist_run_vesselId_checklistCode_date
+            ON checklist_run(vesselId, checklistCode, date)
+            """.trimIndent(),
+        )
+
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // Remove duplicate checklist runs before adding the unique index.
-                // Order matters: creating the index first would throw a constraint
-                // violation on any device where duplicates already exist.
-                db.execSQL(
-                    """
-                    DELETE FROM checklist_run
-                    WHERE id NOT IN (
-                        SELECT MIN(id)
-                        FROM checklist_run
-                        GROUP BY vesselId, checklistCode, date
-                    )
-                    """.trimIndent()
-                )
-                db.execSQL(
-                    """
-                    CREATE UNIQUE INDEX IF NOT EXISTS
-                    index_checklist_run_vesselId_checklistCode_date
-                    ON checklist_run(vesselId, checklistCode, date)
-                    """.trimIndent()
-                )
+                MIGRATION_2_3_SQL.forEach(db::execSQL)
             }
         }
 
@@ -808,5 +815,12 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL(MIGRATION_3_4_SQL)
             }
         }
+
+        /** Every step from version N to N+1, in order. What MigrationChainTest replays. */
+        val MIGRATION_STEPS_SQL: Map<Int, List<String>> = mapOf(
+            1 to MIGRATION_1_2_SQL,
+            2 to MIGRATION_2_3_SQL,
+            3 to listOf(MIGRATION_3_4_SQL),
+        )
     }
 }

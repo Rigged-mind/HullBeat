@@ -45,7 +45,6 @@ fun RecordMeterDialog(
     onSave: (date: LocalDate, hours: Double) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val extended = LocalExtendedColors.current
     // Saveable, like the sheets: a rotation used to drop what was typed.
     var dateString by rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
     val date = runCatching { LocalDate.parse(dateString) }.getOrDefault(LocalDate.now())
@@ -103,38 +102,11 @@ fun RecordMeterDialog(
                 )
 
                 if (isDecrease) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = extended.tint.dueSoon,
-                        border = BorderStroke(1.dp, extended.status.dueSoon),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = stringResource(R.string.meter_decrease_warning, currentHours ?: 0.0),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { decreaseAcknowledged = !decreaseAcknowledged },
-                            ) {
-                                Checkbox(
-                                    checked = decreaseAcknowledged,
-                                    onCheckedChange = { decreaseAcknowledged = it },
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.meter_decrease_confirm),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            }
-                        }
-                    }
+                    MeterDecreaseWarning(
+                        previousHours = currentHours ?: 0.0,
+                        acknowledged = decreaseAcknowledged,
+                        onAcknowledgedChange = { decreaseAcknowledged = it },
+                    )
                 }
             }
         },
@@ -161,4 +133,51 @@ fun RecordMeterDialog(
         },
         modifier = modifier,
     )
+}
+
+/**
+ * A reading below the previous one, and the box that lets it through. Shared
+ * by this dialog and the quick log: the quick log saved such a reading
+ * silently, and the trend restarted from it without anyone choosing that.
+ */
+@Composable
+fun MeterDecreaseWarning(
+    previousHours: Double,
+    acknowledged: Boolean,
+    onAcknowledgedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val extended = LocalExtendedColors.current
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = extended.tint.dueSoon,
+        border = BorderStroke(1.dp, extended.status.dueSoon),
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = stringResource(R.string.meter_decrease_warning, previousHours),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onAcknowledgedChange(!acknowledged) },
+            ) {
+                Checkbox(
+                    checked = acknowledged,
+                    onCheckedChange = onAcknowledgedChange,
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.meter_decrease_confirm),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        }
+    }
 }

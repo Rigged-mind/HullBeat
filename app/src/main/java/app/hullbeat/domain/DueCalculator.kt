@@ -231,6 +231,19 @@ object DueCalculator {
     /** The current gauge's last reading, as typed. For a hint, never for a value. */
     fun lastMeter(readings: List<Reading>): Double? = currentMeter(readings)
 
+    /**
+     * The reading a new value dated [day] must not fall below: the current
+     * gauge's last one on or before that day. A value under it reads as a
+     * meter reset in [usableSegment] - the trend restarts and the hour-driven
+     * items lose their base - so the form asks before saving it.
+     *
+     * Not simply the last reading: a service logged after the fact, dated
+     * before later readings, rightly carries fewer hours. Null when the
+     * gauge has no reading that early.
+     */
+    fun previousMeter(readings: List<Reading>, day: LocalDate): Double? =
+        usableSegment(readings)?.lastOrNull { !it.date.isAfter(day) }?.value
+
     // ------------------------------------------------------------ internals
 
     private data class Candidate(

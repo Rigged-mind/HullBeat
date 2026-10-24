@@ -767,6 +767,7 @@ fun ComponentDetailScreen(
                 hasMeter = schedule.intervalHours != null,
                 meterEstimate = state.meterEstimate,
                 lastMeterReading = state.lastMeterReading,
+                meterReadings = state.meterReadings,
             )
 
             QuickLogSheet(

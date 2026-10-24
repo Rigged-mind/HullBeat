@@ -67,8 +67,10 @@ import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.labelRes
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DecimalInput
+import app.hullbeat.domain.DueCalculator
 import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.DateSelectionRow
+import app.hullbeat.ui.components.MeterDecreaseWarning
 import app.hullbeat.ui.components.rememberSampledBitmap
 import java.time.LocalDate
 
@@ -154,7 +156,26 @@ fun QuickLogSheet(
     // to be read as blank, and the record went in without the meter reading.
     val meterOk = !item.hasMeter || DecimalInput.isAcceptable(meterText)
     val costOk = DecimalInput.isAcceptable(costText)
-    val canSave = (!item.needsNewExpiry || parsedNewExpiry != null) && meterOk && costOk && !isSaving
+
+    // A certificate renewed on the day of the service cannot run out before
+    // it. The date used to be checked for its format only, so a slip of the
+    // year saved an expiry already in the past and the item went red at once
+    // - or, worse, looked renewed in the journal while still expired.
+    // A past expiry is still allowed: logging last spring's renewal after the
+    // fact is a real case.
+    val expiryOk = parsedNewExpiry == null || parsedNewExpiry.isAfter(date)
+
+    // Below the previous reading reads as a replaced meter: the trend starts
+    // over from it. Allowed - meters are replaced - but never silently.
+    val previousHours = remember(item.meterReadings, date) {
+        DueCalculator.previousMeter(item.meterReadings, date)
+    }
+    val enteredHours = if (item.hasMeter) DecimalInput.parse(meterText) else null
+    val isDecrease = enteredHours != null && previousHours != null && enteredHours < previousHours
+    var decreaseAcknowledged by rememberSaveable { mutableStateOf(false) }
+
+    val canSave = (!item.needsNewExpiry || parsedNewExpiry != null) && expiryOk &&
+        meterOk && costOk && (!isDecrease || decreaseAcknowledged) && !isSaving
 
     ModalBottomSheet(
         onDismissRequest = { if (!isSaving) onDismiss() },
@@ -228,7 +249,10 @@ fun QuickLogSheet(
                         }
                     },
                     singleLine = true,
-                    isError = item.needsNewExpiry && parsedNewExpiry == null,
+                    isError = item.needsNewExpiry && (parsedNewExpiry == null || !expiryOk),
+                    supportingText = if (!expiryOk) {
+                        { Text(stringResource(R.string.error_expiry_before_service)) }
+                    } else null,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -260,6 +284,13 @@ fun QuickLogSheet(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (isDecrease && previousHours != null) {
+                    MeterDecreaseWarning(
+                        previousHours = previousHours,
+                        acknowledged = decreaseAcknowledged,
+                        onAcknowledgedChange = { decreaseAcknowledged = it },
+                    )
+                }
             }
 
             OutlinedTextField(

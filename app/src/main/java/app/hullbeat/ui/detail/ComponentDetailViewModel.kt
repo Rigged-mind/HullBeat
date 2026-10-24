@@ -71,6 +71,7 @@ data class ComponentDetailUiState(
     /** For the log sheet; see NowItem.meterEstimate. */
     val meterEstimate: Double? = null,
     val lastMeterReading: Double? = null,
+    val meterReadings: List<DueCalculator.Reading> = emptyList(),
     val isLoading: Boolean = true,
 )
 
@@ -231,6 +232,7 @@ class ComponentDetailViewModel(
                     readings, LocalDate.now(), vessel?.seasonStartMonth, vessel?.seasonEndMonth,
                 ),
                 lastMeterReading = DueCalculator.lastMeter(readings),
+                meterReadings = readings,
                 isLoading = false,
             )
 

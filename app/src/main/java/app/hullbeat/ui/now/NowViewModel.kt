@@ -253,6 +253,7 @@ class NowViewModel(
                         hasMeter = meters.isNotEmpty() || schedule.intervalHours != null,
                         meterEstimate = meterEstimate,
                         lastMeterReading = lastMeterReading,
+                        meterReadings = readings,
                     )
                 } else if (evaluation.isUpcoming) {
                     val schedule = evaluation.primarySchedule
@@ -281,6 +282,7 @@ class NowViewModel(
                             hasMeter = meters.isNotEmpty() || schedule.intervalHours != null,
                             meterEstimate = meterEstimate,
                             lastMeterReading = lastMeterReading,
+                            meterReadings = readings,
                         )
                     }
                 }
