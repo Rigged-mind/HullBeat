@@ -45,6 +45,7 @@ import app.hullbeat.data.catalog.ChecklistItemDef
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.displayName
 import app.hullbeat.ui.theme.LocalExtendedColors
+import app.hullbeat.ui.theme.SheetSystemBars
 
 /**
  * Bottom sheet displaying the pre-departure checklist for a vessel.
@@ -94,6 +95,7 @@ fun DepartureChecklistSheet(
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

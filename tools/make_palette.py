@@ -66,6 +66,15 @@ DERIVE = OrderedDict([
     ("outlineVariant", "divider"),
     ("error", "statusOverdue"),
     ("onError", "background"),
+    # Left out, Compose fills these from the stock Material baseline: every
+    # sheet rendered on lavender-grey #1D1B20 in Night, where its muted text
+    # fell to 3.85:1. Sheets, menus and dialogs sit on the scheme's own
+    # surface; the highest container is the variant plate.
+    ("surfaceContainerLowest", "surface"),
+    ("surfaceContainerLow", "surface"),
+    ("surfaceContainer", "surface"),
+    ("surfaceContainerHigh", "surface"),
+    ("surfaceContainerHighest", "surfaceVariant"),
 ])
 
 RAMP_BY_HEX = {}
@@ -207,7 +216,7 @@ def gen_kt(p):
     out.append("\n// --- schemes ------------------------------------------------------------\n")
     for name, s in p["schemes"].items():
         cap = name[0].upper() + name[1:]
-        builder = "lightColorScheme" if name in ("light", "sunlight") else "darkColorScheme"
+        builder = "lightColorScheme" if name in ("light", "sunlight", "colorful") else "darkColorScheme"
         out.append("\nval %sScheme: ColorScheme = %s(\n" % (cap, builder))
         for role, hexval in s["material"].items():
             out.append("    %s = %s,\n" % (role, kt_expr(hexval)))

@@ -40,6 +40,7 @@ import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.categoryDisplayName
 import app.hullbeat.data.db.displayName
+import app.hullbeat.ui.theme.SheetSystemBars
 
 /**
  * Lists all components that have a service schedule but no recorded
@@ -64,6 +65,7 @@ fun UnrecordedNodesSheet(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

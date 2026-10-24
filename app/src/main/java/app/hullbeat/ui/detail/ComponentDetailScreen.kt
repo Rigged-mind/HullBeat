@@ -47,7 +47,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.window.Dialog
@@ -106,6 +105,7 @@ import app.hullbeat.ui.store.LOW_STOCK_FRACTION
 import app.hullbeat.ui.theme.LocalExtendedColors
 import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.ui.theme.LocalScheme
+import app.hullbeat.ui.theme.appTopBarColors
 import app.hullbeat.ui.theme.Scheme
 import app.hullbeat.ui.theme.categorySectionColor
 import java.time.LocalDate
@@ -275,10 +275,7 @@ fun ComponentDetailScreen(
                         Text(backDestinationTitle, style = MaterialTheme.typography.titleSmall)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors = appTopBarColors(),
             )
         },
         modifier = modifier.fillMaxSize(),

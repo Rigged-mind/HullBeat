@@ -43,6 +43,7 @@ import app.hullbeat.data.db.Criticality
 import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.data.search.SearchRepository
+import app.hullbeat.ui.theme.SheetSystemBars
 import kotlinx.coroutines.launch
 
 /**
@@ -85,6 +86,7 @@ fun CreateComponentSheet(
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

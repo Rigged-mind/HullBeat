@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.hullbeat.R
 import app.hullbeat.data.db.displayName
+import app.hullbeat.ui.theme.SheetSystemBars
 import java.time.LocalDate
 
 /**
@@ -84,6 +85,7 @@ fun DeferSheet(
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

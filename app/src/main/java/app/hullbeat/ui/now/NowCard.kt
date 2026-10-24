@@ -97,12 +97,10 @@ fun NowCard(
 
     val borderColor = when {
         isOverdue -> extended.status.overdue
-        isColorful -> secColor.accent.copy(alpha = 0.5f)
         else -> MaterialTheme.colorScheme.outlineVariant
     }
     val borderWidth = when {
         isOverdue && extended.isHighContrast -> 2.dp
-        isColorful -> 1.5.dp
         else -> extended.borderWidth.dp
     }
 

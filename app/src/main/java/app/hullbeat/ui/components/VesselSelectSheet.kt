@@ -44,6 +44,7 @@ import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.profileOptionLabel
 import app.hullbeat.ui.theme.LocalExtendedColors
+import app.hullbeat.ui.theme.SheetSystemBars
 
 /**
  * Bottom sheet for switching between vessels or adding a new vessel.
@@ -69,6 +70,7 @@ fun VesselSelectSheet(
         onDismissRequest = onDismiss,
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

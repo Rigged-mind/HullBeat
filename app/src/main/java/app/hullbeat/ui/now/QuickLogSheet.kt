@@ -72,6 +72,7 @@ import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.DateSelectionRow
 import app.hullbeat.ui.components.MeterDecreaseWarning
 import app.hullbeat.ui.components.rememberSampledBitmap
+import app.hullbeat.ui.theme.SheetSystemBars
 import java.time.LocalDate
 
 /**
@@ -183,6 +184,7 @@ fun QuickLogSheet(
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

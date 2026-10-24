@@ -25,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,7 +72,9 @@ import app.hullbeat.ui.settings.SettingsDrawerSheet
 import app.hullbeat.ui.setup.VesselSetupScreen
 import app.hullbeat.ui.store.StoreScreen
 import app.hullbeat.ui.store.StoreViewModel
+import app.hullbeat.ui.theme.LocalScheme
 import app.hullbeat.ui.theme.Scheme
+import app.hullbeat.ui.theme.appTopBarColors
 
 enum class NavTab(val titleRes: Int, val iconRes: Int) {
     NOW(R.string.nav_now, R.drawable.ic_nav_now),
@@ -277,6 +278,7 @@ fun HullBeatMainScaffold(
                     currentVessel?.name ?: stringResource(R.string.app_name)
                 }
                 val cdSelect = stringResource(R.string.cd_select_vessel, titleText)
+                val colorfulHeader = LocalScheme.current == Scheme.COLORFUL
 
                 TopAppBar(
                     navigationIcon = {
@@ -292,7 +294,6 @@ fun HullBeatMainScaffold(
                                 painter = painterResource(R.drawable.ic_menu),
                                 contentDescription = stringResource(R.string.nav_menu_title),
                                 modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     },
@@ -315,7 +316,11 @@ fun HullBeatMainScaffold(
                                     painter = painterResource(R.drawable.ic_nav_boat),
                                     contentDescription = null,
                                     modifier = Modifier.size(22.dp),
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = if (colorfulHeader) {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    },
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
@@ -329,7 +334,11 @@ fun HullBeatMainScaffold(
                                 Text(
                                     text = "\u25BE",
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if (colorfulHeader) {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
                                 )
                             }
                         }
@@ -351,10 +360,7 @@ fun HullBeatMainScaffold(
                             }
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+                    colors = appTopBarColors(),
                 )
             },
             bottomBar = {

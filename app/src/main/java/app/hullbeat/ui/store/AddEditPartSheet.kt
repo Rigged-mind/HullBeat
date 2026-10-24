@@ -45,6 +45,7 @@ import app.hullbeat.data.db.Component
 import app.hullbeat.data.db.StorageLocation
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.storageLocationDisplayName
+import app.hullbeat.ui.theme.SheetSystemBars
 
 private fun formatNumber(value: Double): String {
     return if (value % 1.0 == 0.0) value.toInt().toString() else value.toString()
@@ -111,6 +112,7 @@ fun AddEditPartSheet(
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()

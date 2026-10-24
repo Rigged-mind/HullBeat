@@ -799,10 +799,9 @@ private fun UpcomingMaintenanceCard(
             .fillMaxWidth()
             .clickable(onClick = onOpenDetail),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(
-            if (isColorful) 1.5.dp else 1.dp,
-            if (isColorful) secColor.accent.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outlineVariant
-        ),
+        // Never the section hue: Electrical's amber and Propulsion's bronze
+        // would frame a card that is not due as if it were.
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Column(

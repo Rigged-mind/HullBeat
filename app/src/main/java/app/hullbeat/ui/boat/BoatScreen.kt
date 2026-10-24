@@ -355,7 +355,12 @@ fun BoatScreen(
         return
     }
 
-    Surface(modifier = modifier.fillMaxSize()) {
+    // Background, like the other three tabs: a surface root left the Boat tab
+    // white under Colorful's tinted background.
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
+    ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),

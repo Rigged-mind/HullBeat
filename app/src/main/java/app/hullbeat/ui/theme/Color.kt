@@ -102,6 +102,37 @@ val LightScheme: ColorScheme = lightColorScheme(
     outlineVariant = Color(0xFFD3E0DC),
     error = Color(0xFFB3261E),
     onError = Color.White,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = Color.White,
+    surfaceContainer = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Brand10,
+)
+
+val ColorfulScheme: ColorScheme = lightColorScheme(
+    primary = Brand80,
+    onPrimary = Color.White,
+    primaryContainer = Brand20,
+    onPrimaryContainer = Brand90,
+    secondary = Brand60,
+    onSecondary = Color.White,
+    secondaryContainer = Brand10,
+    onSecondaryContainer = Brand90,
+    background = Brand10,
+    onBackground = Color(0xFF0B1F1C),
+    surface = Color.White,
+    onSurface = Color(0xFF0B1F1C),
+    surfaceVariant = Color(0xFFD3E5DF),
+    onSurfaceVariant = Color(0xFF4A5F5B),
+    outline = Color(0xFF6E8781),
+    outlineVariant = Color(0xFFD3E0DC),
+    error = Color(0xFFB3261E),
+    onError = Color.White,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = Color.White,
+    surfaceContainer = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Color(0xFFD3E5DF),
 )
 
 val DarkScheme: ColorScheme = darkColorScheme(
@@ -123,6 +154,11 @@ val DarkScheme: ColorScheme = darkColorScheme(
     outlineVariant = Color(0xFF25332F),
     error = Color(0xFFFF8A7E),
     onError = Brand99,
+    surfaceContainerLowest = Color(0xFF0E1A18),
+    surfaceContainerLow = Color(0xFF0E1A18),
+    surfaceContainer = Color(0xFF0E1A18),
+    surfaceContainerHigh = Color(0xFF0E1A18),
+    surfaceContainerHighest = Color(0xFF172724),
 )
 
 val SunlightScheme: ColorScheme = lightColorScheme(
@@ -144,6 +180,11 @@ val SunlightScheme: ColorScheme = lightColorScheme(
     outlineVariant = Color(0xFF6E8781),
     error = Color(0xFF8C1D18),
     onError = Color.White,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = Color.White,
+    surfaceContainer = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Brand05,
 )
 
 val NightScheme: ColorScheme = darkColorScheme(
@@ -160,15 +201,37 @@ val NightScheme: ColorScheme = darkColorScheme(
     surface = Color(0xFF0F0604),
     onSurface = Color(0xFFE8543A),
     surfaceVariant = Color(0xFF1C0A06),
-    onSurfaceVariant = Color(0xFFD14A32),
+    onSurfaceVariant = Color(0xFFD84D34),
     outline = Color(0xFFA34329),
     outlineVariant = Color(0xFF2A0F09),
     error = Color(0xFFFF7A55),
     onError = Color(0xFF080302),
+    surfaceContainerLowest = Color(0xFF0F0604),
+    surfaceContainerLow = Color(0xFF0F0604),
+    surfaceContainer = Color(0xFF0F0604),
+    surfaceContainerHigh = Color(0xFF0F0604),
+    surfaceContainerHighest = Color(0xFF1C0A06),
 )
 
 
 val LightExtended = ExtendedColors(
+    status = StatusColors(
+        overdue = Color(0xFFB3261E),
+        dueSoon = Color(0xFF8A5200),
+        ok = Color(0xFF4A5F5B),
+        deferred = Color(0xFF3D5A6C),
+    ),
+    tint = StatusTints(
+        overdue = Color(0xFFFBE4E2),
+        dueSoon = Color(0xFFFDF0DC),
+        deferred = Color(0xFFE5EDF2),
+    ),
+    divider = Color(0xFFD3E0DC),
+    isHighContrast = false,
+    borderWidth = 1,
+)
+
+val ColorfulExtended = ExtendedColors(
     status = StatusColors(
         overdue = Color(0xFFB3261E),
         dueSoon = Color(0xFF8A5200),
@@ -223,8 +286,8 @@ val NightExtended = ExtendedColors(
     status = StatusColors(
         overdue = Color(0xFFFF7A55),
         dueSoon = Color(0xFFE8543A),
-        ok = Color(0xFFD14A32),
-        deferred = Color(0xFFD14A32),
+        ok = Color(0xFFD84D34),
+        deferred = Color(0xFFD84D34),
     ),
     tint = StatusTints(
         overdue = Color(0xFF2E0E07),

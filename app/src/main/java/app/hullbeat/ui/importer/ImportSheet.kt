@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import app.hullbeat.ui.theme.SheetSystemBars
 import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -247,6 +248,7 @@ fun ImportSheet(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = modifier,
     ) {
+        SheetSystemBars()
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()

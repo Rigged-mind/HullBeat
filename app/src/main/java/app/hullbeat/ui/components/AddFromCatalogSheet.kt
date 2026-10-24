@@ -55,6 +55,7 @@ import app.hullbeat.data.db.categoryDisplayName
 import app.hullbeat.data.db.categoryIconRes
 import app.hullbeat.data.db.displayName
 import app.hullbeat.ui.theme.LocalExtendedColors
+import app.hullbeat.ui.theme.SheetSystemBars
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -95,6 +96,7 @@ fun AddFromCatalogSheet(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = modifier,
     ) {
+        SheetSystemBars()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
