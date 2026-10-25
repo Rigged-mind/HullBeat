@@ -37,9 +37,7 @@ object AttachmentStorage {
             val path = sourceUri.path
             if (path != null) {
                 val existingFile = File(path)
-                val canonicalTarget = runCatching { targetDir.canonicalPath }.getOrNull()
-                val canonicalFile = runCatching { existingFile.canonicalPath }.getOrNull()
-                if (canonicalTarget != null && canonicalFile != null && canonicalFile.startsWith(canonicalTarget) && existingFile.exists()) {
+                if (isFileInside(existingFile, targetDir)) {
                     return Uri.fromFile(existingFile)
                 }
             }
@@ -68,8 +66,14 @@ object AttachmentStorage {
         }
     }
 
+    /** The folders under filesDir that hold the owner's photographs and files. */
+    private val MEDIA_DIRS = listOf("attachments", "vessels")
+
     /**
-     * Safely deletes a file from internal storage if it resides within [Context.getFilesDir].
+     * Deletes a file the app copied in, if it lies in one of [MEDIA_DIRS].
+     * The uri comes from the database, and a restored database can say
+     * anything: anywhere else under filesDir - preferences, the search index
+     * - is not the owner's attachment and must not go with it.
      */
     fun deleteInternalFile(context: Context, uriString: String?): Boolean {
         if (uriString.isNullOrBlank()) return false
@@ -78,9 +82,7 @@ object AttachmentStorage {
         val file = File(path)
 
         return try {
-            val canonicalFilesDir = context.filesDir.canonicalPath
-            val canonicalFile = file.canonicalPath
-            if (canonicalFile.startsWith(canonicalFilesDir) && file.exists()) {
+            if (MEDIA_DIRS.any { isFileInside(file, File(context.filesDir, it)) }) {
                 file.delete()
             } else {
                 false
@@ -90,6 +92,16 @@ object AttachmentStorage {
             false
         }
     }
+
+    /**
+     * Whether [file] is an existing file somewhere below [dir], after `..`
+     * and links are resolved. Compared by path segments, not as strings: as
+     * strings, `files/attachments_old/x` starts with `files/attachments`.
+     */
+    internal fun isFileInside(file: File, dir: File): Boolean = runCatching {
+        val canonical = file.canonicalFile
+        canonical.isFile && canonical.toPath().startsWith(dir.canonicalFile.toPath())
+    }.getOrDefault(false)
 
     /**
      * Opens an [InputStream] for [uri], directly opening [FileInputStream] for file://
