@@ -41,8 +41,13 @@ class HullBeatApp : Application() {
             _database ?: buildDatabase().also { _database = it }
         }
 
-    private fun buildDatabase(): AppDatabase {
-        return Room.databaseBuilder(applicationContext, AppDatabase::class.java, AppDatabase.NAME)
+    /**
+     * The app's Room setup - migrations and the fixes run on every open -
+     * under [name]. Instrumented tests build theirs here under another name,
+     * so they check what the app really opens without touching its file.
+     */
+    internal fun buildDatabase(name: String = AppDatabase.NAME): AppDatabase {
+        return Room.databaseBuilder(applicationContext, AppDatabase::class.java, name)
             .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onOpen(db: SupportSQLiteDatabase) {

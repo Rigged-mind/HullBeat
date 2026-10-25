@@ -63,6 +63,42 @@ data class BackupResult(val success: Boolean, val skippedFiles: Int = 0)
  */
 enum class RestoreResult { OK, INVALID, NEWER_VERSION, NO_SPACE }
 
+/**
+ * Where a restore puts the database and photographs, and how it has Room
+ * check the result. The app restores into [forApp]; an instrumented test
+ * passes its own, so running it never touches the owner's data.
+ */
+class RestoreTarget(
+    val databaseFile: File,
+    /** Holds the attachments/ and vessels/ folders. */
+    val mediaRoot: File,
+    val scratchDir: File,
+    /** Closes any open connection before the file under it is replaced. */
+    val closeDatabase: () -> Unit,
+    /** Opens [databaseFile] through Room and queries it; throws if Room refuses it. */
+    val openAndCheck: () -> Unit,
+    /** Runs once a restore has gone through. */
+    val onRestored: () -> Unit,
+) {
+    companion object {
+        fun forApp(context: Context): RestoreTarget {
+            val app = context.applicationContext as HullBeatApp
+            return RestoreTarget(
+                databaseFile = context.getDatabasePath(AppDatabase.NAME),
+                mediaRoot = context.filesDir,
+                scratchDir = context.cacheDir,
+                closeDatabase = { app.closeAndResetDatabase() },
+                openAndCheck = {
+                    app.database.openHelper.writableDatabase
+                        .query("SELECT COUNT(*) FROM vessel").use { it.moveToFirst() }
+                },
+                // So the app picks a boat from the restored data.
+                onRestored = { AppPreferences.setSelectedVesselId(context, null) },
+            )
+        }
+    }
+}
+
 /** What the database inside a backup turned out to be. */
 internal enum class SchemaVerdict { HULLBEAT, NEWER_VERSION, FOREIGN }
 
@@ -103,7 +139,7 @@ object BackupManager {
                 .use { it.moveToFirst() && it.getInt(0) == 0 }
             if (!checkpointed) return BackupResult(success = false)
 
-            val dbFile = context.getDatabasePath(AppDatabase.NAME)
+            val dbFile = context.getDatabasePath(db.openHelper.databaseName ?: AppDatabase.NAME)
             if (!dbFile.exists()) return BackupResult(success = false)
 
             val attachments = try {
@@ -190,10 +226,14 @@ object BackupManager {
         }
     }
 
-    fun restoreBackup(context: Context, inputStream: InputStream): RestoreResult {
-        val tempInputFile = File(context.cacheDir, "restore_temp_input")
+    fun restoreBackup(context: Context, inputStream: InputStream): RestoreResult =
+        restoreBackup(inputStream, RestoreTarget.forApp(context))
+
+    fun restoreBackup(inputStream: InputStream, target: RestoreTarget): RestoreResult {
+        target.scratchDir.mkdirs()
+        val tempInputFile = File(target.scratchDir, "restore_temp_input")
         try {
-            val budget = SpaceBudget(context.cacheDir)
+            val budget = SpaceBudget(target.scratchDir)
             inputStream.use { input ->
                 tempInputFile.outputStream().use { output ->
                     input.copyWithin(output, budget)
@@ -210,8 +250,8 @@ object BackupManager {
             tempInputFile.inputStream().use { it.read(header) }
 
             return when {
-                isZipHeader(header) -> restoreZipBackup(context, tempInputFile)
-                isSqliteHeader(header) -> restoreSqliteBackup(context, tempInputFile)
+                isZipHeader(header) -> restoreZipBackup(target, tempInputFile)
+                isSqliteHeader(header) -> restoreSqliteBackup(target, tempInputFile)
                 else -> {
                     Log.w(TAG, "Restore: neither a zip nor an SQLite file")
                     tempInputFile.delete()
@@ -229,7 +269,7 @@ object BackupManager {
         }
     }
 
-    private fun restoreSqliteBackup(context: Context, tempDbFile: File): RestoreResult {
+    private fun restoreSqliteBackup(target: RestoreTarget, tempDbFile: File): RestoreResult {
         try {
             if (!verifyDatabaseIntegrity(tempDbFile)) return RestoreResult.INVALID
             readSchemaVerdict(tempDbFile).refusal()?.let { return it }
@@ -250,10 +290,10 @@ object BackupManager {
             File(tempDbFile.path + "-wal").delete()
             File(tempDbFile.path + "-shm").delete()
 
-            if (!swapInDatabase(context, tempDbFile)) return RestoreResult.INVALID
-            pruneUnreferencedMedia(context, context.getDatabasePath(AppDatabase.NAME))
+            if (!swapInDatabase(target, tempDbFile)) return RestoreResult.INVALID
+            pruneUnreferencedMedia(target)
 
-            AppPreferences.setSelectedVesselId(context, null)
+            target.onRestored()
             return RestoreResult.OK
         } catch (e: Exception) {
             Log.e(TAG, "Restore of an SQLite file failed", e)
@@ -263,8 +303,8 @@ object BackupManager {
         }
     }
 
-    private fun restoreZipBackup(context: Context, zipFileToRestore: File): RestoreResult {
-        val tempDbFile = File(context.cacheDir, "restore_temp.db")
+    private fun restoreZipBackup(target: RestoreTarget, zipFileToRestore: File): RestoreResult {
+        val tempDbFile = File(target.scratchDir, "restore_temp.db")
         // Photographs are unpacked into the live folders, but under names no
         // file there has yet: nothing the working data uses is overwritten
         // before the restore is known to have worked, and if it has not, they
@@ -273,7 +313,7 @@ object BackupManager {
         var result = RestoreResult.INVALID
         try {
             result = ZipFile(zipFileToRestore).use { zipFile ->
-                restoreFromZip(context, zipFile, tempDbFile, extracted)
+                restoreFromZip(target, zipFile, tempDbFile, extracted)
             }
         } catch (e: NoSpaceException) {
             Log.w(TAG, "Restore: not enough space to unpack the backup", e)
@@ -289,7 +329,7 @@ object BackupManager {
     }
 
     private fun restoreFromZip(
-        context: Context,
+        target: RestoreTarget,
         zipFile: ZipFile,
         tempDbFile: File,
         extracted: MutableList<File>,
@@ -302,7 +342,7 @@ object BackupManager {
             }
             ?: return RestoreResult.INVALID
 
-        val budget = SpaceBudget(context.filesDir)
+        val budget = SpaceBudget(target.mediaRoot)
         zipFile.getInputStream(dbEntry).use { inStream ->
             tempDbFile.outputStream().use { outStream ->
                 inStream.copyWithin(outStream, budget)
@@ -330,10 +370,10 @@ object BackupManager {
             }.getOrNull()
         }
 
-        val attachmentsDir = File(context.filesDir, "attachments")
+        val attachmentsDir = File(target.mediaRoot, "attachments")
         attachmentsDir.mkdirs()
 
-        val vesselsDir = File(context.filesDir, "vessels")
+        val vesselsDir = File(target.mediaRoot, "vessels")
         vesselsDir.mkdirs()
 
         val prefix = "r${System.currentTimeMillis()}_"
@@ -427,11 +467,10 @@ object BackupManager {
         File(tempDbFile.path + "-wal").delete()
         File(tempDbFile.path + "-shm").delete()
 
-        if (!swapInDatabase(context, tempDbFile)) return RestoreResult.INVALID
-        pruneUnreferencedMedia(context, context.getDatabasePath(AppDatabase.NAME))
+        if (!swapInDatabase(target, tempDbFile)) return RestoreResult.INVALID
+        pruneUnreferencedMedia(target)
 
-        // Clear selected vessel so app selects restored vessel
-        AppPreferences.setSelectedVesselId(context, null)
+        target.onRestored()
 
         return RestoreResult.OK
     }
@@ -447,14 +486,13 @@ object BackupManager {
      * that passed every check before this can still fail here, and that must
      * cost the owner nothing.
      */
-    private fun swapInDatabase(context: Context, restoredDb: File): Boolean {
-        val app = context.applicationContext as? HullBeatApp
-        val target = context.getDatabasePath(AppDatabase.NAME)
-        target.parentFile?.mkdirs()
-        val live = DB_FILE_SUFFIXES.map { File(target.path + it) }
+    private fun swapInDatabase(target: RestoreTarget, restoredDb: File): Boolean {
+        val dbFile = target.databaseFile
+        dbFile.parentFile?.mkdirs()
+        val live = DB_FILE_SUFFIXES.map { File(dbFile.path + it) }
         val setAside = live.map { File(it.path + ".pre-restore") }
 
-        app?.closeAndResetDatabase()
+        target.closeDatabase()
         setAside.forEach { it.delete() }
         val moved = mutableListOf<Int>()
         for (i in live.indices) {
@@ -468,16 +506,15 @@ object BackupManager {
         }
 
         return try {
-            if (!restoredDb.renameTo(target)) restoredDb.copyTo(target, overwrite = true)
+            if (!restoredDb.renameTo(dbFile)) restoredDb.copyTo(dbFile, overwrite = true)
             // A query, not just an open: Room migrates and validates on the
             // first use of the connection, and that is the check that counts.
-            app?.database?.openHelper?.writableDatabase
-                ?.query("SELECT COUNT(*) FROM vessel")?.use { it.moveToFirst() }
+            target.openAndCheck()
             setAside.forEach { it.delete() }
             true
         } catch (e: Exception) {
             Log.e(TAG, "Restore: Room refused the restored database, the previous one is back", e)
-            app?.closeAndResetDatabase()
+            target.closeDatabase()
             live.forEach { it.delete() }
             moved.forEach { setAside[it].renameTo(live[it]) }
             false
@@ -498,9 +535,9 @@ object BackupManager {
      * restore. If the references cannot be read, nothing is deleted - a
      * cleanup must never cost a photograph that is still in use.
      */
-    private fun pruneUnreferencedMedia(context: Context, restoredDb: File) {
+    private fun pruneUnreferencedMedia(target: RestoreTarget) {
         val uris = try {
-            val db = SQLiteDatabase.openDatabase(restoredDb.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
+            val db = SQLiteDatabase.openDatabase(target.databaseFile.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
             try {
                 val list = mutableListOf<String?>()
                 db.rawQuery("SELECT fileUri FROM attachment", null).use { c -> while (c.moveToNext()) list += c.getString(0) }
@@ -516,7 +553,7 @@ object BackupManager {
         val referenced = referencedPaths(uris)
         var deleted = 0
         for (dir in MEDIA_DIRS) {
-            val files = File(context.filesDir, dir).listFiles()?.filter { it.isFile } ?: continue
+            val files = File(target.mediaRoot, dir).listFiles()?.filter { it.isFile } ?: continue
             for (file in filesToPrune(files, referenced)) {
                 if (file.delete()) deleted++
             }

@@ -19,6 +19,7 @@
 #   tools/emu.sh back                  press Back
 #   tools/emu.sh db DIR                copy .db, -wal and -shm into DIR
 #   tools/emu.sh crash                 last lines of the crash buffer
+#   tools/emu.sh itest [Class]         instrumented tests, keeping the app's data
 #
 # The emulator must already be running: starting it from here shuts down
 # within seconds.
@@ -123,7 +124,25 @@ case "$cmd" in
     crash)
         adb logcat -d -b crash | tail -40
         ;;
+    itest)
+        # Not connectedAndroidTest: that task uninstalls the app when it
+        # finishes, and the owner's data goes with it. Here both APKs go in
+        # with install -r and nothing is removed afterwards.
+        need_device
+        gradle :app:assembleDebug :app:assembleDebugAndroidTest -q
+        for apk in "$ROOT/app/build/outputs/apk/debug/app-debug.apk" \
+                   "$ROOT/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"; do
+            command -v cygpath >/dev/null && apk="$(cygpath -m "$apk")"
+            adb install -r -t "$apk" >/dev/null
+        done
+        filter=""
+        [ $# -gt 0 ] && filter="-e class $1"
+        out="$(adb shell am instrument -w $filter "$PKG.test/androidx.test.runner.AndroidJUnitRunner" | tr -d '\r')"
+        restart
+        echo "$out" | tail -30
+        echo "$out" | grep -q "^OK ("
+        ;;
     *)
-        sed -n '2,25p' "$0"; exit 1
+        sed -n '2,26p' "$0"; exit 1
         ;;
 esac
