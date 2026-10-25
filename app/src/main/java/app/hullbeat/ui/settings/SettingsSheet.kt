@@ -20,6 +20,7 @@ import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.data.db.storageLocationDisplayName
 import app.hullbeat.domain.backup.BackupManager
 import app.hullbeat.domain.backup.BackupResult
+import app.hullbeat.domain.backup.RestoreResult
 import app.hullbeat.domain.export.ExcelExporter
 import app.hullbeat.domain.export.ServiceRecordExportItem
 import app.hullbeat.notify.MaintenanceCheckWorker
@@ -216,11 +217,11 @@ fun SettingsDrawerSheet(
     ) { uri: Uri? ->
         if (uri != null) {
             scope.launch(Dispatchers.IO) {
-                val ok = context.contentResolver.openInputStream(uri)?.use { stream ->
+                val result = context.contentResolver.openInputStream(uri)?.use { stream ->
                     BackupManager.restoreBackup(context, stream)
-                } ?: false
+                } ?: RestoreResult.INVALID
                 withContext(Dispatchers.Main) {
-                    if (ok) {
+                    if (result == RestoreResult.OK) {
                         Toast.makeText(
                             context.applicationContext,
                             R.string.settings_restore_success,
@@ -239,7 +240,11 @@ fun SettingsDrawerSheet(
                     } else {
                         Toast.makeText(
                             context,
-                            R.string.settings_restore_invalid,
+                            when (result) {
+                                RestoreResult.NEWER_VERSION -> R.string.settings_restore_newer
+                                RestoreResult.NO_SPACE -> R.string.settings_restore_no_space
+                                else -> R.string.settings_restore_invalid
+                            },
                             Toast.LENGTH_LONG
                         ).show()
                     }

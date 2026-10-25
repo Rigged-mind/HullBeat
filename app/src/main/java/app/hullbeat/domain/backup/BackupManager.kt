@@ -13,6 +13,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.zip.ZipEntry
@@ -53,6 +54,16 @@ data class VesselPhotoEntry(
  * have broken attachment links after a restore.
  */
 data class BackupResult(val success: Boolean, val skippedFiles: Int = 0)
+
+/**
+ * What a restore came to. Anything but [OK] leaves the working database and
+ * its photographs as they were. [NEWER_VERSION] is told apart from
+ * [INVALID] because the owner can fix it: by updating the app.
+ */
+enum class RestoreResult { OK, INVALID, NEWER_VERSION, NO_SPACE }
+
+/** What the database inside a backup turned out to be. */
+internal enum class SchemaVerdict { HULLBEAT, NEWER_VERSION, FOREIGN }
 
 object BackupManager {
 
@@ -178,19 +189,20 @@ object BackupManager {
         }
     }
 
-    fun restoreBackup(context: Context, inputStream: InputStream): Boolean {
+    fun restoreBackup(context: Context, inputStream: InputStream): RestoreResult {
         val tempInputFile = File(context.cacheDir, "restore_temp_input")
         try {
+            val budget = SpaceBudget(context.cacheDir)
             inputStream.use { input ->
                 tempInputFile.outputStream().use { output ->
-                    input.copyTo(output)
+                    input.copyWithin(output, budget)
                     output.flush()
                 }
             }
 
             if (tempInputFile.length() < 16) {
                 tempInputFile.delete()
-                return false
+                return RestoreResult.INVALID
             }
 
             val header = ByteArray(16)
@@ -202,22 +214,24 @@ object BackupManager {
                 else -> {
                     Log.w(TAG, "Restore: neither a zip nor an SQLite file")
                     tempInputFile.delete()
-                    false
+                    RestoreResult.INVALID
                 }
             }
+        } catch (e: NoSpaceException) {
+            Log.w(TAG, "Restore: not enough space to read the file", e)
+            tempInputFile.delete()
+            return RestoreResult.NO_SPACE
         } catch (e: Exception) {
             Log.e(TAG, "Restore failed while reading the file", e)
             tempInputFile.delete()
-            return false
+            return RestoreResult.INVALID
         }
     }
 
-    private fun restoreSqliteBackup(context: Context, tempDbFile: File): Boolean {
+    private fun restoreSqliteBackup(context: Context, tempDbFile: File): RestoreResult {
         try {
-            if (!verifyDatabaseIntegrity(tempDbFile)) {
-                tempDbFile.delete()
-                return false
-            }
+            if (!verifyDatabaseIntegrity(tempDbFile)) return RestoreResult.INVALID
+            readSchemaVerdict(tempDbFile).refusal()?.let { return it }
 
             // Checkpoint any pending WAL frames and convert journal mode to DELETE
             val checkpointDb = SQLiteDatabase.openDatabase(
@@ -235,209 +249,230 @@ object BackupManager {
             File(tempDbFile.path + "-wal").delete()
             File(tempDbFile.path + "-shm").delete()
 
-            // Close existing Room database cleanly before overwriting database files
-            (context.applicationContext as? HullBeatApp)?.closeAndResetDatabase()
-
-            val targetDb = context.getDatabasePath(AppDatabase.NAME)
-            targetDb.parentFile?.mkdirs()
-            File(targetDb.path + "-wal").delete()
-            File(targetDb.path + "-shm").delete()
-            tempDbFile.copyTo(targetDb, overwrite = true)
-            tempDbFile.delete()
-            File(targetDb.path + "-wal").delete()
-            File(targetDb.path + "-shm").delete()
-            pruneUnreferencedMedia(context, targetDb)
+            if (!swapInDatabase(context, tempDbFile)) return RestoreResult.INVALID
+            pruneUnreferencedMedia(context, context.getDatabasePath(AppDatabase.NAME))
 
             AppPreferences.setSelectedVesselId(context, null)
-            return true
+            return RestoreResult.OK
         } catch (e: Exception) {
             Log.e(TAG, "Restore of an SQLite file failed", e)
-            tempDbFile.delete()
-            File(tempDbFile.path + "-wal").delete()
-            File(tempDbFile.path + "-shm").delete()
-            return false
+            return RestoreResult.INVALID
+        } finally {
+            DB_FILE_SUFFIXES.forEach { File(tempDbFile.path + it).delete() }
         }
     }
 
-    private fun restoreZipBackup(context: Context, zipFileToRestore: File): Boolean {
+    private fun restoreZipBackup(context: Context, zipFileToRestore: File): RestoreResult {
         val tempDbFile = File(context.cacheDir, "restore_temp.db")
+        // Photographs are unpacked into the live folders, but under names no
+        // file there has yet: nothing the working data uses is overwritten
+        // before the restore is known to have worked, and if it has not, they
+        // are deleted again.
+        val extracted = mutableListOf<File>()
+        var result = RestoreResult.INVALID
         try {
-            val zipFile = ZipFile(zipFileToRestore)
-            val dbEntry = zipFile.getEntry("database/hullbeat.db")
-                ?: zipFile.getEntry("database\\hullbeat.db")
-                ?: zipFile.entries().asSequence().firstOrNull {
-                    it.name.endsWith(".db", ignoreCase = true) && !it.isDirectory
-                }
-            if (dbEntry == null) {
-                zipFile.close()
-                zipFileToRestore.delete()
-                return false
+            result = ZipFile(zipFileToRestore).use { zipFile ->
+                restoreFromZip(context, zipFile, tempDbFile, extracted)
             }
-
-            zipFile.getInputStream(dbEntry).use { inStream ->
-                tempDbFile.outputStream().use { outStream ->
-                    inStream.copyTo(outStream)
-                    outStream.flush()
-                }
-            }
-
-            if (!verifyDatabaseIntegrity(tempDbFile)) {
-                zipFile.close()
-                tempDbFile.delete()
-                zipFileToRestore.delete()
-                return false
-            }
-
-            val manifestEntry = zipFile.getEntry("manifest.json")
-                ?: zipFile.getEntry("manifest.JSON")
-            val manifest: BackupManifest? = if (manifestEntry != null) {
-                runCatching {
-                    zipFile.getInputStream(manifestEntry).bufferedReader(Charsets.UTF_8).use { reader ->
-                        json.decodeFromString<BackupManifest>(reader.readText())
-                    }
-                }.getOrNull()
-            } else null
-
-            val attachmentsDir = File(context.filesDir, "attachments")
-            attachmentsDir.mkdirs()
-
-            val vesselsDir = File(context.filesDir, "vessels")
-            vesselsDir.mkdirs()
-
-            val extractedAttachments = mutableListOf<Pair<Long, File>>()
-            val extractedVesselPhotos = mutableListOf<Pair<Long, File>>()
-
-            if (manifest != null && manifest.attachments.isNotEmpty()) {
-                for (attMeta in manifest.attachments) {
-                    val entry = zipFile.getEntry(attMeta.archivePath)
-                        ?: zipFile.getEntry(attMeta.archivePath.replace('\\', '/'))
-                        ?: zipFile.getEntry(attMeta.archivePath.replace('/', '\\'))
-                        ?: continue
-                    val targetFile = File(attachmentsDir, "${attMeta.id}.bin")
-                    zipFile.getInputStream(entry).use { inStream ->
-                        targetFile.outputStream().use { outStream ->
-                            inStream.copyTo(outStream)
-                        }
-                    }
-                    extractedAttachments.add(attMeta.id to targetFile)
-                }
-            } else {
-                val entries = zipFile.entries()
-                while (entries.hasMoreElements()) {
-                    val entry = entries.nextElement()
-                    val normalizedName = entry.name.replace('\\', '/')
-                    if (normalizedName.startsWith("attachments/") && !entry.isDirectory) {
-                        val fileName = File(entry.name).name
-                        val idPart = fileName.substringBefore(".")
-                        val attId = idPart.toLongOrNull()
-                        val targetFile = File(attachmentsDir, fileName)
-                        zipFile.getInputStream(entry).use { inStream ->
-                            targetFile.outputStream().use { outStream ->
-                                inStream.copyTo(outStream)
-                            }
-                        }
-                        if (attId != null) {
-                            extractedAttachments.add(attId to targetFile)
-                        }
-                    }
-                }
-            }
-
-            if (manifest != null && manifest.vesselPhotos.isNotEmpty()) {
-                for (vesselMeta in manifest.vesselPhotos) {
-                    val entry = zipFile.getEntry(vesselMeta.archivePath)
-                        ?: zipFile.getEntry(vesselMeta.archivePath.replace('\\', '/'))
-                        ?: zipFile.getEntry(vesselMeta.archivePath.replace('/', '\\'))
-                        ?: continue
-                    val targetFile = File(vesselsDir, "${vesselMeta.vesselId}.bin")
-                    zipFile.getInputStream(entry).use { inStream ->
-                        targetFile.outputStream().use { outStream ->
-                            inStream.copyTo(outStream)
-                        }
-                    }
-                    extractedVesselPhotos.add(vesselMeta.vesselId to targetFile)
-                }
-            } else {
-                val entries = zipFile.entries()
-                while (entries.hasMoreElements()) {
-                    val entry = entries.nextElement()
-                    val normalizedName = entry.name.replace('\\', '/')
-                    if (normalizedName.startsWith("vessels/") && !entry.isDirectory) {
-                        val fileName = File(entry.name).name
-                        val idPart = fileName.substringBefore(".")
-                        val vId = idPart.toLongOrNull()
-                        val targetFile = File(vesselsDir, fileName)
-                        zipFile.getInputStream(entry).use { inStream ->
-                            targetFile.outputStream().use { outStream ->
-                                inStream.copyTo(outStream)
-                            }
-                        }
-                        if (vId != null) {
-                            extractedVesselPhotos.add(vId to targetFile)
-                        }
-                    }
-                }
-            }
-
-            zipFile.close()
-
-            // Update photo & attachment file URIs in tempDbFile, then checkpoint and convert to journal_mode = DELETE
-            val writeDb = SQLiteDatabase.openDatabase(
-                tempDbFile.absolutePath,
-                null,
-                SQLiteDatabase.OPEN_READWRITE,
-            )
-            try {
-                for ((attId, localFile) in extractedAttachments) {
-                    val uriString = Uri.fromFile(localFile).toString()
-                    writeDb.execSQL(
-                        "UPDATE attachment SET fileUri = ? WHERE id = ?",
-                        arrayOf(uriString, attId.toString())
-                    )
-                }
-                for ((vesselId, localFile) in extractedVesselPhotos) {
-                    val uriString = Uri.fromFile(localFile).toString()
-                    writeDb.execSQL(
-                        "UPDATE vessel SET photoUri = ? WHERE id = ?",
-                        arrayOf(uriString, vesselId.toString())
-                    )
-                }
-                writeDb.rawQuery("PRAGMA wal_checkpoint(TRUNCATE)", null).use { it.moveToFirst() }
-                // rawQuery, not execSQL: this PRAGMA answers with a row, and
-                // Android's execSQL throws on any statement that returns one.
-                // It did, here, outside any try - so every .zip restore failed.
-                writeDb.rawQuery("PRAGMA journal_mode = DELETE", null).use { it.moveToFirst() }
-            } finally {
-                writeDb.close()
-            }
-            File(tempDbFile.path + "-wal").delete()
-            File(tempDbFile.path + "-shm").delete()
-
-            // Close existing Room database cleanly before overwriting database files
-            (context.applicationContext as? HullBeatApp)?.closeAndResetDatabase()
-
-            val targetDb = context.getDatabasePath(AppDatabase.NAME)
-            targetDb.parentFile?.mkdirs()
-            File(targetDb.path + "-wal").delete()
-            File(targetDb.path + "-shm").delete()
-            tempDbFile.copyTo(targetDb, overwrite = true)
-            tempDbFile.delete()
-            File(targetDb.path + "-wal").delete()
-            File(targetDb.path + "-shm").delete()
-            zipFileToRestore.delete()
-            pruneUnreferencedMedia(context, targetDb)
-
-            // Clear selected vessel so app selects restored vessel
-            AppPreferences.setSelectedVesselId(context, null)
-
-            return true
+        } catch (e: NoSpaceException) {
+            Log.w(TAG, "Restore: not enough space to unpack the backup", e)
+            result = RestoreResult.NO_SPACE
         } catch (e: Exception) {
             Log.e(TAG, "Restore of a zip backup failed", e)
-            tempDbFile.delete()
-            File(tempDbFile.path + "-wal").delete()
-            File(tempDbFile.path + "-shm").delete()
+        } finally {
+            DB_FILE_SUFFIXES.forEach { File(tempDbFile.path + it).delete() }
             zipFileToRestore.delete()
-            return false
+            if (result != RestoreResult.OK) extracted.forEach { it.delete() }
+        }
+        return result
+    }
+
+    private fun restoreFromZip(
+        context: Context,
+        zipFile: ZipFile,
+        tempDbFile: File,
+        extracted: MutableList<File>,
+    ): RestoreResult {
+        if (zipFile.size() > MAX_ZIP_ENTRIES) return RestoreResult.INVALID
+        val dbEntry = zipFile.getEntry("database/hullbeat.db")
+            ?: zipFile.getEntry("database\\hullbeat.db")
+            ?: zipFile.entries().asSequence().firstOrNull {
+                it.name.endsWith(".db", ignoreCase = true) && !it.isDirectory
+            }
+            ?: return RestoreResult.INVALID
+
+        val budget = SpaceBudget(context.filesDir)
+        zipFile.getInputStream(dbEntry).use { inStream ->
+            tempDbFile.outputStream().use { outStream ->
+                inStream.copyWithin(outStream, budget)
+                outStream.flush()
+            }
+        }
+
+        if (!verifyDatabaseIntegrity(tempDbFile)) return RestoreResult.INVALID
+        readSchemaVerdict(tempDbFile).refusal()?.let { return it }
+
+        val manifestEntry = zipFile.getEntry("manifest.json")
+            ?: zipFile.getEntry("manifest.JSON")
+        val manifest: BackupManifest? = if (manifestEntry != null) {
+            runCatching {
+                zipFile.getInputStream(manifestEntry).bufferedReader(Charsets.UTF_8).use { reader ->
+                    json.decodeFromString<BackupManifest>(reader.readText())
+                }
+            }.getOrNull()
+        } else null
+
+        val attachmentsDir = File(context.filesDir, "attachments")
+        attachmentsDir.mkdirs()
+
+        val vesselsDir = File(context.filesDir, "vessels")
+        vesselsDir.mkdirs()
+
+        val prefix = "r${System.currentTimeMillis()}_"
+        fun unpack(entry: ZipEntry, dir: File, name: String): File {
+            val targetFile = File(dir, prefix + name)
+            extracted += targetFile
+            zipFile.getInputStream(entry).use { inStream ->
+                targetFile.outputStream().use { outStream ->
+                    inStream.copyWithin(outStream, budget)
+                }
+            }
+            return targetFile
+        }
+
+        val extractedAttachments = mutableListOf<Pair<Long, File>>()
+        val extractedVesselPhotos = mutableListOf<Pair<Long, File>>()
+
+        if (manifest != null && manifest.attachments.isNotEmpty()) {
+            for (attMeta in manifest.attachments) {
+                val entry = zipFile.getEntry(attMeta.archivePath)
+                    ?: zipFile.getEntry(attMeta.archivePath.replace('\\', '/'))
+                    ?: zipFile.getEntry(attMeta.archivePath.replace('/', '\\'))
+                    ?: continue
+                extractedAttachments.add(attMeta.id to unpack(entry, attachmentsDir, "${attMeta.id}.bin"))
+            }
+        } else {
+            for (entry in zipFile.entries()) {
+                val normalizedName = entry.name.replace('\\', '/')
+                if (normalizedName.startsWith("attachments/") && !entry.isDirectory) {
+                    val fileName = File(entry.name).name
+                    val attId = fileName.substringBefore(".").toLongOrNull()
+                    val targetFile = unpack(entry, attachmentsDir, fileName)
+                    if (attId != null) {
+                        extractedAttachments.add(attId to targetFile)
+                    }
+                }
+            }
+        }
+
+        if (manifest != null && manifest.vesselPhotos.isNotEmpty()) {
+            for (vesselMeta in manifest.vesselPhotos) {
+                val entry = zipFile.getEntry(vesselMeta.archivePath)
+                    ?: zipFile.getEntry(vesselMeta.archivePath.replace('\\', '/'))
+                    ?: zipFile.getEntry(vesselMeta.archivePath.replace('/', '\\'))
+                    ?: continue
+                extractedVesselPhotos.add(vesselMeta.vesselId to unpack(entry, vesselsDir, "${vesselMeta.vesselId}.bin"))
+            }
+        } else {
+            for (entry in zipFile.entries()) {
+                val normalizedName = entry.name.replace('\\', '/')
+                if (normalizedName.startsWith("vessels/") && !entry.isDirectory) {
+                    val fileName = File(entry.name).name
+                    val vId = fileName.substringBefore(".").toLongOrNull()
+                    val targetFile = unpack(entry, vesselsDir, fileName)
+                    if (vId != null) {
+                        extractedVesselPhotos.add(vId to targetFile)
+                    }
+                }
+            }
+        }
+
+        // Update photo & attachment file URIs in tempDbFile, then checkpoint and convert to journal_mode = DELETE
+        val writeDb = SQLiteDatabase.openDatabase(
+            tempDbFile.absolutePath,
+            null,
+            SQLiteDatabase.OPEN_READWRITE,
+        )
+        try {
+            for ((attId, localFile) in extractedAttachments) {
+                val uriString = Uri.fromFile(localFile).toString()
+                writeDb.execSQL(
+                    "UPDATE attachment SET fileUri = ? WHERE id = ?",
+                    arrayOf(uriString, attId.toString())
+                )
+            }
+            for ((vesselId, localFile) in extractedVesselPhotos) {
+                val uriString = Uri.fromFile(localFile).toString()
+                writeDb.execSQL(
+                    "UPDATE vessel SET photoUri = ? WHERE id = ?",
+                    arrayOf(uriString, vesselId.toString())
+                )
+            }
+            writeDb.rawQuery("PRAGMA wal_checkpoint(TRUNCATE)", null).use { it.moveToFirst() }
+            // rawQuery, not execSQL: this PRAGMA answers with a row, and
+            // Android's execSQL throws on any statement that returns one.
+            // It did, here, outside any try - so every .zip restore failed.
+            writeDb.rawQuery("PRAGMA journal_mode = DELETE", null).use { it.moveToFirst() }
+        } finally {
+            writeDb.close()
+        }
+        File(tempDbFile.path + "-wal").delete()
+        File(tempDbFile.path + "-shm").delete()
+
+        if (!swapInDatabase(context, tempDbFile)) return RestoreResult.INVALID
+        pruneUnreferencedMedia(context, context.getDatabasePath(AppDatabase.NAME))
+
+        // Clear selected vessel so app selects restored vessel
+        AppPreferences.setSelectedVesselId(context, null)
+
+        return RestoreResult.OK
+    }
+
+    /** The main database file and the two SQLite keeps beside it. */
+    private val DB_FILE_SUFFIXES = listOf("", "-wal", "-shm")
+
+    /**
+     * Puts [restoredDb] where the working database is and has Room open it,
+     * which runs the migrations an older backup needs and checks the result
+     * against the schema this build expects. The working database is set
+     * aside first, not overwritten, and goes back if Room refuses: a backup
+     * that passed every check before this can still fail here, and that must
+     * cost the owner nothing.
+     */
+    private fun swapInDatabase(context: Context, restoredDb: File): Boolean {
+        val app = context.applicationContext as? HullBeatApp
+        val target = context.getDatabasePath(AppDatabase.NAME)
+        target.parentFile?.mkdirs()
+        val live = DB_FILE_SUFFIXES.map { File(target.path + it) }
+        val setAside = live.map { File(it.path + ".pre-restore") }
+
+        app?.closeAndResetDatabase()
+        setAside.forEach { it.delete() }
+        val moved = mutableListOf<Int>()
+        for (i in live.indices) {
+            if (!live[i].exists()) continue
+            if (!live[i].renameTo(setAside[i])) {
+                Log.e(TAG, "Restore: could not set ${live[i].name} aside, nothing replaced")
+                moved.forEach { setAside[it].renameTo(live[it]) }
+                return false
+            }
+            moved += i
+        }
+
+        return try {
+            if (!restoredDb.renameTo(target)) restoredDb.copyTo(target, overwrite = true)
+            // A query, not just an open: Room migrates and validates on the
+            // first use of the connection, and that is the check that counts.
+            app?.database?.openHelper?.writableDatabase
+                ?.query("SELECT COUNT(*) FROM vessel")?.use { it.moveToFirst() }
+            setAside.forEach { it.delete() }
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Restore: Room refused the restored database, the previous one is back", e)
+            app?.closeAndResetDatabase()
+            live.forEach { it.delete() }
+            moved.forEach { setAside[it].renameTo(live[it]) }
+            false
         }
     }
 
@@ -529,6 +564,72 @@ object BackupManager {
         } catch (e: Exception) {
             Log.e(TAG, "Restore: the database in the backup could not be opened", e)
             false
+        }
+    }
+
+    /**
+     * Whether a database is one of ours, judged by the two things Room itself
+     * writes: `PRAGMA user_version` and the identity hash in
+     * `room_master_table`. quick_check only says the file is sound SQLite -
+     * any app's database passes it, and Room, handed one, either fails on
+     * every start or takes version 0 for a fresh install and opens it empty.
+     */
+    internal fun schemaVerdict(userVersion: Int, identityHash: String?): SchemaVerdict = when {
+        identityHash == null -> SchemaVerdict.FOREIGN
+        userVersion > AppDatabase.IDENTITY_HASHES.keys.max() -> SchemaVerdict.NEWER_VERSION
+        AppDatabase.IDENTITY_HASHES[userVersion] == identityHash -> SchemaVerdict.HULLBEAT
+        else -> SchemaVerdict.FOREIGN
+    }
+
+    private fun readSchemaVerdict(dbFile: File): SchemaVerdict = try {
+        SQLiteDatabase.openDatabase(dbFile.absolutePath, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+            val hash = runCatching {
+                db.rawQuery("SELECT identity_hash FROM room_master_table WHERE id = 42", null)
+                    .use { c -> if (c.moveToFirst()) c.getString(0) else null }
+            }.getOrNull()
+            schemaVerdict(db.version, hash).also {
+                if (it != SchemaVerdict.HULLBEAT) Log.w(TAG, "Restore: refused, version ${db.version}, $it")
+            }
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "Restore: the database in the backup could not be read", e)
+        SchemaVerdict.FOREIGN
+    }
+
+    private fun SchemaVerdict.refusal(): RestoreResult? = when (this) {
+        SchemaVerdict.HULLBEAT -> null
+        SchemaVerdict.NEWER_VERSION -> RestoreResult.NEWER_VERSION
+        SchemaVerdict.FOREIGN -> RestoreResult.INVALID
+    }
+
+    /** Left free on the device by a restore, so it never fills the phone. */
+    private const val RESTORE_FREE_SPACE_RESERVE = 64L * 1024 * 1024
+
+    /** Far more entries than any real backup has; an archive with more is not ours. */
+    private const val MAX_ZIP_ENTRIES = 50_000
+
+    private class NoSpaceException : IOException("not enough space to restore")
+
+    /**
+     * Bytes a restore may still write. Counted while copying, not taken from
+     * the sizes the archive states about itself, which can be false.
+     */
+    private class SpaceBudget(dir: File) {
+        private var remaining = dir.usableSpace - RESTORE_FREE_SPACE_RESERVE
+
+        fun take(bytes: Int) {
+            remaining -= bytes
+            if (remaining < 0) throw NoSpaceException()
+        }
+    }
+
+    private fun InputStream.copyWithin(out: OutputStream, budget: SpaceBudget) {
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        while (true) {
+            val n = read(buffer)
+            if (n < 0) break
+            budget.take(n)
+            out.write(buffer, 0, n)
         }
     }
 

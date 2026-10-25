@@ -822,5 +822,18 @@ abstract class AppDatabase : RoomDatabase() {
             2 to MIGRATION_2_3_SQL,
             3 to listOf(MIGRATION_3_4_SQL),
         )
+
+        /**
+         * The identity hash Room writes into `room_master_table` at each
+         * schema version, copied from the exported schemas. A restore takes
+         * only a database whose hash is the one listed for its own version;
+         * BackupSchemaTest fails when a schema is exported without its line here.
+         */
+        val IDENTITY_HASHES: Map<Int, String> = mapOf(
+            1 to "b34f8996476808379244f971380b58a2",
+            2 to "fc81d0d3e387e6766a6aaa1fd5990fb0",
+            3 to "e9f7900378b06ead5278bc6cd1ab2756",
+            4 to "eb74ca8b1308d48232e9f69abf077fb0",
+        )
     }
 }

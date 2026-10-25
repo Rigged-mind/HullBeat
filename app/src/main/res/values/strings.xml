@@ -412,6 +412,8 @@
     <string name="settings_backup_failed">Failed to create backup</string>
     <string name="settings_restore_success">Database restored successfully</string>
     <string name="settings_restore_invalid">Invalid backup file</string>
+    <string name="settings_restore_newer">Backup from a newer HullBeat. Update the app and retry.</string>
+    <string name="settings_restore_no_space">Not enough space to restore. Your data is unchanged.</string>
     <string name="settings_export_store">Export inventory &amp; lockers (CSV)</string>
     <string name="settings_export_excel">Export to Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Excel file exported successfully</string>

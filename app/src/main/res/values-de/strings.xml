@@ -397,6 +397,8 @@
     <string name="settings_backup_failed">Sicherung fehlgeschlagen</string>
     <string name="settings_restore_success">Datenbank wiederhergestellt</string>
     <string name="settings_restore_invalid">Ungültige Sicherungsdatei</string>
+    <string name="settings_restore_newer">Sicherung aus neuerem HullBeat. Bitte App aktualisieren.</string>
+    <string name="settings_restore_no_space">Zu wenig Speicher. Ihre Daten bleiben unverändert.</string>
     <string name="settings_export_store">Bestand &amp; Stauräume exportieren (CSV)</string>
     <string name="settings_export_excel">Nach Excel exportieren (.xlsx)</string>
     <string name="settings_export_excel_success">Excel-Datei exportiert</string>

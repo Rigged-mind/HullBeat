@@ -397,6 +397,8 @@
     <string name="settings_backup_failed">No se pudo crear la copia</string>
     <string name="settings_restore_success">Base de datos restaurada</string>
     <string name="settings_restore_invalid">Archivo de copia no válido</string>
+    <string name="settings_restore_newer">Copia de un HullBeat más reciente. Actualice la app.</string>
+    <string name="settings_restore_no_space">No hay espacio para restaurar. Sus datos no han cambiado.</string>
     <string name="settings_export_store">Exportar inventario y pañoles (CSV)</string>
     <string name="settings_export_excel">Exportar a Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Archivo de Excel exportado</string>

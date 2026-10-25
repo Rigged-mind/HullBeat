@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-388 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+390 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -378,6 +378,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `settings_backup_failed` | Failed to create backup | **No se pudo crear la copia** | |
 | `settings_restore_success` | Database restored successfully | **Base de datos restaurada** | |
 | `settings_restore_invalid` | Invalid backup file | **Archivo de copia no válido** | |
+| `settings_restore_newer` | Backup from a newer HullBeat. Update the app and retry. | **Copia de un HullBeat más reciente. Actualice la app.** | |
+| `settings_restore_no_space` | Not enough space to restore. Your data is unchanged. | **No hay espacio para restaurar. Sus datos no han cambiado.** | |
 | `settings_export_store` | Export inventory &amp; lockers (CSV) | **Exportar inventario y pañoles (CSV)** | |
 | `settings_export_excel` | Export to Excel (.xlsx) | **Exportar a Excel (.xlsx)** | |
 | `settings_export_excel_success` | Excel file exported successfully | **Archivo de Excel exportado** | |

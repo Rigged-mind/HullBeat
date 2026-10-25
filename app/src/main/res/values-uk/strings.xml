@@ -411,6 +411,8 @@
     <string name="settings_backup_failed">Не вдалося створити резервну копію</string>
     <string name="settings_restore_success">Базу даних успішно відновлено</string>
     <string name="settings_restore_invalid">Некоректний файл резервної копії</string>
+    <string name="settings_restore_newer">Копію зроблено новішим HullBeat. Оновіть застосунок і повторіть.</string>
+    <string name="settings_restore_no_space">Замало місця для відновлення. Дані не змінено.</string>
     <string name="settings_export_store">Експортувати склад і рундуки (CSV)</string>
     <string name="settings_export_excel">Експортувати в Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Таблицю Excel успішно експортовано</string>
