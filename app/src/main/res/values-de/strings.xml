@@ -312,8 +312,6 @@
     <string name="settings_data_title">Daten &amp; Speicher</string>
     <string name="settings_data_subtitle">100% offline, lokal auf diesem Gerät gespeichert</string>
     <string name="settings_export_journal">Wartungsbuch exportieren (CSV)</string>
-    <string name="settings_export_success">Wartungsbuch erfolgreich exportiert</string>
-    <string name="settings_export_empty">Keine Einträge zum Exportieren</string>
 
     <!-- About -->
     <string name="settings_about_title">Über HullBeat</string>
@@ -376,13 +374,6 @@
     <string name="store_items_count">%1$d Stk.</string>
 
     <!-- Import & Rollback -->
-    <string name="settings_import_title">Wartungshistorie importieren</string>
-    <string name="settings_import_subtitle">Einträge aus einer CSV- oder TSV-Tabelle laden</string>
-    <string name="settings_import_btn">Tabelle importieren (CSV)</string>
-    <string name="import_sheet_title">Import ins Wartungsbuch</string>
-    <string name="import_preview_subtitle">Spalten zuordnen und Einträge prüfen</string>
-    <string name="import_file_label">Datei</string>
-    <string name="import_btn_commit">Einträge importieren</string>
     <string name="import_history_title">Importverlauf</string>
     <string name="import_history_empty">Noch keine Importe</string>
     <string name="import_rollback_btn">Rückgängig</string>
@@ -396,7 +387,6 @@
     <string name="field_map_who">Ausgeführt von</string>
     <string name="field_map_notes">Notizen</string>
     <string name="field_map_component">Komponente</string>
-    <string name="field_map_ignore">Ignorieren</string>
 
     <!-- Backup & Restore -->
     <string name="settings_backup_title">Sicherung &amp; Wiederherstellung (SAF)</string>
@@ -408,16 +398,12 @@
     <string name="settings_restore_success">Datenbank wiederhergestellt</string>
     <string name="settings_restore_invalid">Ungültige Sicherungsdatei</string>
     <string name="settings_export_store">Bestand &amp; Stauräume exportieren (CSV)</string>
-    <string name="settings_export_store_empty">Keine Stauräume oder Teile zum Exportieren</string>
-    <string name="settings_export_store_success">Bestand und Stauräume exportiert</string>
     <string name="settings_export_excel">Nach Excel exportieren (.xlsx)</string>
     <string name="settings_export_excel_success">Excel-Datei exportiert</string>
     <string name="settings_export_excel_failed">Excel-Export fehlgeschlagen</string>
     <string name="settings_export_excel_empty">Keine Daten zum Exportieren</string>
     <string name="excel_sheet_journal">Wartungsbuch</string>
     <string name="excel_sheet_store">Bestand &amp; Stauräume</string>
-    <string name="settings_export_journal_csv">Wartungsbuch (CSV)</string>
-    <string name="settings_export_store_csv">Bestand (CSV)</string>
 
     <!-- Boat Passport PDF -->
     <string name="settings_export_pdf_passport">Bootsdatenblatt &amp; Serviceheft (PDF)</string>
@@ -456,13 +442,6 @@
     <string name="theme_colorful">Farbig</string>
     <string name="lang_de">Deutsch</string>
     <string name="lang_es">Español</string>
-    <string name="import_btn_commit_with_issues">Prüfen &amp; importieren</string>
-    <string name="import_issues_banner_subtitle">Nicht erkannte Daten oder Komponenten werden beim Import übersprungen</string>
-    <string name="import_skip_dialog_title">Fehlerhafte Zeilen überspringen</string>
-    <string name="import_issue_date">nicht erkanntes Datum „%s“</string>
-    <string name="import_issue_component">unbekannte Komponente „%s“</string>
-    <string name="import_issue_row">Zeile %1$d: %2$s</string>
-    <string name="import_skip_dialog_cancel">Abbrechen</string>
     <string name="pdf_compiled_by">Vom Eigner mit HullBeat erstellt</string>
     <string name="nav_menu_title">Menü</string>
     <string name="drawer_switch_vessel">Boot wechseln</string>

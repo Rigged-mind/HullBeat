@@ -312,8 +312,6 @@
     <string name="settings_data_title">Datos y almacenamiento</string>
     <string name="settings_data_subtitle">100% sin conexión, guardado en este dispositivo</string>
     <string name="settings_export_journal">Exportar historial (CSV)</string>
-    <string name="settings_export_success">Historial exportado</string>
-    <string name="settings_export_empty">No hay registros que exportar</string>
 
     <!-- About -->
     <string name="settings_about_title">Acerca de HullBeat</string>
@@ -376,13 +374,6 @@
     <string name="store_items_count">Cant.: %1$d</string>
 
     <!-- Import & Rollback -->
-    <string name="settings_import_title">Importar historial de mantenimiento</string>
-    <string name="settings_import_subtitle">Cargar registros desde una hoja CSV o TSV</string>
-    <string name="settings_import_btn">Importar hoja de cálculo (CSV)</string>
-    <string name="import_sheet_title">Importar al historial</string>
-    <string name="import_preview_subtitle">Asigna las columnas y revisa los registros</string>
-    <string name="import_file_label">Archivo</string>
-    <string name="import_btn_commit">Importar registros</string>
     <string name="import_history_title">Importaciones anteriores</string>
     <string name="import_history_empty">Aún no hay importaciones</string>
     <string name="import_rollback_btn">Deshacer</string>
@@ -396,7 +387,6 @@
     <string name="field_map_who">Realizado por</string>
     <string name="field_map_notes">Notas</string>
     <string name="field_map_component">Componente</string>
-    <string name="field_map_ignore">Ignorar</string>
 
     <!-- Backup & Restore -->
     <string name="settings_backup_title">Copia de seguridad y restauración (SAF)</string>
@@ -408,16 +398,12 @@
     <string name="settings_restore_success">Base de datos restaurada</string>
     <string name="settings_restore_invalid">Archivo de copia no válido</string>
     <string name="settings_export_store">Exportar inventario y pañoles (CSV)</string>
-    <string name="settings_export_store_empty">No hay pañoles ni piezas que exportar</string>
-    <string name="settings_export_store_success">Inventario y pañoles exportados</string>
     <string name="settings_export_excel">Exportar a Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Archivo de Excel exportado</string>
     <string name="settings_export_excel_failed">No se pudo exportar a Excel</string>
     <string name="settings_export_excel_empty">No hay datos que exportar</string>
     <string name="excel_sheet_journal">Historial</string>
     <string name="excel_sheet_store">Inventario y pañoles</string>
-    <string name="settings_export_journal_csv">Historial (CSV)</string>
-    <string name="settings_export_store_csv">Inventario (CSV)</string>
 
     <!-- Boat Passport PDF -->
     <string name="settings_export_pdf_passport">Ficha del barco y libro de mantenimiento (PDF)</string>
@@ -456,13 +442,6 @@
     <string name="theme_colorful">Color</string>
     <string name="lang_de">Deutsch</string>
     <string name="lang_es">Español</string>
-    <string name="import_btn_commit_with_issues">Revisar e importar</string>
-    <string name="import_issues_banner_subtitle">Las fechas o componentes no reconocidos se omitirán al importar</string>
-    <string name="import_skip_dialog_title">Omitir filas con problemas</string>
-    <string name="import_issue_date">fecha no reconocida «%s»</string>
-    <string name="import_issue_component">componente desconocido «%s»</string>
-    <string name="import_issue_row">Fila %1$d: %2$s</string>
-    <string name="import_skip_dialog_cancel">Cancelar</string>
     <string name="pdf_compiled_by">Elaborado por el propietario con HullBeat</string>
     <string name="nav_menu_title">Menú</string>
     <string name="drawer_switch_vessel">Cambiar de barco</string>

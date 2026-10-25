@@ -214,45 +214,15 @@
         <item quantity="other">%d рядка</item>
     </plurals>
 
-    <plurals name="import_success_toast">
-        <item quantity="one">Імпортовано %d запис</item>
-        <item quantity="few">Імпортовано %d записи</item>
-        <item quantity="many">Імпортовано %d записів</item>
-        <item quantity="other">Імпортовано %d записи</item>
-    </plurals>
     <plurals name="settings_backup_skipped_files">
         <item quantity="one">Backup створено, але %d вкладення не ввійшло до архіву (файл недоступний)</item>
         <item quantity="few">Backup створено, але %d вкладення не ввійшли до архіву (файли недоступні)</item>
         <item quantity="many">Backup створено, але %d вкладень не ввійшло до архіву (файли недоступні)</item>
         <item quantity="other">Backup створено, але %d вкладення не ввійшли до архіву (файли недоступні)</item>
     </plurals>
-    <plurals name="import_skipped_rows">
-        <item quantity="one">пропущено %d рядок</item>
-        <item quantity="few">пропущено %d рядки</item>
-        <item quantity="many">пропущено %d рядків</item>
-        <item quantity="other">пропущено %d рядків</item>
-    </plurals>
 
-    <plurals name="import_issues_banner_title">
-        <item quantity="one">%d рядок із проблемами</item>
-        <item quantity="few">%d рядки з проблемами</item>
-        <item quantity="many">%d рядків з проблемами</item>
-        <item quantity="other">%d рядків з проблемами</item>
-    </plurals>
 
-    <plurals name="import_skip_dialog_subtitle">
-        <item quantity="one">%d рядок містить нерозпізнані поля і не буде імпортований:</item>
-        <item quantity="few">%d рядки містять нерозпізнані поля і не будуть імпортовані:</item>
-        <item quantity="many">%d рядків містять нерозпізнані поля і не будуть імпортовані:</item>
-        <item quantity="other">%d рядків містять нерозпізнані поля і не будуть імпортовані:</item>
-    </plurals>
 
     <!-- Форму обирає ЗАГАЛЬНА кількість: після «з» іменник у родовому
          відмінку узгоджується з нею - «з 1 рядка», «з 2 рядків», «з 21 рядка». -->
-    <plurals name="import_skip_dialog_confirm">
-        <item quantity="one">Імпортувати %1$d з %2$d рядка</item>
-        <item quantity="few">Імпортувати %1$d з %2$d рядків</item>
-        <item quantity="many">Імпортувати %1$d з %2$d рядків</item>
-        <item quantity="other">Імпортувати %1$d з %2$d рядків</item>
-    </plurals>
 </resources>

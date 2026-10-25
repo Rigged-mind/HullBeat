@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import app.hullbeat.data.db.ImportSession
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.displayName
+import app.hullbeat.data.db.rollbackImportSession
 import app.hullbeat.data.db.formatWorkTypes
 import app.hullbeat.data.db.formatRecordDescription
 import app.hullbeat.data.db.storageLocationDisplayName
@@ -21,10 +22,8 @@ import app.hullbeat.domain.backup.BackupManager
 import app.hullbeat.domain.backup.BackupResult
 import app.hullbeat.domain.export.ExcelExporter
 import app.hullbeat.domain.export.ServiceRecordExportItem
-import app.hullbeat.domain.importer.ImportEngine
 import app.hullbeat.notify.MaintenanceCheckWorker
 import java.time.LocalDate
-import app.hullbeat.ui.importer.ImportSheet
 import app.hullbeat.ui.export.rememberPassportPdfExport
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -51,7 +50,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.LocalContentColor
@@ -172,8 +170,7 @@ fun SettingsDrawerSheet(
     var notificationsEnabled by remember { mutableStateOf(AppPreferences.isNotificationsEnabled(context)) }
     var advanceDays by remember { mutableIntStateOf(AppPreferences.getAdvanceReminderDays(context)) }
 
-    // Import and Backup state
-    var showImportSheet by remember { mutableStateOf(false) }
+    // Past imports (the importer is gone; undoing what it wrote is not) and backup state
     var importSessions by remember { mutableStateOf<List<ImportSession>>(emptyList()) }
     val db = (context.applicationContext as HullBeatApp).database
 
@@ -927,26 +924,6 @@ fun SettingsDrawerSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
 
-                        // Import CSV Button
-                        Button(
-                            onClick = { showImportSheet = true },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(44.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_import_btn),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-
-                        val exportSuccessText = stringResource(R.string.settings_export_success)
-                        val exportEmptyText = stringResource(R.string.settings_export_empty)
-                        val exportStoreSuccessText = stringResource(R.string.settings_export_store_success)
-                        val exportStoreEmptyText = stringResource(R.string.settings_export_store_empty)
-
                         // Export to Excel Button (Primary)
                         OutlinedButton(
                             onClick = {
@@ -1023,145 +1000,6 @@ fun SettingsDrawerSheet(
                                     }
                                 },
                             )
-                        }
-
-                        // CSV exports row
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            OutlinedButton(
-                                onClick = { withExportVessel { vesselId ->
-                                    scope.launch {
-                                        withContext(Dispatchers.IO) {
-                                            val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
-                                            val records = if (targetVesselId != null) {
-                                                db.serviceRecordDao().allForVessel(targetVesselId)
-                                            } else {
-                                                emptyList()
-                                            }
-                                            if (records.isEmpty()) {
-                                                withContext(Dispatchers.Main) {
-                                                    Toast.makeText(context, exportEmptyText, Toast.LENGTH_SHORT).show()
-                                                }
-                                                return@withContext
-                                            }
-                                            val sb = StringBuilder()
-                                            sb.append("Date,WorkType,Cost,PerformedBy,Description,Notes\n")
-                                            records.forEach { r ->
-                                                val costVal = r.cost?.toString() ?: ""
-                                                val perfVal = (r.performedBy ?: "").replace("\"", "\"\"")
-                                                val workTypeVal = r.workTypes.replace("\"", "\"\"")
-                                                val descVal = r.description.replace("\"", "\"\"")
-                                                val noteVal = (r.notes ?: "").replace("\"", "\"\"")
-                                                sb.append(r.date)
-                                                    .append(",\"").append(workTypeVal).append("\",")
-                                                    .append(costVal).append(",\"")
-                                                    .append(perfVal).append("\",\"")
-                                                    .append(descVal).append("\",\"")
-                                                    .append(noteVal).append("\"\n")
-                                            }
-                                            val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                                type = "text/plain"
-                                                putExtra(Intent.EXTRA_SUBJECT, "HullBeat Ship's Log")
-                                                putExtra(Intent.EXTRA_TEXT, sb.toString())
-                                            }
-                                            val chooser = Intent.createChooser(sendIntent, null).apply {
-                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            }
-                                            context.startActivity(chooser)
-                                            withContext(Dispatchers.Main) {
-                                                Toast.makeText(context, exportSuccessText, Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    }
-                                } },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(40.dp),
-                                shape = RoundedCornerShape(8.dp),
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.settings_export_journal_csv),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.labelMedium,
-                                )
-                            }
-
-                            OutlinedButton(
-                                onClick = { withExportVessel { vesselId ->
-                                    scope.launch {
-                                        withContext(Dispatchers.IO) {
-                                            val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
-                                            val locations = if (targetVesselId != null) {
-                                                db.inventoryDao().allLocationsForVessel(targetVesselId)
-                                            } else {
-                                                emptyList()
-                                            }
-                                            val items = if (targetVesselId != null) {
-                                                db.inventoryDao().allForVessel(targetVesselId)
-                                            } else {
-                                                emptyList()
-                                            }
-                                            if (locations.isEmpty() && items.isEmpty()) {
-                                                withContext(Dispatchers.Main) {
-                                                    Toast.makeText(context, exportStoreEmptyText, Toast.LENGTH_SHORT).show()
-                                                }
-                                                return@withContext
-                                            }
-                                            val sb = StringBuilder()
-                                            sb.append("Locker,PartName,PartNumber,Manufacturer,Quantity,MinQuantity,Notes\n")
-                                            items.forEach { item ->
-                                                val lockerName = (item.locationName ?: "").replace("\"", "\"\"")
-                                                val name = item.partName.replace("\"", "\"\"")
-                                                val partNum = (item.partNumber ?: "").replace("\"", "\"\"")
-                                                val mfr = (item.manufacturer ?: "").replace("\"", "\"\"")
-                                                val notes = (item.partNote ?: "").replace("\"", "\"\"")
-                                                val minQty = item.minQuantity?.toString() ?: ""
-                                                sb.append("\"").append(lockerName).append("\",\"")
-                                                    .append(name).append("\",\"")
-                                                    .append(partNum).append("\",\"")
-                                                    .append(mfr).append("\",")
-                                                    .append(item.quantity).append(",")
-                                                    .append(minQty).append(",\"")
-                                                    .append(notes).append("\"\n")
-                                            }
-                                            val usedLocationIds = items.mapNotNull { it.locationId }.toSet()
-                                            val emptyLocations = locations.filter { it.id !in usedLocationIds }
-                                            emptyLocations.forEach { loc ->
-                                                val lockerName = loc.name.replace("\"", "\"\"")
-                                                val notes = (loc.note ?: "").replace("\"", "\"\"")
-                                                sb.append("\"").append(lockerName).append("\",\"\",\"\",\"\",0,\"\",\"")
-                                                    .append(notes).append("\"\n")
-                                            }
-                                            val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                                type = "text/plain"
-                                                putExtra(Intent.EXTRA_SUBJECT, "HullBeat Store & Lockers")
-                                                putExtra(Intent.EXTRA_TEXT, sb.toString())
-                                            }
-                                            val chooser = Intent.createChooser(sendIntent, null).apply {
-                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            }
-                                            context.startActivity(chooser)
-                                            withContext(Dispatchers.Main) {
-                                                Toast.makeText(context, exportStoreSuccessText, Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    }
-                                } },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(40.dp),
-                                shape = RoundedCornerShape(8.dp),
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.settings_export_store_csv),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.labelMedium,
-                                )
-                            }
                         }
 
                         Spacer(Modifier.height(4.dp))
@@ -1251,7 +1089,7 @@ fun SettingsDrawerSheet(
                                         OutlinedButton(
                                             onClick = {
                                                 scope.launch(Dispatchers.IO) {
-                                                    ImportEngine.rollbackSession(session.id, db)
+                                                    db.rollbackImportSession(session.id)
                                                     withContext(Dispatchers.Main) {
                                                         Toast.makeText(context, context.getString(R.string.import_rollback_success), Toast.LENGTH_SHORT).show()
                                                         refreshSessions()
@@ -1342,27 +1180,6 @@ fun SettingsDrawerSheet(
                     }
                 }
             }
-        }
-    }
-
-    if (showImportSheet) {
-        var importVesselId by remember { mutableStateOf<Long?>(activeVesselId) }
-        LaunchedEffect(activeVesselId) {
-            if (importVesselId == null) {
-                withContext(Dispatchers.IO) {
-                    importVesselId = db.vesselDao().allActive().firstOrNull()?.id
-                }
-            }
-        }
-        if (importVesselId != null) {
-            ImportSheet(
-                vesselId = importVesselId!!,
-                database = db,
-                onDismiss = { showImportSheet = false },
-                onImportFinished = {
-                    refreshSessions()
-                },
-            )
         }
     }
 }

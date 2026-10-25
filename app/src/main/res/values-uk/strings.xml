@@ -326,8 +326,6 @@
     <string name="settings_data_title">Дані та журнал</string>
     <string name="settings_data_subtitle">100% локальне офлайн-збереження на цьому пристрої</string>
     <string name="settings_export_journal">Експорт журналу (CSV)</string>
-    <string name="settings_export_success">Судновий журнал успішно експортовано</string>
-    <string name="settings_export_empty">Немає записів для експорту</string>
 
     <!-- About -->
     <string name="settings_about_title">Про HullBeat</string>
@@ -390,20 +388,6 @@
     <string name="store_items_count">%1$d шт</string>
 
     <!-- Import & Rollback -->
-    <string name="settings_import_title">Імпорт історії робіт</string>
-    <string name="settings_import_subtitle">Завантаження записів із таблиці CSV або TSV</string>
-    <string name="settings_import_btn">Імпортувати таблицю (CSV)</string>
-    <string name="import_sheet_title">Імпорт журналу</string>
-    <string name="import_preview_subtitle">Зіставте колонки та перевірте записи</string>
-    <string name="import_file_label">Файл</string>
-    <string name="import_btn_commit">Імпортувати записи</string>
-    <string name="import_btn_commit_with_issues">Переглянути та імпортувати</string>
-    <string name="import_issues_banner_subtitle">Рядки з нерозпізнаною датою або компонентом будуть пропущені при імпорті</string>
-    <string name="import_skip_dialog_title">Пропуск проблемних рядків</string>
-    <string name="import_issue_date">невідома дата «%s»</string>
-    <string name="import_issue_component">невідомий компонент «%s»</string>
-    <string name="import_issue_row">Рядок %1$d: %2$s</string>
-    <string name="import_skip_dialog_cancel">Скасувати</string>
     <string name="import_history_title">Історія імпортів</string>
     <string name="import_history_empty">Імпортів ще не було</string>
     <string name="import_rollback_btn">Скасувати</string>
@@ -417,7 +401,6 @@
     <string name="field_map_who">Виконавець</string>
     <string name="field_map_notes">Нотатки</string>
     <string name="field_map_component">Вузол</string>
-    <string name="field_map_ignore">Пропустити</string>
 
     <!-- Backup & Restore -->
     <string name="settings_backup_title">Резервне копіювання (SAF)</string>
@@ -429,16 +412,12 @@
     <string name="settings_restore_success">Базу даних успішно відновлено</string>
     <string name="settings_restore_invalid">Некоректний файл резервної копії</string>
     <string name="settings_export_store">Експортувати склад і рундуки (CSV)</string>
-    <string name="settings_export_store_empty">Немає рундуків чи деталей для експорту</string>
-    <string name="settings_export_store_success">Склад та рундуки успішно експортовано</string>
     <string name="settings_export_excel">Експортувати в Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Таблицю Excel успішно експортовано</string>
     <string name="settings_export_excel_failed">Не вдалося експортувати файл Excel</string>
     <string name="settings_export_excel_empty">Немає даних для експорту</string>
     <string name="excel_sheet_journal">Журнал обслуговування</string>
     <string name="excel_sheet_store">Склад і рундуки</string>
-    <string name="settings_export_journal_csv">Журнал (CSV)</string>
-    <string name="settings_export_store_csv">Склад (CSV)</string>
 
     <!-- Boat Passport PDF -->
     <string name="settings_export_pdf_passport">Паспорт судна та сервісна книжка (PDF)</string>

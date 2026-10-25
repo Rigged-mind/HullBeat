@@ -151,33 +151,13 @@
         <item quantity="other">%d rows</item>
     </plurals>
 
-    <plurals name="import_success_toast">
-        <item quantity="one">Imported %d record</item>
-        <item quantity="other">Imported %d records</item>
-    </plurals>
     <plurals name="settings_backup_skipped_files">
         <item quantity="one">Backup created, but %d attachment could not be included (file unavailable)</item>
         <item quantity="other">Backup created, but %d attachments could not be included (files unavailable)</item>
     </plurals>
-    <plurals name="import_skipped_rows">
-        <item quantity="one">%d row skipped</item>
-        <item quantity="other">%d rows skipped</item>
-    </plurals>
 
-    <plurals name="import_issues_banner_title">
-        <item quantity="one">%d row has issues</item>
-        <item quantity="other">%d rows have issues</item>
-    </plurals>
 
-    <plurals name="import_skip_dialog_subtitle">
-        <item quantity="one">%d row has unparsed fields and will not be imported:</item>
-        <item quantity="other">%d rows have unparsed fields and will not be imported:</item>
-    </plurals>
 
     <!-- Two numbers; the TOTAL picks the form, because the noun follows it:
          "Import 3 of 21 rows", «Імпортувати 3 з 21 рядка». -->
-    <plurals name="import_skip_dialog_confirm">
-        <item quantity="one">Import %1$d of %2$d row</item>
-        <item quantity="other">Import %1$d of %2$d rows</item>
-    </plurals>
 </resources>

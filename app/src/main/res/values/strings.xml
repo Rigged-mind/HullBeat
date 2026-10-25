@@ -327,8 +327,6 @@
     <string name="settings_data_title">Data &amp; storage</string>
     <string name="settings_data_subtitle">100% offline-first local storage on this device</string>
     <string name="settings_export_journal">Export ship\'s log (CSV)</string>
-    <string name="settings_export_success">Ship\'s log exported successfully</string>
-    <string name="settings_export_empty">No records to export</string>
 
     <!-- About -->
     <string name="settings_about_title">About HullBeat</string>
@@ -391,23 +389,6 @@
     <string name="store_items_count">%1$d pcs</string>
 
     <!-- Import & Rollback -->
-    <string name="settings_import_title">Import service history</string>
-    <string name="settings_import_subtitle">Load records from CSV or TSV spreadsheet</string>
-    <string name="settings_import_btn">Import spreadsheet (CSV)</string>
-    <string name="import_sheet_title">Import journal</string>
-    <string name="import_preview_subtitle">Map columns and preview records</string>
-    <string name="import_file_label">File</string>
-    <string name="import_btn_commit">Import records</string>
-    <string name="import_btn_commit_with_issues">Review &amp; import</string>
-    <!-- import_issues_banner_title, import_skip_dialog_subtitle and
-         import_skip_dialog_confirm are <plurals>: "%d rows have" read
-         "1 rows have", and in Ukrainian "1 рядків". -->
-    <string name="import_issues_banner_subtitle">Unrecognized dates or components will be skipped upon import</string>
-    <string name="import_skip_dialog_title">Skipping problematic rows</string>
-    <string name="import_issue_date">unrecognized date «%s»</string>
-    <string name="import_issue_component">unknown component «%s»</string>
-    <string name="import_issue_row">Row %1$d: %2$s</string>
-    <string name="import_skip_dialog_cancel">Cancel</string>
     <string name="import_history_title">Import history</string>
     <string name="import_history_empty">No imports yet</string>
     <string name="import_rollback_btn">Undo</string>
@@ -421,7 +402,6 @@
     <string name="field_map_who">Performed by</string>
     <string name="field_map_notes">Notes</string>
     <string name="field_map_component">Component</string>
-    <string name="field_map_ignore">Ignore</string>
 
     <!-- Backup & Restore -->
     <string name="settings_backup_title">Backup &amp; restore (SAF)</string>
@@ -433,16 +413,12 @@
     <string name="settings_restore_success">Database restored successfully</string>
     <string name="settings_restore_invalid">Invalid backup file</string>
     <string name="settings_export_store">Export inventory &amp; lockers (CSV)</string>
-    <string name="settings_export_store_empty">No lockers or parts to export</string>
-    <string name="settings_export_store_success">Store and lockers exported successfully</string>
     <string name="settings_export_excel">Export to Excel (.xlsx)</string>
     <string name="settings_export_excel_success">Excel file exported successfully</string>
     <string name="settings_export_excel_failed">Failed to export Excel file</string>
     <string name="settings_export_excel_empty">No data to export</string>
     <string name="excel_sheet_journal">Service log</string>
     <string name="excel_sheet_store">Store &amp; Lockers</string>
-    <string name="settings_export_journal_csv">Log (CSV)</string>
-    <string name="settings_export_store_csv">Store (CSV)</string>
 
     <!-- Boat Passport PDF -->
     <string name="settings_export_pdf_passport">Boat passport &amp; service book (PDF)</string>
