@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-404 strings and 33 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+388 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -301,12 +301,12 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `settings_data_title` | Data &amp; storage | **Datos y almacenamiento** | |
 | `settings_data_subtitle` | 100% offline-first local storage on this device | **100% sin conexión, guardado en este dispositivo** | |
 | `settings_export_journal` | Export ship\'s log (CSV) | **Exportar historial (CSV)** | |
-| `settings_export_success` | Ship\'s log exported successfully | **Historial exportado** | |
-| `settings_export_empty` | No records to export | **No hay registros que exportar** | |
 | `settings_about_title` | About HullBeat | **Acerca de HullBeat** | |
 | `settings_about_version` | Version %1$s | **Versión %1$s** | |
 | `settings_about_desc` | HullBeat is an offline-first ship\'s log and maintenance planner designed for sailboats and motor yachts. | **HullBeat es un historial de mantenimiento y planificador sin conexión para veleros y yates a motor.** | |
 | `settings_about_github` | GitHub repository | **Repositorio en GitHub** | |
+| `settings_feedback` | Suggestions &amp; feedback | **Sugerencias y comentarios** | |
+| `settings_feedback_no_mail_app` | No email app on this phone. Write to %1$s | **No hay ninguna app de correo en este teléfono. Escriba a %1$s** | |
 | `store_tab_all` | All spares | **Todos los repuestos** | |
 | `store_tab_tobuy` | To buy | **Por comprar** | |
 | `store_tab_locations` | Lockers | **Pañoles** | |
@@ -357,20 +357,6 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `store_default_loc_forepeak` | Forepeak locker | **Pañol de proa** | |
 | `store_default_loc_galley` | Galley locker | **Armario de la cocina** | |
 | `store_items_count` | %1$d pcs | **Cant.: %1$d** | |
-| `settings_import_title` | Import service history | **Importar historial de mantenimiento** | |
-| `settings_import_subtitle` | Load records from CSV or TSV spreadsheet | **Cargar registros desde una hoja CSV o TSV** | |
-| `settings_import_btn` | Import spreadsheet (CSV) | **Importar hoja de cálculo (CSV)** | |
-| `import_sheet_title` | Import journal | **Importar al historial** | |
-| `import_preview_subtitle` | Map columns and preview records | **Asigna las columnas y revisa los registros** | |
-| `import_file_label` | File | **Archivo** | |
-| `import_btn_commit` | Import records | **Importar registros** | |
-| `import_btn_commit_with_issues` | Review &amp; import | **Revisar e importar** | |
-| `import_issues_banner_subtitle` | Unrecognized dates or components will be skipped upon import | **Las fechas o componentes no reconocidos se omitirán al importar** | |
-| `import_skip_dialog_title` | Skipping problematic rows | **Omitir filas con problemas** | |
-| `import_issue_date` | unrecognized date «%s» | **fecha no reconocida «%s»** | |
-| `import_issue_component` | unknown component «%s» | **componente desconocido «%s»** | |
-| `import_issue_row` | Row %1$d: %2$s | **Fila %1$d: %2$s** | |
-| `import_skip_dialog_cancel` | Cancel | **Cancelar** | |
 | `import_history_title` | Import history | **Importaciones anteriores** | |
 | `import_history_empty` | No imports yet | **Aún no hay importaciones** | |
 | `import_rollback_btn` | Undo | **Deshacer** | |
@@ -384,7 +370,6 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `field_map_who` | Performed by | **Realizado por** | |
 | `field_map_notes` | Notes | **Notas** | |
 | `field_map_component` | Component | **Componente** | |
-| `field_map_ignore` | Ignore | **Ignorar** | |
 | `settings_backup_title` | Backup &amp; restore (SAF) | **Copia de seguridad y restauración (SAF)** | |
 | `settings_backup_subtitle` | Full database backup to storage or cloud | **Copia completa de la base de datos en el almacenamiento o la nube** | |
 | `settings_backup_create` | Create backup | **Crear copia de seguridad** | |
@@ -394,16 +379,12 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `settings_restore_success` | Database restored successfully | **Base de datos restaurada** | |
 | `settings_restore_invalid` | Invalid backup file | **Archivo de copia no válido** | |
 | `settings_export_store` | Export inventory &amp; lockers (CSV) | **Exportar inventario y pañoles (CSV)** | |
-| `settings_export_store_empty` | No lockers or parts to export | **No hay pañoles ni piezas que exportar** | |
-| `settings_export_store_success` | Store and lockers exported successfully | **Inventario y pañoles exportados** | |
 | `settings_export_excel` | Export to Excel (.xlsx) | **Exportar a Excel (.xlsx)** | |
 | `settings_export_excel_success` | Excel file exported successfully | **Archivo de Excel exportado** | |
 | `settings_export_excel_failed` | Failed to export Excel file | **No se pudo exportar a Excel** | |
 | `settings_export_excel_empty` | No data to export | **No hay datos que exportar** | |
 | `excel_sheet_journal` | Service log | **Historial** | |
 | `excel_sheet_store` | Store &amp; Lockers | **Inventario y pañoles** | |
-| `settings_export_journal_csv` | Log (CSV) | **Historial (CSV)** | |
-| `settings_export_store_csv` | Store (CSV) | **Inventario (CSV)** | |
 | `settings_export_pdf_passport` | Boat passport &amp; service book (PDF) | **Ficha del barco y libro de mantenimiento (PDF)** | |
 | `settings_export_pdf_success` | Boat passport exported successfully | **Ficha del barco exportada** | |
 | `settings_export_pdf_failed` | Failed to create PDF document | **No se pudo crear el PDF** | |
@@ -432,6 +413,9 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `pdf_compiled_by` | Compiled by owner via HullBeat | **Elaborado por el propietario con HullBeat** | |
 | `now_enter_hours` | Enter hours | **Introducir horas** | |
 | `error_photo_save_failed` | Could not save the photo | **No se pudo guardar la foto** | |
+| `error_number_invalid` | Not a number | **No es un número** | |
+| `error_expiry_before_service` | Must be later than the date of the service | **Debe ser posterior a la fecha del trabajo** | |
+| `error_record_save_failed` | Could not save the record. Nothing was lost - try again. | **No se pudo guardar el registro. No se perdió nada: inténtelo de nuevo.** | |
 | `action_ok` | OK | **Aceptar** | |
 | `nav_menu_title` | Menu | **Menú** | |
 | `drawer_switch_vessel` | Switch vessel | **Cambiar de barco** | |
@@ -467,9 +451,4 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `store_stat_items` | one: %d item / other: %d items | **one: %d pieza / many: %d piezas / other: %d piezas** | |
 | `store_stat_lockers` | one: in %d locker / other: in %d lockers | **one: en %d pañol / many: en %d pañoles / other: en %d pañoles** | |
 | `import_rows_count` | one: %d row / other: %d rows | **one: %d fila / many: %d filas / other: %d filas** | |
-| `import_success_toast` | one: Imported %d record / other: Imported %d records | **one: %d registro importado / many: %d registros importados / other: %d registros importados** | |
 | `settings_backup_skipped_files` | one: Backup created, but %d attachment could not be included (file unavailable) / other: Backup created, but %d attachments could not be included (files unavailable) | **one: Copia creada, pero no se pudo incluir %d adjunto (archivo no disponible) / many: Copia creada, pero no se pudieron incluir %d adjuntos (archivos no disponibles) / other: Copia creada, pero no se pudieron incluir %d adjuntos (archivos no disponibles)** | |
-| `import_skipped_rows` | one: %d row skipped / other: %d rows skipped | **one: %d fila omitida / many: %d filas omitidas / other: %d filas omitidas** | |
-| `import_issues_banner_title` | one: %d row has issues / other: %d rows have issues | **one: %d fila con problemas / many: %d filas con problemas / other: %d filas con problemas** | |
-| `import_skip_dialog_subtitle` | one: %d row has unparsed fields and will not be imported: / other: %d rows have unparsed fields and will not be imported: | **one: %d fila tiene campos no reconocidos y no se importará: / many: %d filas tienen campos no reconocidos y no se importarán: / other: %d filas tienen campos no reconocidos y no se importarán:** | |
-| `import_skip_dialog_confirm` | one: Import %1$d of %2$d row / other: Import %1$d of %2$d rows | **one: Importar %1$d de %2$d fila / many: Importar %1$d de %2$d filas / other: Importar %1$d de %2$d filas** | |
