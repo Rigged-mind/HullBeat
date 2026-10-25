@@ -586,6 +586,13 @@ fun HullBeatMainScaffold(
             )
         }
     }
+
+    // ModalNavigationDrawer does not take Back itself, so with Settings open
+    // Back closed the whole app. Placed after the drawer, so it comes before
+    // any handler inside the tabs while the drawer is open.
+    BackHandler(enabled = drawerState.isOpen) {
+        drawerScope.launch { drawerState.close() }
+    }
 }
 }
 
