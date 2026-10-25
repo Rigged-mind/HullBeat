@@ -36,6 +36,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,6 +52,9 @@ import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,6 +73,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -96,6 +103,7 @@ import app.hullbeat.data.preferences.PressureUnit
 import app.hullbeat.data.preferences.TemperatureUnit
 import app.hullbeat.data.preferences.VolumeUnit
 import app.hullbeat.ui.AppLanguage
+import app.hullbeat.ui.theme.LocalScheme
 import app.hullbeat.ui.theme.Scheme
 import app.hullbeat.ui.theme.LocalExtendedColors
 import androidx.compose.animation.core.animateFloatAsState
@@ -362,491 +370,539 @@ fun SettingsDrawerSheet(
         }
     }
 
-    ModalDrawerSheet(
-        drawerContainerColor = MaterialTheme.colorScheme.surface,
-        modifier = modifier.widthIn(max = 360.dp),
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            flingBehavior = appFlingBehavior(),
+    // Colorful: the main screen's brand header carries over into the drawer,
+    // and sections become white cards on the tinted background instead of
+    // dividers on white. The band also sits under the status bar, whose
+    // glyphs are light in this scheme and vanished on a white drawer.
+    val colorful = LocalScheme.current == Scheme.COLORFUL
+    val drawerHeader: @Composable () -> Unit = {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Header
-            item(key = "drawer_header") {
-                Column(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_nav_boat),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp),
+                        tint = if (colorful) LocalContentColor.current else MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                IconButton(onClick = onClose) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.action_cancel),
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
+            }
+
+            if (activeVesselName != null) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (colorful) {
+                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.12f)
+                    } else {
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+                    },
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_nav_boat),
-                                contentDescription = null,
-                                modifier = Modifier.size(28.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                        IconButton(onClick = onClose) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_close),
-                                contentDescription = stringResource(R.string.action_cancel),
-                                modifier = Modifier.size(22.dp),
-                            )
-                        }
-                    }
-
-                    if (activeVesselName != null) {
-                        Surface(
-                            shape = RoundedCornerShape(10.dp),
-                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = activeVesselName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                }
-                                if (onSwitchVessel != null) {
-                                    TextButton(
-                                        onClick = onSwitchVessel,
-                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.drawer_switch_vessel),
-                                            style = MaterialTheme.typography.labelMedium,
-                                            fontWeight = FontWeight.Bold,
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            item(key = "divider_top") { HorizontalDivider() }
-
-            // 1. Units of measurement
-            item(key = "units_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = stringResource(R.string.settings_units_title),
+                                text = activeVesselName,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            Text(
-                                text = stringResource(R.string.settings_units_subtitle),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
-
-                    // Presets
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        FilledTonalButton(
-                            onClick = {
-                                AppPreferences.applyMetricPreset(context)
-                                lengthUnit = LengthUnit.METRES
-                                distanceUnit = DistanceUnit.NAUTICAL_MILES
-                                volumeUnit = VolumeUnit.LITRES
-                                pressureUnit = PressureUnit.BAR
-                                temperatureUnit = TemperatureUnit.CELSIUS
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(44.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_units_preset_metric),
+                                fontWeight = FontWeight.SemiBold,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelLarge,
                             )
                         }
-                        FilledTonalButton(
-                            onClick = {
-                                AppPreferences.applyNauticalImperialPreset(context)
-                                lengthUnit = LengthUnit.FEET
-                                distanceUnit = DistanceUnit.NAUTICAL_MILES
-                                volumeUnit = VolumeUnit.GALLONS_US
-                                pressureUnit = PressureUnit.PSI
-                                temperatureUnit = TemperatureUnit.CELSIUS
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(44.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_units_preset_nautical),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
+                        if (onSwitchVessel != null) {
+                            TextButton(
+                                onClick = onSwitchVessel,
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                colors = if (colorful) {
+                                    ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current)
+                                } else {
+                                    ButtonDefaults.textButtonColors()
+                                },
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.drawer_switch_vessel),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
                         }
                     }
+                }
+            }
+        }
+    }
 
-                    // Length unit
-                    SettingsUnitRow(
-                        title = stringResource(R.string.settings_unit_length),
-                        selectedName = stringResource(lengthUnit.nameRes),
-                        options = LengthUnit.entries.map { it to stringResource(it.shortNameRes) },
-                        selected = lengthUnit,
-                        onSelect = {
-                            lengthUnit = it
-                            AppPreferences.setLengthUnit(context, it)
-                        },
-                    )
+    ModalDrawerSheet(
+        drawerContainerColor = if (colorful) {
+            MaterialTheme.colorScheme.background
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
+        windowInsets = if (colorful) WindowInsets(0) else DrawerDefaults.windowInsets,
+        modifier = modifier.widthIn(max = 360.dp),
+    ) {
+        if (colorful) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimary) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primary)
+                        .statusBarsPadding()
+                        .padding(start = 20.dp, end = 20.dp, bottom = 16.dp),
+                ) {
+                    drawerHeader()
+                }
+            }
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(if (colorful) Modifier.navigationBarsPadding() else Modifier)
+                .padding(
+                    horizontal = if (colorful) 12.dp else 20.dp,
+                    vertical = if (colorful) 12.dp else 8.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(if (colorful) 12.dp else 20.dp),
+            flingBehavior = appFlingBehavior(),
+        ) {
+            // Header
+            if (!colorful) item(key = "drawer_header") { drawerHeader() }
 
-                    // Distance unit
-                    SettingsUnitRow(
-                        title = stringResource(R.string.settings_unit_distance),
-                        selectedName = stringResource(distanceUnit.nameRes),
-                        options = DistanceUnit.entries.map { it to stringResource(it.shortNameRes) },
-                        selected = distanceUnit,
-                        onSelect = {
-                            distanceUnit = it
-                            AppPreferences.setDistanceUnit(context, it)
-                        },
-                    )
+            if (!colorful) item(key = "divider_top") { HorizontalDivider() }
 
-                    // Volume unit
-                    SettingsUnitRow(
-                        title = stringResource(R.string.settings_unit_volume),
-                        selectedName = stringResource(volumeUnit.nameRes),
-                        options = VolumeUnit.entries.map { it to stringResource(it.shortNameRes) },
-                        selected = volumeUnit,
-                        onSelect = {
-                            volumeUnit = it
-                            AppPreferences.setVolumeUnit(context, it)
-                        },
-                    )
+            // 1. Units of measurement
+            item(key = "units_section") {
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(R.string.settings_units_title),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Text(
+                                    text = stringResource(R.string.settings_units_subtitle),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
 
-                    // Pressure unit
-                    SettingsUnitRow(
-                        title = stringResource(R.string.settings_unit_pressure),
-                        selectedName = stringResource(pressureUnit.nameRes),
-                        options = PressureUnit.entries.map { it to stringResource(it.shortNameRes) },
-                        selected = pressureUnit,
-                        onSelect = {
-                            pressureUnit = it
-                            AppPreferences.setPressureUnit(context, it)
-                        },
-                    )
+                        // Presets
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            FilledTonalButton(
+                                onClick = {
+                                    AppPreferences.applyMetricPreset(context)
+                                    lengthUnit = LengthUnit.METRES
+                                    distanceUnit = DistanceUnit.NAUTICAL_MILES
+                                    volumeUnit = VolumeUnit.LITRES
+                                    pressureUnit = PressureUnit.BAR
+                                    temperatureUnit = TemperatureUnit.CELSIUS
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(44.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_units_preset_metric),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                            }
+                            FilledTonalButton(
+                                onClick = {
+                                    AppPreferences.applyNauticalImperialPreset(context)
+                                    lengthUnit = LengthUnit.FEET
+                                    distanceUnit = DistanceUnit.NAUTICAL_MILES
+                                    volumeUnit = VolumeUnit.GALLONS_US
+                                    pressureUnit = PressureUnit.PSI
+                                    temperatureUnit = TemperatureUnit.CELSIUS
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(44.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_units_preset_nautical),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                            }
+                        }
 
-                    // Temperature unit
-                    SettingsUnitRow(
-                        title = stringResource(R.string.settings_unit_temperature),
-                        selectedName = stringResource(temperatureUnit.nameRes),
-                        options = TemperatureUnit.entries.map { it to stringResource(it.shortNameRes) },
-                        selected = temperatureUnit,
-                        onSelect = {
-                            temperatureUnit = it
-                            AppPreferences.setTemperatureUnit(context, it)
-                        },
-                    )
+                        // Length unit
+                        SettingsUnitRow(
+                            title = stringResource(R.string.settings_unit_length),
+                            selectedName = stringResource(lengthUnit.nameRes),
+                            options = LengthUnit.entries.map { it to stringResource(it.shortNameRes) },
+                            selected = lengthUnit,
+                            onSelect = {
+                                lengthUnit = it
+                                AppPreferences.setLengthUnit(context, it)
+                            },
+                        )
+
+                        // Distance unit
+                        SettingsUnitRow(
+                            title = stringResource(R.string.settings_unit_distance),
+                            selectedName = stringResource(distanceUnit.nameRes),
+                            options = DistanceUnit.entries.map { it to stringResource(it.shortNameRes) },
+                            selected = distanceUnit,
+                            onSelect = {
+                                distanceUnit = it
+                                AppPreferences.setDistanceUnit(context, it)
+                            },
+                        )
+
+                        // Volume unit
+                        SettingsUnitRow(
+                            title = stringResource(R.string.settings_unit_volume),
+                            selectedName = stringResource(volumeUnit.nameRes),
+                            options = VolumeUnit.entries.map { it to stringResource(it.shortNameRes) },
+                            selected = volumeUnit,
+                            onSelect = {
+                                volumeUnit = it
+                                AppPreferences.setVolumeUnit(context, it)
+                            },
+                        )
+
+                        // Pressure unit
+                        SettingsUnitRow(
+                            title = stringResource(R.string.settings_unit_pressure),
+                            selectedName = stringResource(pressureUnit.nameRes),
+                            options = PressureUnit.entries.map { it to stringResource(it.shortNameRes) },
+                            selected = pressureUnit,
+                            onSelect = {
+                                pressureUnit = it
+                                AppPreferences.setPressureUnit(context, it)
+                            },
+                        )
+
+                        // Temperature unit
+                        SettingsUnitRow(
+                            title = stringResource(R.string.settings_unit_temperature),
+                            selectedName = stringResource(temperatureUnit.nameRes),
+                            options = TemperatureUnit.entries.map { it to stringResource(it.shortNameRes) },
+                            selected = temperatureUnit,
+                            onSelect = {
+                                temperatureUnit = it
+                                AppPreferences.setTemperatureUnit(context, it)
+                            },
+                        )
+                    }
                 }
             }
 
-            item(key = "divider_1") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_1") { HorizontalDivider() }
 
             // 2. Currency
             item(key = "currency_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_currency),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_currency_subtitle),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text(
+                            text = stringResource(R.string.settings_currency),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = stringResource(R.string.settings_currency_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
 
-                    // Matched by CODE: SEK and NOK are both "kr", and the code
-                    // is what every new cost is stored with. A "kr" saved
-                    // before the code was has none; it falls back to the
-                    // symbol, and the first "kr" wins the label until the
-                    // owner picks again.
-                    val selectedCurrencyOption = if (isCustomSelected) null else
-                        AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.code == selectedCurrencyCode }
-                            ?: AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.symbol == selectedCurrency }
+                        // Matched by CODE: SEK and NOK are both "kr", and the code
+                        // is what every new cost is stored with. A "kr" saved
+                        // before the code was has none; it falls back to the
+                        // symbol, and the first "kr" wins the label until the
+                        // owner picks again.
+                        val selectedCurrencyOption = if (isCustomSelected) null else
+                            AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.code == selectedCurrencyCode }
+                                ?: AppPreferences.AVAILABLE_CURRENCIES.firstOrNull { it.symbol == selectedCurrency }
 
-                    // Built with a plain if rather than ?.let: stringResource is
-                    // composable, and reading it inside a lambda is a rule about
-                    // inline functions that a reader should not have to know.
-                    val currencyFieldText = if (selectedCurrencyOption != null) {
-                        selectedCurrencyOption.symbol + " · " + selectedCurrencyOption.code +
-                            " · " + stringResource(selectedCurrencyOption.nameRes)
-                    } else {
-                        selectedCurrency
-                    }
+                        // Built with a plain if rather than ?.let: stringResource is
+                        // composable, and reading it inside a lambda is a rule about
+                        // inline functions that a reader should not have to know.
+                        val currencyFieldText = if (selectedCurrencyOption != null) {
+                            selectedCurrencyOption.symbol + " · " + selectedCurrencyOption.code +
+                                " · " + stringResource(selectedCurrencyOption.nameRes)
+                        } else {
+                            selectedCurrency
+                        }
 
-                    SettingsDropdown(
-                        fieldText = currencyFieldText,
-                        expanded = currencyMenuOpen,
-                        onExpandedChange = { currencyMenuOpen = it },
-                    ) {
-                        AppPreferences.AVAILABLE_CURRENCIES.forEach { option ->
+                        SettingsDropdown(
+                            fieldText = currencyFieldText,
+                            expanded = currencyMenuOpen,
+                            onExpandedChange = { currencyMenuOpen = it },
+                        ) {
+                            AppPreferences.AVAILABLE_CURRENCIES.forEach { option ->
+                                SettingsDropdownItem(
+                                    text = option.symbol + " · " + option.code +
+                                        " · " + stringResource(option.nameRes),
+                                    // By identity, not symbol: only the row the
+                                    // field shows is ticked, not both "kr".
+                                    selected = option === selectedCurrencyOption,
+                                    onClick = {
+                                        currencyMenuOpen = false
+                                        isCustomSelected = false
+                                        selectedCurrency = option.symbol
+                                        selectedCurrencyCode = option.code
+                                        AppPreferences.setCurrency(context, option.symbol, option.code)
+                                        onCurrencyChanged(option.symbol)
+                                    },
+                                )
+                            }
+
+                            SettingsDropdownDivider()
+
                             SettingsDropdownItem(
-                                text = option.symbol + " · " + option.code +
-                                    " · " + stringResource(option.nameRes),
-                                // By identity, not symbol: only the row the
-                                // field shows is ticked, not both "kr".
-                                selected = option === selectedCurrencyOption,
+                                text = stringResource(R.string.settings_currency_custom),
+                                selected = isCustomSelected,
                                 onClick = {
                                     currencyMenuOpen = false
-                                    isCustomSelected = false
-                                    selectedCurrency = option.symbol
-                                    selectedCurrencyCode = option.code
-                                    AppPreferences.setCurrency(context, option.symbol, option.code)
-                                    onCurrencyChanged(option.symbol)
+                                    isCustomSelected = true
+                                    if (customCurrencyText.isNotBlank()) {
+                                        selectedCurrency = customCurrencyText.trim()
+                                        selectedCurrencyCode = selectedCurrency
+                                        AppPreferences.setCurrency(context, selectedCurrency)
+                                        onCurrencyChanged(selectedCurrency)
+                                    }
                                 },
                             )
                         }
 
-                        SettingsDropdownDivider()
-
-                        SettingsDropdownItem(
-                            text = stringResource(R.string.settings_currency_custom),
-                            selected = isCustomSelected,
-                            onClick = {
-                                currencyMenuOpen = false
-                                isCustomSelected = true
-                                if (customCurrencyText.isNotBlank()) {
-                                    selectedCurrency = customCurrencyText.trim()
-                                    selectedCurrencyCode = selectedCurrency
-                                    AppPreferences.setCurrency(context, selectedCurrency)
-                                    onCurrencyChanged(selectedCurrency)
-                                }
-                            },
-                        )
-                    }
-
-                    // Only while it is the answer, instead of a permanent card
-                    // holding a radio button nobody had pressed.
-                    if (isCustomSelected) {
-                        OutlinedTextField(
-                            value = customCurrencyText,
-                            onValueChange = { input ->
-                                customCurrencyText = input
-                                val trimmed = input.trim()
-                                if (trimmed.isNotEmpty()) {
-                                    selectedCurrency = trimmed
-                                    selectedCurrencyCode = trimmed
-                                    AppPreferences.setCurrency(context, trimmed)
-                                    onCurrencyChanged(trimmed)
-                                }
-                            },
-                            label = { Text(stringResource(R.string.settings_currency_custom)) },
-                            placeholder = { Text(stringResource(R.string.settings_currency_custom_hint)) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                        // Only while it is the answer, instead of a permanent card
+                        // holding a radio button nobody had pressed.
+                        if (isCustomSelected) {
+                            OutlinedTextField(
+                                value = customCurrencyText,
+                                onValueChange = { input ->
+                                    customCurrencyText = input
+                                    val trimmed = input.trim()
+                                    if (trimmed.isNotEmpty()) {
+                                        selectedCurrency = trimmed
+                                        selectedCurrencyCode = trimmed
+                                        AppPreferences.setCurrency(context, trimmed)
+                                        onCurrencyChanged(trimmed)
+                                    }
+                                },
+                                label = { Text(stringResource(R.string.settings_currency_custom)) },
+                                placeholder = { Text(stringResource(R.string.settings_currency_custom_hint)) },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }
 
-            item(key = "divider_2") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_2") { HorizontalDivider() }
 
             // 3. Theme & Contrast
             item(key = "theme_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_theme),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.settings_theme),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
 
-                    // Everyday schemes, then the marine ones (sunlight, night,
-                    // colour), split by a divider.
-                    val generalThemes: List<Pair<Scheme, Int>> = listOf(
-                        Scheme.SYSTEM to R.string.theme_system,
-                        Scheme.LIGHT to R.string.theme_light,
-                        Scheme.DARK to R.string.theme_dark,
-                    )
-                    val marineThemes: List<Pair<Scheme, Int>> = listOf(
-                        Scheme.SUNLIGHT to R.string.theme_sunlight,
-                        Scheme.NIGHT to R.string.theme_night,
-                        Scheme.COLORFUL to R.string.theme_colorful,
-                    )
-                    val currentThemeLabel = (generalThemes + marineThemes)
-                        .first { it.first == currentScheme }.second
+                        // Everyday schemes, then the marine ones (sunlight, night,
+                        // colour), split by a divider.
+                        val generalThemes: List<Pair<Scheme, Int>> = listOf(
+                            Scheme.SYSTEM to R.string.theme_system,
+                            Scheme.LIGHT to R.string.theme_light,
+                            Scheme.DARK to R.string.theme_dark,
+                        )
+                        val marineThemes: List<Pair<Scheme, Int>> = listOf(
+                            Scheme.SUNLIGHT to R.string.theme_sunlight,
+                            Scheme.NIGHT to R.string.theme_night,
+                            Scheme.COLORFUL to R.string.theme_colorful,
+                        )
+                        val currentThemeLabel = (generalThemes + marineThemes)
+                            .first { it.first == currentScheme }.second
 
-                    SettingsDropdown(
-                        fieldText = stringResource(currentThemeLabel),
-                        expanded = themeMenuOpen,
-                        onExpandedChange = { themeMenuOpen = it },
-                    ) {
-                        generalThemes.forEach { (scheme, labelRes) ->
-                            SettingsDropdownItem(
-                                text = stringResource(labelRes),
-                                selected = currentScheme == scheme,
-                                onClick = {
-                                    themeMenuOpen = false
-                                    onSchemeChanged(scheme)
-                                },
-                            )
-                        }
-                        SettingsDropdownDivider()
-                        marineThemes.forEach { (scheme, labelRes) ->
-                            SettingsDropdownItem(
-                                text = stringResource(labelRes),
-                                selected = currentScheme == scheme,
-                                onClick = {
-                                    themeMenuOpen = false
-                                    onSchemeChanged(scheme)
-                                },
-                            )
+                        SettingsDropdown(
+                            fieldText = stringResource(currentThemeLabel),
+                            expanded = themeMenuOpen,
+                            onExpandedChange = { themeMenuOpen = it },
+                        ) {
+                            generalThemes.forEach { (scheme, labelRes) ->
+                                SettingsDropdownItem(
+                                    text = stringResource(labelRes),
+                                    selected = currentScheme == scheme,
+                                    onClick = {
+                                        themeMenuOpen = false
+                                        onSchemeChanged(scheme)
+                                    },
+                                )
+                            }
+                            SettingsDropdownDivider()
+                            marineThemes.forEach { (scheme, labelRes) ->
+                                SettingsDropdownItem(
+                                    text = stringResource(labelRes),
+                                    selected = currentScheme == scheme,
+                                    onClick = {
+                                        themeMenuOpen = false
+                                        onSchemeChanged(scheme)
+                                    },
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            item(key = "divider_3") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_3") { HorizontalDivider() }
 
             // 4. Language
             item(key = "language_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_language),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.settings_language),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
 
-                    // A dropdown, built like the currency one above: chips took
-                    // a row per two languages and stop scaling past four. The
-                    // list is AppLanguage.SUPPORTED, so a language released
-                    // later appears here without touching this screen.
-                    val current = AppLanguage.current(context)
-                    SettingsDropdown(
-                        fieldText = stringResource(AppLanguage.nameRes(current)),
-                        expanded = languageMenuOpen,
-                        onExpandedChange = { languageMenuOpen = it },
-                    ) {
-                        AppLanguage.SUPPORTED.forEach { tag ->
-                            SettingsDropdownItem(
-                                text = stringResource(AppLanguage.nameRes(tag)),
-                                selected = tag == current,
-                                onClick = {
-                                    languageMenuOpen = false
-                                    if (current != tag) AppLanguage.set(context, tag)
-                                },
-                            )
+                        // A dropdown, built like the currency one above: chips took
+                        // a row per two languages and stop scaling past four. The
+                        // list is AppLanguage.SUPPORTED, so a language released
+                        // later appears here without touching this screen.
+                        val current = AppLanguage.current(context)
+                        SettingsDropdown(
+                            fieldText = stringResource(AppLanguage.nameRes(current)),
+                            expanded = languageMenuOpen,
+                            onExpandedChange = { languageMenuOpen = it },
+                        ) {
+                            AppLanguage.SUPPORTED.forEach { tag ->
+                                SettingsDropdownItem(
+                                    text = stringResource(AppLanguage.nameRes(tag)),
+                                    selected = tag == current,
+                                    onClick = {
+                                        languageMenuOpen = false
+                                        if (current != tag) AppLanguage.set(context, tag)
+                                    },
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            item(key = "divider_4") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_4") { HorizontalDivider() }
 
             // 5. Maintenance Notifications
             item(key = "notifications_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_notifications_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_notifications_subtitle),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(
-                            text = stringResource(R.string.settings_notifications_enabled),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
+                            text = stringResource(R.string.settings_notifications_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                         )
-                        Switch(
-                            checked = notificationsEnabled,
-                            onCheckedChange = { checked ->
-                                notificationsEnabled = checked
-                                AppPreferences.setNotificationsEnabled(context, checked)
-                                if (checked) {
-                                    MaintenanceCheckWorker.runNow(context)
-                                } else {
-                                    context.getSystemService(NotificationManager::class.java)?.cancelAll()
-                                }
-                            },
+                        Text(
+                            text = stringResource(R.string.settings_notifications_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                    }
 
-                    if (notificationsEnabled) {
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
                             Text(
-                                text = stringResource(R.string.settings_notifications_advance),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = stringResource(R.string.settings_notifications_enabled),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                val daysList: List<Pair<Int, Int>> = listOf(
-                                    7 to R.string.settings_notifications_days_7,
-                                    14 to R.string.settings_notifications_days_14,
-                                    30 to R.string.settings_notifications_days_30,
+                            Switch(
+                                checked = notificationsEnabled,
+                                onCheckedChange = { checked ->
+                                    notificationsEnabled = checked
+                                    AppPreferences.setNotificationsEnabled(context, checked)
+                                    if (checked) {
+                                        MaintenanceCheckWorker.runNow(context)
+                                    } else {
+                                        context.getSystemService(NotificationManager::class.java)?.cancelAll()
+                                    }
+                                },
+                            )
+                        }
+
+                        if (notificationsEnabled) {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text(
+                                    text = stringResource(R.string.settings_notifications_advance),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
-                                daysList.forEach { (days, labelRes) ->
-                                    SettingsSelectChip(
-                                        selected = advanceDays == days,
-                                        onClick = {
-                                            advanceDays = days
-                                            AppPreferences.setAdvanceReminderDays(context, days)
-                                            MaintenanceCheckWorker.runNow(context)
-                                        },
-                                        label = stringResource(labelRes),
-                                        modifier = Modifier.weight(1f),
-                                        height = 38.dp,
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    val daysList: List<Pair<Int, Int>> = listOf(
+                                        7 to R.string.settings_notifications_days_7,
+                                        14 to R.string.settings_notifications_days_14,
+                                        30 to R.string.settings_notifications_days_30,
                                     )
+                                    daysList.forEach { (days, labelRes) ->
+                                        SettingsSelectChip(
+                                            selected = advanceDays == days,
+                                            onClick = {
+                                                advanceDays = days
+                                                AppPreferences.setAdvanceReminderDays(context, days)
+                                                MaintenanceCheckWorker.runNow(context)
+                                            },
+                                            label = stringResource(labelRes),
+                                            modifier = Modifier.weight(1f),
+                                            height = 38.dp,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -854,356 +910,358 @@ fun SettingsDrawerSheet(
                 }
             }
 
-            item(key = "divider_5") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_5") { HorizontalDivider() }
 
             // 6. Data & Export
             item(key = "data_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_data_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_data_subtitle),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-
-                    // Import CSV Button
-                    Button(
-                        onClick = { showImportSheet = true },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(
-                            text = stringResource(R.string.settings_import_btn),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
+                            text = stringResource(R.string.settings_data_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                         )
-                    }
+                        Text(
+                            text = stringResource(R.string.settings_data_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
 
-                    val exportSuccessText = stringResource(R.string.settings_export_success)
-                    val exportEmptyText = stringResource(R.string.settings_export_empty)
-                    val exportStoreSuccessText = stringResource(R.string.settings_export_store_success)
-                    val exportStoreEmptyText = stringResource(R.string.settings_export_store_empty)
+                        // Import CSV Button
+                        Button(
+                            onClick = { showImportSheet = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_import_btn),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
 
-                    // Export to Excel Button (Primary)
-                    OutlinedButton(
-                        onClick = {
-                            withExportVessel { vesselId ->
-                                excelVesselId = vesselId
-                                val dateStr = LocalDate.now().toString()
-                                createExcelLauncher.launch("hullbeat_export_$dateStr.xlsx")
+                        val exportSuccessText = stringResource(R.string.settings_export_success)
+                        val exportEmptyText = stringResource(R.string.settings_export_empty)
+                        val exportStoreSuccessText = stringResource(R.string.settings_export_store_success)
+                        val exportStoreEmptyText = stringResource(R.string.settings_export_store_empty)
+
+                        // Export to Excel Button (Primary)
+                        OutlinedButton(
+                            onClick = {
+                                withExportVessel { vesselId ->
+                                    excelVesselId = vesselId
+                                    val dateStr = LocalDate.now().toString()
+                                    createExcelLauncher.launch("hullbeat_export_$dateStr.xlsx")
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_export_excel),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+
+                        // Export Boat Passport (PDF) Button
+                        OutlinedButton(
+                            onClick = { withExportVessel(exportPassportPdf) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_export_pdf_passport),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+
+                        exportVesselChoice?.let { (vessels, export) ->
+                            AlertDialog(
+                                onDismissRequest = { exportVesselChoice = null },
+                                title = { Text(stringResource(R.string.vessel_select_title)) },
+                                text = {
+                                    Column(
+                                        modifier = Modifier.verticalScroll(rememberScrollState()),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    ) {
+                                        vessels.forEach { vessel ->
+                                            OutlinedButton(
+                                                onClick = {
+                                                    exportVesselChoice = null
+                                                    export(vessel.id)
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .heightIn(min = 56.dp),
+                                            ) {
+                                                Text(
+                                                    text = vessel.displayName(context),
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = {},
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = { exportVesselChoice = null },
+                                        modifier = Modifier.heightIn(min = 56.dp),
+                                    ) {
+                                        Text(stringResource(R.string.action_cancel))
+                                    }
+                                },
+                            )
+                        }
+
+                        // CSV exports row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            OutlinedButton(
+                                onClick = { withExportVessel { vesselId ->
+                                    scope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
+                                            val records = if (targetVesselId != null) {
+                                                db.serviceRecordDao().allForVessel(targetVesselId)
+                                            } else {
+                                                emptyList()
+                                            }
+                                            if (records.isEmpty()) {
+                                                withContext(Dispatchers.Main) {
+                                                    Toast.makeText(context, exportEmptyText, Toast.LENGTH_SHORT).show()
+                                                }
+                                                return@withContext
+                                            }
+                                            val sb = StringBuilder()
+                                            sb.append("Date,WorkType,Cost,PerformedBy,Description,Notes\n")
+                                            records.forEach { r ->
+                                                val costVal = r.cost?.toString() ?: ""
+                                                val perfVal = (r.performedBy ?: "").replace("\"", "\"\"")
+                                                val workTypeVal = r.workTypes.replace("\"", "\"\"")
+                                                val descVal = r.description.replace("\"", "\"\"")
+                                                val noteVal = (r.notes ?: "").replace("\"", "\"\"")
+                                                sb.append(r.date)
+                                                    .append(",\"").append(workTypeVal).append("\",")
+                                                    .append(costVal).append(",\"")
+                                                    .append(perfVal).append("\",\"")
+                                                    .append(descVal).append("\",\"")
+                                                    .append(noteVal).append("\"\n")
+                                            }
+                                            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                                                type = "text/plain"
+                                                putExtra(Intent.EXTRA_SUBJECT, "HullBeat Ship's Log")
+                                                putExtra(Intent.EXTRA_TEXT, sb.toString())
+                                            }
+                                            val chooser = Intent.createChooser(sendIntent, null).apply {
+                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                            context.startActivity(chooser)
+                                            withContext(Dispatchers.Main) {
+                                                Toast.makeText(context, exportSuccessText, Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+                                } },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(40.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_export_journal_csv),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.settings_export_excel),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
 
-                    // Export Boat Passport (PDF) Button
-                    OutlinedButton(
-                        onClick = { withExportVessel(exportPassportPdf) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.settings_export_pdf_passport),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
-
-                    exportVesselChoice?.let { (vessels, export) ->
-                        AlertDialog(
-                            onDismissRequest = { exportVesselChoice = null },
-                            title = { Text(stringResource(R.string.vessel_select_title)) },
-                            text = {
-                                Column(
-                                    modifier = Modifier.verticalScroll(rememberScrollState()),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    vessels.forEach { vessel ->
-                                        OutlinedButton(
-                                            onClick = {
-                                                exportVesselChoice = null
-                                                export(vessel.id)
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .heightIn(min = 56.dp),
-                                        ) {
-                                            Text(
-                                                text = vessel.displayName(context),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                            )
-                                        }
-                                    }
-                                }
-                            },
-                            confirmButton = {},
-                            dismissButton = {
-                                TextButton(
-                                    onClick = { exportVesselChoice = null },
-                                    modifier = Modifier.heightIn(min = 56.dp),
-                                ) {
-                                    Text(stringResource(R.string.action_cancel))
-                                }
-                            },
-                        )
-                    }
-
-                    // CSV exports row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        OutlinedButton(
-                            onClick = { withExportVessel { vesselId ->
-                                scope.launch {
-                                    withContext(Dispatchers.IO) {
-                                        val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
-                                        val records = if (targetVesselId != null) {
-                                            db.serviceRecordDao().allForVessel(targetVesselId)
-                                        } else {
-                                            emptyList()
-                                        }
-                                        if (records.isEmpty()) {
-                                            withContext(Dispatchers.Main) {
-                                                Toast.makeText(context, exportEmptyText, Toast.LENGTH_SHORT).show()
+                            OutlinedButton(
+                                onClick = { withExportVessel { vesselId ->
+                                    scope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
+                                            val locations = if (targetVesselId != null) {
+                                                db.inventoryDao().allLocationsForVessel(targetVesselId)
+                                            } else {
+                                                emptyList()
                                             }
-                                            return@withContext
-                                        }
-                                        val sb = StringBuilder()
-                                        sb.append("Date,WorkType,Cost,PerformedBy,Description,Notes\n")
-                                        records.forEach { r ->
-                                            val costVal = r.cost?.toString() ?: ""
-                                            val perfVal = (r.performedBy ?: "").replace("\"", "\"\"")
-                                            val workTypeVal = r.workTypes.replace("\"", "\"\"")
-                                            val descVal = r.description.replace("\"", "\"\"")
-                                            val noteVal = (r.notes ?: "").replace("\"", "\"\"")
-                                            sb.append(r.date)
-                                                .append(",\"").append(workTypeVal).append("\",")
-                                                .append(costVal).append(",\"")
-                                                .append(perfVal).append("\",\"")
-                                                .append(descVal).append("\",\"")
-                                                .append(noteVal).append("\"\n")
-                                        }
-                                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                            type = "text/plain"
-                                            putExtra(Intent.EXTRA_SUBJECT, "HullBeat Ship's Log")
-                                            putExtra(Intent.EXTRA_TEXT, sb.toString())
-                                        }
-                                        val chooser = Intent.createChooser(sendIntent, null).apply {
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        }
-                                        context.startActivity(chooser)
-                                        withContext(Dispatchers.Main) {
-                                            Toast.makeText(context, exportSuccessText, Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-                            } },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(40.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_export_journal_csv),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-
-                        OutlinedButton(
-                            onClick = { withExportVessel { vesselId ->
-                                scope.launch {
-                                    withContext(Dispatchers.IO) {
-                                        val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
-                                        val locations = if (targetVesselId != null) {
-                                            db.inventoryDao().allLocationsForVessel(targetVesselId)
-                                        } else {
-                                            emptyList()
-                                        }
-                                        val items = if (targetVesselId != null) {
-                                            db.inventoryDao().allForVessel(targetVesselId)
-                                        } else {
-                                            emptyList()
-                                        }
-                                        if (locations.isEmpty() && items.isEmpty()) {
-                                            withContext(Dispatchers.Main) {
-                                                Toast.makeText(context, exportStoreEmptyText, Toast.LENGTH_SHORT).show()
+                                            val items = if (targetVesselId != null) {
+                                                db.inventoryDao().allForVessel(targetVesselId)
+                                            } else {
+                                                emptyList()
                                             }
-                                            return@withContext
-                                        }
-                                        val sb = StringBuilder()
-                                        sb.append("Locker,PartName,PartNumber,Manufacturer,Quantity,MinQuantity,Notes\n")
-                                        items.forEach { item ->
-                                            val lockerName = (item.locationName ?: "").replace("\"", "\"\"")
-                                            val name = item.partName.replace("\"", "\"\"")
-                                            val partNum = (item.partNumber ?: "").replace("\"", "\"\"")
-                                            val mfr = (item.manufacturer ?: "").replace("\"", "\"\"")
-                                            val notes = (item.partNote ?: "").replace("\"", "\"\"")
-                                            val minQty = item.minQuantity?.toString() ?: ""
-                                            sb.append("\"").append(lockerName).append("\",\"")
-                                                .append(name).append("\",\"")
-                                                .append(partNum).append("\",\"")
-                                                .append(mfr).append("\",")
-                                                .append(item.quantity).append(",")
-                                                .append(minQty).append(",\"")
-                                                .append(notes).append("\"\n")
-                                        }
-                                        val usedLocationIds = items.mapNotNull { it.locationId }.toSet()
-                                        val emptyLocations = locations.filter { it.id !in usedLocationIds }
-                                        emptyLocations.forEach { loc ->
-                                            val lockerName = loc.name.replace("\"", "\"\"")
-                                            val notes = (loc.note ?: "").replace("\"", "\"\"")
-                                            sb.append("\"").append(lockerName).append("\",\"\",\"\",\"\",0,\"\",\"")
-                                                .append(notes).append("\"\n")
-                                        }
-                                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                            type = "text/plain"
-                                            putExtra(Intent.EXTRA_SUBJECT, "HullBeat Store & Lockers")
-                                            putExtra(Intent.EXTRA_TEXT, sb.toString())
-                                        }
-                                        val chooser = Intent.createChooser(sendIntent, null).apply {
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        }
-                                        context.startActivity(chooser)
-                                        withContext(Dispatchers.Main) {
-                                            Toast.makeText(context, exportStoreSuccessText, Toast.LENGTH_SHORT).show()
+                                            if (locations.isEmpty() && items.isEmpty()) {
+                                                withContext(Dispatchers.Main) {
+                                                    Toast.makeText(context, exportStoreEmptyText, Toast.LENGTH_SHORT).show()
+                                                }
+                                                return@withContext
+                                            }
+                                            val sb = StringBuilder()
+                                            sb.append("Locker,PartName,PartNumber,Manufacturer,Quantity,MinQuantity,Notes\n")
+                                            items.forEach { item ->
+                                                val lockerName = (item.locationName ?: "").replace("\"", "\"\"")
+                                                val name = item.partName.replace("\"", "\"\"")
+                                                val partNum = (item.partNumber ?: "").replace("\"", "\"\"")
+                                                val mfr = (item.manufacturer ?: "").replace("\"", "\"\"")
+                                                val notes = (item.partNote ?: "").replace("\"", "\"\"")
+                                                val minQty = item.minQuantity?.toString() ?: ""
+                                                sb.append("\"").append(lockerName).append("\",\"")
+                                                    .append(name).append("\",\"")
+                                                    .append(partNum).append("\",\"")
+                                                    .append(mfr).append("\",")
+                                                    .append(item.quantity).append(",")
+                                                    .append(minQty).append(",\"")
+                                                    .append(notes).append("\"\n")
+                                            }
+                                            val usedLocationIds = items.mapNotNull { it.locationId }.toSet()
+                                            val emptyLocations = locations.filter { it.id !in usedLocationIds }
+                                            emptyLocations.forEach { loc ->
+                                                val lockerName = loc.name.replace("\"", "\"\"")
+                                                val notes = (loc.note ?: "").replace("\"", "\"\"")
+                                                sb.append("\"").append(lockerName).append("\",\"\",\"\",\"\",0,\"\",\"")
+                                                    .append(notes).append("\"\n")
+                                            }
+                                            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                                                type = "text/plain"
+                                                putExtra(Intent.EXTRA_SUBJECT, "HullBeat Store & Lockers")
+                                                putExtra(Intent.EXTRA_TEXT, sb.toString())
+                                            }
+                                            val chooser = Intent.createChooser(sendIntent, null).apply {
+                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                            context.startActivity(chooser)
+                                            withContext(Dispatchers.Main) {
+                                                Toast.makeText(context, exportStoreSuccessText, Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
-                                }
-                            } },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(40.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_export_store_csv),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
+                                } },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(40.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_export_store_csv),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
                         }
-                    }
 
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(R.string.settings_backup_title),
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_backup_subtitle),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-
-                    // Backup & Restore buttons row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        OutlinedButton(
-                            onClick = { createBackupLauncher.launch("hullbeat_backup.zip") },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(44.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_backup_create),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                        OutlinedButton(
-                            onClick = { restoreBackupLauncher.launch(arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream", "*/*")) },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(44.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_backup_restore),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                    }
-
-                    // Import sessions list & rollback
-                    if (importSessions.isNotEmpty()) {
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.import_history_title),
+                            text = stringResource(R.string.settings_backup_title),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                         )
-                        importSessions.forEach { session ->
-                            Surface(
+                        Text(
+                            text = stringResource(R.string.settings_backup_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+
+                        // Backup & Restore buttons row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            OutlinedButton(
+                                onClick = { createBackupLauncher.launch("hullbeat_backup.zip") },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(44.dp),
                                 shape = RoundedCornerShape(8.dp),
-                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                                modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(10.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically,
+                                Text(
+                                    text = stringResource(R.string.settings_backup_create),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
+                            OutlinedButton(
+                                onClick = { restoreBackupLauncher.launch(arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream", "*/*")) },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(44.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_backup_restore),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
+                        }
+
+                        // Import sessions list & rollback
+                        if (importSessions.isNotEmpty()) {
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.import_history_title),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            importSessions.forEach { session ->
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                    modifier = Modifier.fillMaxWidth(),
                                 ) {
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            text = session.fileName,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.SemiBold,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                        Text(
-                                            text = pluralStringResource(
-                                                R.plurals.import_rows_count,
-                                                session.rowCount,
-                                                session.rowCount,
-                                            ),
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
-                                    OutlinedButton(
-                                        onClick = {
-                                            scope.launch(Dispatchers.IO) {
-                                                ImportEngine.rollbackSession(session.id, db)
-                                                withContext(Dispatchers.Main) {
-                                                    Toast.makeText(context, context.getString(R.string.import_rollback_success), Toast.LENGTH_SHORT).show()
-                                                    refreshSessions()
-                                                }
-                                            }
-                                        },
-                                        shape = RoundedCornerShape(6.dp),
+                                    Row(
+                                        modifier = Modifier.padding(10.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
                                     ) {
-                                        Text(stringResource(R.string.import_rollback_btn))
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(
+                                                text = session.fileName,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.SemiBold,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text(
+                                                text = pluralStringResource(
+                                                    R.plurals.import_rows_count,
+                                                    session.rowCount,
+                                                    session.rowCount,
+                                                ),
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                        }
+                                        OutlinedButton(
+                                            onClick = {
+                                                scope.launch(Dispatchers.IO) {
+                                                    ImportEngine.rollbackSession(session.id, db)
+                                                    withContext(Dispatchers.Main) {
+                                                        Toast.makeText(context, context.getString(R.string.import_rollback_success), Toast.LENGTH_SHORT).show()
+                                                        refreshSessions()
+                                                    }
+                                                }
+                                            },
+                                            shape = RoundedCornerShape(6.dp),
+                                        ) {
+                                            Text(stringResource(R.string.import_rollback_btn))
+                                        }
                                     }
                                 }
                             }
@@ -1212,74 +1270,76 @@ fun SettingsDrawerSheet(
                 }
             }
 
-            item(key = "divider_6") { HorizontalDivider() }
+            if (!colorful) item(key = "divider_6") { HorizontalDivider() }
 
             // 7. About
             item(key = "about_section") {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        text = stringResource(R.string.settings_about_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    // From the package, not a literal: this said "1.0.0" while
-                    // the build was 0.1.0, so a bug report quoted the wrong release.
-                    val appVersion = remember { appVersionName(context) }
-                    // Above the version, as asked: the one place an owner who
-                    // wants to say something will look. mailto: rather than a
-                    // form - the app has no network access, by design.
-                    OutlinedButton(
-                        onClick = { sendFeedbackEmail(context, appVersion) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 56.dp),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_mail),
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
+                SettingsCard(colorful) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = stringResource(R.string.settings_about_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.settings_feedback))
-                    }
-                    Text(
-                        text = stringResource(R.string.settings_about_version, appVersion),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_about_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        IconButton(
-                            onClick = {
-                                val url = "https://github.com/Rigged-mind/HullBeat"
-                                try {
-                                    uriHandler.openUri(url)
-                                } catch (e: Exception) {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    }
-                                    runCatching { context.startActivity(intent) }
-                                }
-                            },
+                        // From the package, not a literal: this said "1.0.0" while
+                        // the build was 0.1.0, so a bug report quoted the wrong release.
+                        val appVersion = remember { appVersionName(context) }
+                        // Above the version, as asked: the one place an owner who
+                        // wants to say something will look. mailto: rather than a
+                        // form - the app has no network access, by design.
+                        OutlinedButton(
+                            onClick = { sendFeedbackEmail(context, appVersion) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 56.dp),
+                            shape = RoundedCornerShape(8.dp),
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_github),
-                                contentDescription = stringResource(R.string.settings_about_github),
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                painter = painterResource(R.drawable.ic_mail),
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
                             )
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(R.string.settings_feedback))
                         }
+                        Text(
+                            text = stringResource(R.string.settings_about_version, appVersion),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Text(
+                            text = stringResource(R.string.settings_about_desc),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    val url = "https://github.com/Rigged-mind/HullBeat"
+                                    try {
+                                        uriHandler.openUri(url)
+                                    } catch (e: Exception) {
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                        runCatching { context.startActivity(intent) }
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_github),
+                                    contentDescription = stringResource(R.string.settings_about_github),
+                                    modifier = Modifier.size(32.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(16.dp))
                     }
-                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
@@ -1479,6 +1539,26 @@ private fun SettingsDropdownDivider() {
         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
         color = MaterialTheme.colorScheme.outlineVariant,
     )
+}
+
+/**
+ * A settings section: a white card under Colorful, the flat list elsewhere.
+ * Card margin plus padding stays at the flat list's 20 dp, or the export
+ * and backup labels lose their last words to the ellipsis.
+ */
+@Composable
+private fun SettingsCard(card: Boolean, content: @Composable () -> Unit) {
+    if (card) {
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Box(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) { content() }
+        }
+    } else {
+        content()
+    }
 }
 
 @Composable
