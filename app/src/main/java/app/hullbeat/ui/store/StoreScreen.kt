@@ -619,11 +619,15 @@ fun StorePartCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
+                        // Weighted but not filling: a long name wraps instead
+                        // of taking the whole row and squeezing the stock
+                        // badge to zero width.
                         Text(
                             text = detail.partName,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f, fill = false),
                         )
 
                         if (item.isOutOfStock) {
