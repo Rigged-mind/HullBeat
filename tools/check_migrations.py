@@ -32,9 +32,24 @@ DATABASE_KT = os.path.join("app", "src", "main", "java", "app", "hullbeat", "dat
 
 
 def extract_migration_sql(kt_path, migration_name):
-    """Extract db.execSQL statements from a named migration in Database.kt."""
+    """Extract the SQL a named migration in Database.kt runs.
+
+    Migrations keep their statements in a list beside them
+    (`MIGRATION_1_2_SQL = listOf(...)`) and run it with
+    `forEach(db::execSQL)`, so MigrationChainTest can replay the same list.
+    That list is read first; a migration written with inline
+    `db.execSQL("...")` calls is still understood.
+    """
     with io.open(kt_path, "r", encoding="utf-8") as f:
         content = f.read()
+
+    listed = re.search(rf"val\s+{migration_name}_SQL\s*=\s*listOf\((?P<body>.*?)\n\s*\)", content, re.DOTALL)
+    if listed:
+        body = listed.group("body")
+        sql_statements = [s.strip() for s in re.findall(r'"""(.*?)"""', body, re.DOTALL)]
+        sql_statements += re.findall(r'(?<!")"([^"\n]+)"(?!")', re.sub(r'""".*?"""', "", body, flags=re.DOTALL))
+        if sql_statements:
+            return sql_statements
 
     pattern = rf"val\s+{migration_name}\s*=\s*object\s*:\s*Migration\(\s*\d+\s*,\s*\d+\s*\)\s*\{{(?P<body>.*?)\n\s*\}}"
     m = re.search(pattern, content, re.DOTALL)
