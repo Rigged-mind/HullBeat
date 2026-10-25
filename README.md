@@ -60,9 +60,9 @@
    * Жодних хмар, акаунтів чи серверів — усі ваші записи, документи та фотографії зберігаються **виключно на вашому телефоні**.
    * Додаток повністю позбавлений дозволу на вихід в інтернет (`INTERNET permission`).
 
-2. **Зручний імпорт та експорт історії обслуговування:**
-   * **Гнучкий імпорт:** Швидке перенесення ваших наявних записів із таблиць Excel (.xlsx) або CSV. Розумний аналізатор (`ColumnMapper` / `CsvSniffer`) автоматично розпізнає стовпчики, формати дат і чистить дані при переході.
+2. **Експорт історії обслуговування та резервні копії:**
    * **Друк та експорт:** Створення повного суднового паспорта та хронології обслуговування у форматі **Excel** або **PDF** в один клік — незамінно для страхових компаній, сервісних центрів чи для підтвердження вартості при продажу судна.
+   * **Резервна копія:** Уся база разом із фото в одному ZIP-файлі, який ви зберігаєте де завгодно — на диску, флешці чи у власній хмарі. Відновлення перевіряє, що файл справді є копією HullBeat, і лишає ваші дані як були, якщо щось пішло не так. Файл не зашифрований — зберігайте його як особисті документи.
 
 3. **Додавання зображень та фотофіксація:**
    * Можливість прикріпити фотографії до будь-якої сервісної роботи, огляду вузла чи поломки.
@@ -190,9 +190,9 @@ Owning a boat or yacht is rewarding, but keeping every system seaworthy demands 
    * Zero cloud dependence, zero tracking, no sign-ups — all vessel records and photos stay **exclusively on your physical device**.
    * Completely lacks the Android `INTERNET` permission.
 
-2. **Seamless Maintenance Import & Export:**
-   * **Intelligent Import:** Effortlessly migrate existing maintenance logs from Excel (.xlsx) or CSV. The built-in `ColumnMapper` and `CsvSniffer` automatically map columns and clean date formats.
+2. **Maintenance Export & Backup:**
    * **PDF & Excel Export:** Generate comprehensive vessel passports and dated maintenance histories in **Excel** or **PDF** format with one tap — essential for insurance renewals, surveyors, or proving vessel care upon resale.
+   * **Backup:** The whole log with its photos in one ZIP you keep wherever you like — a drive, a USB stick or your own cloud. A restore checks that the file really is a HullBeat backup and leaves your data as it was if anything goes wrong. The file is not encrypted: keep it as you would personal papers.
 
 3. **Full Photo Documentation & Inspection:**
    * Attach high-resolution photos to any service record, component card, or defect report.
@@ -285,8 +285,8 @@ cd HullBeat
 ```
 HullBeat/
 ├── app/                  # Main Android application (Jetpack Compose, Room, Kotlin)
-│   ├── src/main/java/    # Clean architecture: UI, ViewModels, Database, Importer/Exporter
-│   └── src/test/         # Unit tests covering engines, calculations, and parsers
+│   ├── src/main/java/    # UI, ViewModels, Room database, backup, PDF/Excel export
+│   └── src/test/         # Unit tests: due engine, calculations, migrations, backup, export
 ├── catalog/              # Preloaded marine component ontology, checklists, and synonyms
 ├── design/               # Design system: vector logos, palette tokens, store assets, banner
 ├── docs/                 # Complete architecture, UI guidelines, and engineering specs
