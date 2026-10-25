@@ -12,6 +12,7 @@ import app.hullbeat.MainActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import app.hullbeat.data.db.ImportSession
+import app.hullbeat.data.db.Vessel
 import app.hullbeat.data.db.displayName
 import app.hullbeat.data.db.formatWorkTypes
 import app.hullbeat.data.db.formatRecordDescription
@@ -27,6 +28,8 @@ import app.hullbeat.ui.importer.ImportSheet
 import app.hullbeat.ui.export.rememberPassportPdfExport
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +47,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenu
@@ -68,6 +72,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -122,6 +127,8 @@ fun SettingsDrawerSheet(
     onClose: () -> Unit,
     activeVesselId: Long? = null,
     activeVesselName: String? = null,
+    /** "All" over more than one boat: [activeVesselId] is then just the first. */
+    isFleetView: Boolean = false,
     onSwitchVessel: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
@@ -236,12 +243,14 @@ fun SettingsDrawerSheet(
         }
     }
 
+    // Saveable: the file picker can outlive the activity.
+    var excelVesselId by rememberSaveable { mutableStateOf<Long?>(null) }
     val createExcelLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     ) { uri: Uri? ->
         if (uri != null) {
             scope.launch(Dispatchers.IO) {
-                val targetVesselId = activeVesselId ?: db.vesselDao().allActive().firstOrNull()?.id
+                val targetVesselId = excelVesselId ?: db.vesselDao().allActive().firstOrNull()?.id
                 val components = if (targetVesselId != null) {
                     db.componentDao().allForVessel(targetVesselId).associateBy { it.id }
                 } else {
@@ -336,6 +345,22 @@ fun SettingsDrawerSheet(
     }
 
     val exportPassportPdf = rememberPassportPdfExport()
+
+    // Every export here is one boat's. Under "All" activeVesselId is just the
+    // first boat by name while the drawer says "All", so ask which one first.
+    var exportVesselChoice by remember {
+        mutableStateOf<Pair<List<Vessel>, (Long) -> Unit>?>(null)
+    }
+    fun withExportVessel(export: (Long?) -> Unit) {
+        if (isFleetView) {
+            scope.launch {
+                val vessels = withContext(Dispatchers.IO) { db.vesselDao().allActive() }
+                exportVesselChoice = vessels to { id -> export(id) }
+            }
+        } else {
+            export(activeVesselId)
+        }
+    }
 
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.surface,
@@ -868,8 +893,11 @@ fun SettingsDrawerSheet(
                     // Export to Excel Button (Primary)
                     OutlinedButton(
                         onClick = {
-                            val dateStr = LocalDate.now().toString()
-                            createExcelLauncher.launch("hullbeat_export_$dateStr.xlsx")
+                            withExportVessel { vesselId ->
+                                excelVesselId = vesselId
+                                val dateStr = LocalDate.now().toString()
+                                createExcelLauncher.launch("hullbeat_export_$dateStr.xlsx")
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -886,9 +914,7 @@ fun SettingsDrawerSheet(
 
                     // Export Boat Passport (PDF) Button
                     OutlinedButton(
-                        onClick = {
-                            exportPassportPdf(activeVesselId)
-                        },
+                        onClick = { withExportVessel(exportPassportPdf) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(44.dp),
@@ -902,16 +928,56 @@ fun SettingsDrawerSheet(
                         )
                     }
 
+                    exportVesselChoice?.let { (vessels, export) ->
+                        AlertDialog(
+                            onDismissRequest = { exportVesselChoice = null },
+                            title = { Text(stringResource(R.string.vessel_select_title)) },
+                            text = {
+                                Column(
+                                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    vessels.forEach { vessel ->
+                                        OutlinedButton(
+                                            onClick = {
+                                                exportVesselChoice = null
+                                                export(vessel.id)
+                                            },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .heightIn(min = 56.dp),
+                                        ) {
+                                            Text(
+                                                text = vessel.displayName(context),
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {},
+                            dismissButton = {
+                                TextButton(
+                                    onClick = { exportVesselChoice = null },
+                                    modifier = Modifier.heightIn(min = 56.dp),
+                                ) {
+                                    Text(stringResource(R.string.action_cancel))
+                                }
+                            },
+                        )
+                    }
+
                     // CSV exports row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         OutlinedButton(
-                            onClick = {
+                            onClick = { withExportVessel { vesselId ->
                                 scope.launch {
                                     withContext(Dispatchers.IO) {
-                                        val targetVesselId = activeVesselId ?: db.vesselDao().allActive().firstOrNull()?.id
+                                        val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
                                         val records = if (targetVesselId != null) {
                                             db.serviceRecordDao().allForVessel(targetVesselId)
                                         } else {
@@ -952,7 +1018,7 @@ fun SettingsDrawerSheet(
                                         }
                                     }
                                 }
-                            },
+                            } },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(40.dp),
@@ -967,10 +1033,10 @@ fun SettingsDrawerSheet(
                         }
 
                         OutlinedButton(
-                            onClick = {
+                            onClick = { withExportVessel { vesselId ->
                                 scope.launch {
                                     withContext(Dispatchers.IO) {
-                                        val targetVesselId = activeVesselId ?: db.vesselDao().allActive().firstOrNull()?.id
+                                        val targetVesselId = vesselId ?: db.vesselDao().allActive().firstOrNull()?.id
                                         val locations = if (targetVesselId != null) {
                                             db.inventoryDao().allLocationsForVessel(targetVesselId)
                                         } else {
@@ -1026,7 +1092,7 @@ fun SettingsDrawerSheet(
                                         }
                                     }
                                 }
-                            },
+                            } },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(40.dp),

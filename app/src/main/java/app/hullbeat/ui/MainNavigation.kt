@@ -257,6 +257,7 @@ fun HullBeatMainScaffold(
                 },
                 activeVesselId = nowState.activeVessel?.id,
                 activeVesselName = vesselDisplayName,
+                isFleetView = nowState.isFleetView,
                 onSwitchVessel = {
                     drawerScope.launch { drawerState.close() }
                     showVesselSheet = true
