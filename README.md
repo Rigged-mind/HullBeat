@@ -57,7 +57,7 @@
 
 1. **100% Офлайн та абсолютна приватність:**
    * Працює будь-де: у відкритому морі, на віддаленому якорі чи в марині без інтернету.
-   * Жодних хмар, акаунтів чи серверів — усі ваші записи, документи та фотографії зберігаються **виключно на вашому телефоні**.
+   * Жодних хмар, акаунтів чи серверів — робоча база з усіма записами, документами й фотографіями живе **лише на вашому телефоні**. Резервна копія потрапляє тільки туди, куди ви самі її збережете.
    * Додаток повністю позбавлений дозволу на вихід в інтернет (`INTERNET permission`).
 
 2. **Експорт історії обслуговування та резервні копії:**
@@ -66,7 +66,7 @@
 
 3. **Додавання зображень та фотофіксація:**
    * Можливість прикріпити фотографії до будь-якої сервісної роботи, огляду вузла чи поломки.
-   * Фотофіксація лічильників мотогодин для підтвердження показників.
+   * Фото лічильника мотогодин можна прикріпити до запису ТО поруч із показником, внесеним у цей запис.
    * Зручний повнорозмірний переглядач із підтримкою жестів свайпу (гортання), зумом, лічильником знімків та підписами.
 
 ---
@@ -187,7 +187,7 @@ Owning a boat or yacht is rewarding, but keeping every system seaworthy demands 
 
 1. **100% Offline & Absolute Privacy:**
    * Works offshore, at anchor, or in remote marinas with zero cellular reception.
-   * Zero cloud dependence, zero tracking, no sign-ups — all vessel records and photos stay **exclusively on your physical device**.
+   * Zero cloud dependence, zero tracking, no sign-ups — the working log with all its records, documents and photos lives **only on your device**. A backup goes only where you yourself save it.
    * Completely lacks the Android `INTERNET` permission.
 
 2. **Maintenance Export & Backup:**
@@ -196,7 +196,7 @@ Owning a boat or yacht is rewarding, but keeping every system seaworthy demands 
 
 3. **Full Photo Documentation & Inspection:**
    * Attach high-resolution photos to any service record, component card, or defect report.
-   * Photo logging for engine hour meters to verify readings.
+   * A photo of the hour meter can go on the service record, next to the hours entered in it.
    * Full-screen gallery viewer featuring intuitive swipe gestures, zoom, photo counter, and custom captions.
 
 ---
