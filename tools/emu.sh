@@ -65,7 +65,11 @@ case "$cmd" in
         ;;
     install)
         need_device
-        adb install -r "$ROOT/app/build/outputs/apk/debug/app-debug.apk" >/dev/null
+        apk="$ROOT/app/build/outputs/apk/debug/app-debug.apk"
+        # adb.exe is a Windows program and MSYS_NO_PATHCONV stops Git Bash
+        # translating /c/... for it, so hand it a C:/... path.
+        command -v cygpath >/dev/null && apk="$(cygpath -m "$apk")"
+        adb install -r "$apk" >/dev/null
         restart
         echo "installed, theme $(current_theme)"
         ;;
