@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "app.hullbeat"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "app.hullbeat"
         minSdk = 26          // SAF, notification actions and java.time all available
-        targetSdk = 35
+        targetSdk = 36       // Google Play requires 36 for new apps and updates from 2026-08-31
         versionCode = 2
         versionName = "0.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
