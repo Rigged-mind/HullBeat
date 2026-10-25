@@ -1,5 +1,5 @@
 {
-  "_": "SINGLE SOURCE for every colour in HullBeat. Generated consumers: app/src/main/java/app/hullbeat/ui/theme/Color.kt, app/src/main/res/values/colors.xml, the CSS in prototype/index.html, and the palette read by tools/check_contrast.py. Edit here, then run python tools/make_palette.py.",
+  "_": "SINGLE SOURCE for every colour in HullBeat. Generated consumers: app/src/main/java/app/hullbeat/ui/theme/Color.kt, app/src/main/res/values/colors.xml, the CSS in prototype/index.html, and the palette read by tools/check_contrast.py. Edit here, then run python tools/make_palette.py (in Claude Code a hook runs it and check_contrast.py).",
   "brand": {
     "05": "#F2F8F6",
     "10": "#E6F0ED",

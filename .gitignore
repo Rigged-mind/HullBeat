@@ -95,3 +95,6 @@ scratch*.txt
 
 # Research forum dumps and downloaded web archives (100MB+ of tracking scripts & HTML)
 pages/
+
+# Claude Code: personal overrides stay local
+.claude/settings.local.json

@@ -1,0 +1,40 @@
+---
+name: emu
+description: Build HullBeat, install it on the running emulator and check a screen in a given theme - screenshots, taps by text, theme switching, database copy, crash log. Use whenever a UI change needs to be seen working, or the user says "перевір на емуляторі", "покажи екран", "зроби скриншот".
+---
+
+# Перевірка на емуляторі
+
+Усе робить `tools/emu.sh`. Кожен Bash-виклик із ним — з
+`dangerouslyDisableSandbox: true` (Gradle і adb не працюють у пісочниці).
+
+## Звичайний цикл
+
+1. Запам'ятати тему, яку вибрав власник: `tools/emu.sh theme`.
+2. `tools/emu.sh run` — збірка й встановлення (дані застосунку зберігаються).
+   Якщо виводить `no emulator attached`, зупинитися й попросити власника
+   запустити емулятор з Android Studio: звідси він не стартує.
+3. Потрібна тема: `tools/emu.sh theme COLORFUL` (SYSTEM, LIGHT, DARK,
+   SUNLIGHT, NIGHT, COLORFUL). Застосунок перезапускається сам.
+4. Дійти до екрана:
+   - вкладки й кнопки — за текстом: `tools/emu.sh tapt "Склад"`;
+   - меню налаштувань — `tools/emu.sh tap 84 216`;
+   - шукати текст на екрані — `tools/emu.sh find "PDF"`;
+   - прокрутка — `adb shell input swipe 540 1900 540 600 300`.
+5. `tools/emu.sh shot назва` і прочитати PNG через Read. Дивитися на те, що
+   змінилося, і на те, що могло зламатися поруч: обрізаний текст, колір
+   значків рядка стану, контраст.
+6. `tools/emu.sh crash` — порожньо означає, що падінь не було.
+7. Повернути тему, яку вибрав власник (крок 1). Він тестує на тому самому
+   емуляторі, і його вибір теми та мови не можна лишати зміненим.
+
+## Корисне
+
+- Тексти на екрані — мовою, яку вибрав власник; не перемикати мову без потреби.
+- Кожна вкладка й шторка — перевіряти в Кольоровій і хоча б одній іншій темі:
+  більшість кольорових правок має гілку `if (colorful)`.
+- Перевірка експорту: зберегти файл через системне вікно (`tapt "SAVE"`),
+  забрати `adb pull /sdcard/Download/<файл>` і звірити вміст із базою
+  (`tools/emu.sh db <тека>` у scratchpad, читати Python-ом `sqlite3`).
+- Тестові файли, збережені в «Завантаження» емулятора, назвати власнику.
+- Знімки лягають у `build/emu/` (у .gitignore).
