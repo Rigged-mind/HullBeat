@@ -24,9 +24,6 @@
 # The catalog and checklists are parsed from assets into these classes.
 -keep,includedescriptorclasses class app.hullbeat.data.catalog.** { *; }
 
-# ML Kit ships optional model downloaders we do not use.
--dontwarn com.google.mlkit.**
-
 # java.time on API 26+ needs no desugaring, but WorkManager reflects on
 # Worker subclasses by class name.
 -keep class * extends androidx.work.ListenableWorker { <init>(...); }

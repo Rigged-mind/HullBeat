@@ -82,9 +82,6 @@ dependencies {
     implementation(libs.androidx.documentfile)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.mlkit.text.recognition)
-    implementation(libs.mlkit.barcode.scanning)
-
     testImplementation(libs.junit)
     testImplementation(libs.sqlite.jdbc)
     androidTestImplementation(libs.androidx.test.junit)
