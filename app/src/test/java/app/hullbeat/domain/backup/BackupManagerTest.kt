@@ -51,6 +51,26 @@ class BackupManagerTest {
     }
 
     @Test
+    fun readAtMostStopsPastTheLimit() {
+        val bytes = ByteArray(10_000) { it.toByte() }
+        assertTrue(bytes.contentEquals(BackupManager.readAtMost(ByteArrayInputStream(bytes), 10_000)))
+        assertTrue(bytes.contentEquals(BackupManager.readAtMost(ByteArrayInputStream(bytes), 20_000)))
+        assertEquals(null, BackupManager.readAtMost(ByteArrayInputStream(bytes), 9_999))
+        assertEquals(0, BackupManager.readAtMost(ByteArrayInputStream(ByteArray(0)), 0)!!.size)
+    }
+
+    @Test
+    fun readAtMostDoesNotReadAnEndlessStream() {
+        var served = 0L
+        val endless = object : java.io.InputStream() {
+            override fun read(): Int { served++; return 0 }
+            override fun read(b: ByteArray, off: Int, len: Int): Int { served += len; return len }
+        }
+        assertEquals(null, BackupManager.readAtMost(endless, 1_000_000))
+        assertTrue("read $served bytes", served < 1_100_000)
+    }
+
+    @Test
     fun testManifestSerialization() {
         val manifest = BackupManifest(
             version = 1,

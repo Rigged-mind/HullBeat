@@ -12,6 +12,7 @@ import app.hullbeat.data.preferences.AppPreferences
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -314,13 +315,20 @@ object BackupManager {
 
         val manifestEntry = zipFile.getEntry("manifest.json")
             ?: zipFile.getEntry("manifest.JSON")
-        val manifest: BackupManifest? = if (manifestEntry != null) {
-            runCatching {
-                zipFile.getInputStream(manifestEntry).bufferedReader(Charsets.UTF_8).use { reader ->
-                    json.decodeFromString<BackupManifest>(reader.readText())
+        // Read whole before parsing, so a bounded read, not readText(): an
+        // archive the owner picked can hold a manifest of any size.
+        val manifestBytes = manifestEntry?.let { entry ->
+            zipFile.getInputStream(entry).use { readAtMost(it, MAX_MANIFEST_BYTES) }
+                ?: run {
+                    Log.w(TAG, "Restore: refused, manifest.json over $MAX_MANIFEST_BYTES bytes")
+                    return RestoreResult.INVALID
                 }
+        }
+        val manifest: BackupManifest? = manifestBytes?.let { bytes ->
+            runCatching {
+                json.decodeFromString<BackupManifest>(bytes.toString(Charsets.UTF_8))
             }.getOrNull()
-        } else null
+        }
 
         val attachmentsDir = File(context.filesDir, "attachments")
         attachmentsDir.mkdirs()
@@ -607,6 +615,27 @@ object BackupManager {
 
     /** Far more entries than any real backup has; an archive with more is not ours. */
     private const val MAX_ZIP_ENTRIES = 50_000
+
+    /**
+     * Twice what a manifest listing [MAX_ZIP_ENTRIES] files takes (about 92
+     * bytes each); a bigger one is not ours.
+     */
+    private const val MAX_MANIFEST_BYTES = 8L * 1024 * 1024
+
+    /** All of [input], or null if it holds more than [limit] bytes. */
+    internal fun readAtMost(input: InputStream, limit: Long): ByteArray? {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        var total = 0L
+        while (true) {
+            val n = input.read(buffer)
+            if (n < 0) break
+            total += n
+            if (total > limit) return null
+            out.write(buffer, 0, n)
+        }
+        return out.toByteArray()
+    }
 
     private class NoSpaceException : IOException("not enough space to restore")
 
