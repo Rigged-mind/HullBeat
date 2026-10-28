@@ -113,6 +113,12 @@
         <item quantity="other">en %d pañoles</item>
     </plurals>
 
+    <plurals name="interval_days">
+        <item quantity="one">%d día</item>
+        <item quantity="many">%d días</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+
     <plurals name="due_in_days">
         <item quantity="one">en %d día</item>
         <item quantity="many">en %d días</item>

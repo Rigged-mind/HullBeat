@@ -91,6 +91,7 @@ import app.hullbeat.data.db.ServiceSchedule
 import app.hullbeat.data.db.WorkType
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DueCalculator
+import app.hullbeat.domain.IntervalInput
 import app.hullbeat.domain.SpecUnit
 import app.hullbeat.domain.SpecUnits
 import app.hullbeat.ui.components.AppDatePickerDialog
@@ -164,6 +165,7 @@ fun ComponentDetailScreen(
     var showRenameDialog by rememberSaveable { mutableStateOf(false) }
     var showHideFromBoatDialog by rememberSaveable { mutableStateOf(false) }
     var showMeterDialog by rememberSaveable { mutableStateOf(false) }
+    var showIntervalDialog by rememberSaveable { mutableStateOf(false) }
     var viewingPhotos by remember { mutableStateOf<List<Attachment>>(emptyList()) }
     var viewingPhotoIndex by remember { mutableIntStateOf(0) }
     var showDeleteConfirmPhoto by remember { mutableStateOf<Attachment?>(null) }
@@ -198,6 +200,9 @@ fun ComponentDetailScreen(
     // under a status line about the expired certificate, and never ask for
     // the new date.
     val schedule = state.primarySchedule
+    // A schedule that counts from the last service. One with only a printed
+    // expiry has nothing to edit here; its date is set when it is renewed.
+    val intervalEditable = schedule != null && IntervalInput.isEditable(schedule)
 
     val logSaving = (quickLogStatus as? QuickLogStatus.Saving)?.scheduleId.let { it != null && it == schedule?.id }
     val logFailed = (quickLogStatus as? QuickLogStatus.Failed)?.scheduleId.let { it != null && it == schedule?.id }
@@ -404,6 +409,21 @@ fun ComponentDetailScreen(
                                     fontWeight = FontWeight.SemiBold,
                                 )
                             }
+                            if (intervalEditable) {
+                                OutlinedButton(
+                                    onClick = { showIntervalDialog = true },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(min = 56.dp),
+                                    shape = RoundedCornerShape(8.dp),
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.action_change_interval),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -438,6 +458,15 @@ fun ComponentDetailScreen(
                                 text = urgencyText,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (isOverdue) extended.status.overdue else MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+
+                        val intervalText = schedule?.let { intervalSummary(context, it) }
+                        if (intervalText != null) {
+                            Text(
+                                text = stringResource(R.string.interval_line, intervalText),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
 
@@ -476,6 +505,22 @@ fun ComponentDetailScreen(
                                     stringResource(R.string.action_record_meter)
                                 }
                                 Text(meterText, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+                            }
+                        }
+
+                        if (intervalEditable) {
+                            OutlinedButton(
+                                onClick = { showIntervalDialog = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 56.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.action_change_interval),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
                             }
                         }
                     }
@@ -905,6 +950,17 @@ fun ComponentDetailScreen(
                         showMeterDialog = false
                         onLogSaved()
                     }
+                },
+            )
+        }
+
+        if (showIntervalDialog && schedule != null) {
+            IntervalDialog(
+                schedule = schedule,
+                onDismiss = { showIntervalDialog = false },
+                onSave = { interval ->
+                    showIntervalDialog = false
+                    viewModel.saveInterval(schedule.id, interval)
                 },
             )
         }

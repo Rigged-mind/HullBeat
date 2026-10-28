@@ -150,6 +150,13 @@
         <item quantity="other">у %d локації</item>
     </plurals>
 
+    <plurals name="interval_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d днів</item>
+        <item quantity="other">%d дня</item>
+    </plurals>
+
     <!-- "за" takes the accusative: 1 день, 2 дні, 5 днів. -->
     <plurals name="due_in_days">
         <item quantity="one">за %d день</item>

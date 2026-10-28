@@ -91,6 +91,11 @@
         <item quantity="other">in %d Stauräumen</item>
     </plurals>
 
+    <plurals name="interval_days">
+        <item quantity="one">%d Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
+
     <plurals name="due_in_days">
         <item quantity="one">in %d Tag</item>
         <item quantity="other">in %d Tagen</item>

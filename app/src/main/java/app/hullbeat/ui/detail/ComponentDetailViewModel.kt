@@ -24,6 +24,7 @@ import app.hullbeat.data.db.StorageLocation
 import app.hullbeat.data.db.Vessel
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.DueEngine
+import app.hullbeat.domain.IntervalInput
 import app.hullbeat.domain.SpecUnit
 import app.hullbeat.domain.SpecUnits
 import app.hullbeat.notify.MaintenanceCheckWorker
@@ -324,6 +325,22 @@ class ComponentDetailViewModel(
                 toConfirm.forEach { db.scheduleDao().update(it.copy(needsVerification = false)) }
             }
             loadData()
+        }
+    }
+
+    /**
+     * The owner's own interval for [scheduleId], from the manual or from
+     * experience. Also clears the "check against the manual" note: the
+     * figure is no longer the catalog's guess.
+     */
+    fun saveInterval(scheduleId: Long, interval: IntervalInput.Result.Valid, onDone: () -> Unit = {}) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val schedule = db.scheduleDao().byId(scheduleId) ?: return@withContext
+                db.scheduleDao().update(IntervalInput.apply(schedule, interval))
+            }
+            loadData()
+            onDone()
         }
     }
 

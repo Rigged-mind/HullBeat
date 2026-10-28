@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-395 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+408 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -128,8 +128,21 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `detail_back` | Back | **Zurück** | |
 | `detail_next_service` | Next maintenance | **Nächste Wartung** | |
 | `verify_interval_title` | Check this interval against the manual | **Intervall mit dem Handbuch abgleichen** | |
-| `verify_interval_body` | This interval is common practice, not your engine maker\'s requirement. Where the manual says otherwise, follow the manual. | **Dieses Intervall ist gängige Praxis, keine Vorgabe Ihres Motorenherstellers. Wo das Handbuch etwas anderes sagt, gilt das Handbuch.** | |
+| `verify_interval_body` | This interval is common practice, not your engine maker\'s requirement. Where the manual says otherwise, follow the manual and change the interval. | **Dieses Intervall ist gängige Praxis, keine Vorgabe Ihres Motorenherstellers. Wo das Handbuch etwas anderes sagt, gilt das Handbuch – ändern Sie dann das Intervall.** | |
 | `verify_interval_confirm` | Checked against the manual | **Mit dem Handbuch abgeglichen** | |
+| `action_change_interval` | Change interval | **Intervall ändern** | |
+| `interval_line` | Interval: %s | **Intervall: %s** | |
+| `interval_or` | %1$s or %2$s | **%1$s oder %2$s** | |
+| `interval_whichever_first` | %s, whichever comes first | **%s, je nachdem, was zuerst eintritt** | |
+| `interval_hours` | %s h | **%s Std.** | |
+| `interval_miles` | %s mi | **%s mi** | |
+| `interval_dialog_title` | Service interval | **Wartungsintervall** | |
+| `interval_dialog_hint` | Leave a field empty if it does not apply. With both filled in, service is due at whichever comes first. | **Lassen Sie ein Feld leer, wenn es nicht zutrifft. Sind beide ausgefüllt, ist die Wartung fällig, je nachdem, was zuerst eintritt.** | |
+| `field_interval_days` | Days | **Tage** | |
+| `field_interval_miles` | Miles | **Meilen** | |
+| `interval_error_days` | A whole number of days, above zero | **Ganze Zahl von Tagen, größer als null** | |
+| `interval_error_number` | A number above zero | **Eine Zahl größer als null** | |
+| `interval_error_none` | Fill in at least one field | **Mindestens ein Feld ausfüllen** | |
 | `detail_stock` | On board spares | **Ersatzteile an Bord** | |
 | `detail_passport` | Passport | **Datenblatt** | |
 | `detail_history` | Service history | **Wartungshistorie** | |
@@ -450,6 +463,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `store_qty` | one: %d pc / other: %d pcs | **one: %d Stk. / other: %d Stk.** | |
 | `store_items` | one: %d item / other: %d items | **one: %d Teil / other: %d Teile** | |
 | `store_locations_in` | one: in %d locker / other: in %d lockers | **one: in %d Stauraum / other: in %d Stauräumen** | |
+| `interval_days` | one: %d day / other: %d days | **one: %d Tag / other: %d Tage** | |
 | `due_in_days` | one: in %d day / other: in %d days | **one: in %d Tag / other: in %d Tagen** | |
 | `boat_own_nodes` | one: %d of them your own / other: %d of them your own | **one: davon %d eigene / other: davon %d eigene** | |
 | `now_needs_meter` | one: %d node is waiting for its first engine hours / other: %d nodes are waiting for their first engine hours | **one: %d Komponente wartet auf die ersten Motorstunden / other: %d Komponenten warten auf die ersten Motorstunden** | |

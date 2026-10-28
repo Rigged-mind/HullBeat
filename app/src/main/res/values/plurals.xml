@@ -106,6 +106,11 @@
         <item quantity="other">in %d lockers</item>
     </plurals>
 
+    <plurals name="interval_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
     <plurals name="due_in_days">
         <item quantity="one">in %d day</item>
         <item quantity="other">in %d days</item>
