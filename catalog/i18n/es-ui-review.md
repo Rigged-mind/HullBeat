@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-392 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+395 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -126,6 +126,9 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `theme_colorful` | Color | **Color** | |
 | `detail_back` | Back | **Atrás** | |
 | `detail_next_service` | Next maintenance | **Próximo mantenimiento** | |
+| `verify_interval_title` | Check this interval against the manual | **Compruebe este intervalo con el manual** | |
+| `verify_interval_body` | This interval is common practice, not your engine maker\'s requirement. Where the manual says otherwise, follow the manual. | **Este intervalo es la práctica habitual, no un requisito del fabricante de su motor. Si el manual dice otra cosa, siga el manual.** | |
+| `verify_interval_confirm` | Checked against the manual | **Comprobado con el manual** | |
 | `detail_stock` | On board spares | **Repuestos a bordo** | |
 | `detail_passport` | Passport | **Ficha técnica** | |
 | `detail_history` | Service history | **Historial de mantenimiento** | |

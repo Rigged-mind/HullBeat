@@ -123,6 +123,9 @@
     <!-- Component Detail -->
     <string name="detail_back">Back</string>
     <string name="detail_next_service">Next maintenance</string>
+    <string name="verify_interval_title">Check this interval against the manual</string>
+    <string name="verify_interval_body">This interval is common practice, not your engine maker\'s requirement. Where the manual says otherwise, follow the manual.</string>
+    <string name="verify_interval_confirm">Checked against the manual</string>
     <string name="detail_stock">On board spares</string>
     <string name="detail_passport">Passport</string>
     <string name="detail_history">Service history</string>

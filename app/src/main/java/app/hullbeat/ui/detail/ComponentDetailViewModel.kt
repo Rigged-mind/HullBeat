@@ -312,6 +312,21 @@ class ComponentDetailViewModel(
         }
     }
 
+    /**
+     * The owner has matched this component's catalog intervals against the
+     * manual, so the note asking for that goes - for good, not per visit.
+     */
+    fun confirmIntervalsVerified() {
+        val toConfirm = _uiState.value.schedules.filter { it.needsVerification }
+        if (toConfirm.isEmpty()) return
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                toConfirm.forEach { db.scheduleDao().update(it.copy(needsVerification = false)) }
+            }
+            loadData()
+        }
+    }
+
     fun addLocation(name: String, qrCode: String?, note: String?, onComplete: () -> Unit = {}) {
         val vesselId = _uiState.value.component?.vesselId ?: return
         viewModelScope.launch {

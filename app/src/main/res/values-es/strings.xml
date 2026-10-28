@@ -115,6 +115,9 @@
     <!-- Component Detail -->
     <string name="detail_back">Atrás</string>
     <string name="detail_next_service">Próximo mantenimiento</string>
+    <string name="verify_interval_title">Compruebe este intervalo con el manual</string>
+    <string name="verify_interval_body">Este intervalo es la práctica habitual, no un requisito del fabricante de su motor. Si el manual dice otra cosa, siga el manual.</string>
+    <string name="verify_interval_confirm">Comprobado con el manual</string>
     <string name="detail_stock">Repuestos a bordo</string>
     <string name="detail_passport">Ficha técnica</string>
     <string name="detail_history">Historial de mantenimiento</string>

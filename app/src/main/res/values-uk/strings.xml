@@ -125,6 +125,9 @@
     <!-- Component Detail -->
     <string name="detail_back">Назад</string>
     <string name="detail_next_service">Наступне ТО</string>
+    <string name="verify_interval_title">Звірте інтервал із мануалом</string>
+    <string name="verify_interval_body">Цей інтервал — загальна практика, а не вимога виробника вашого двигуна. Якщо мануал каже інакше, орієнтуйтеся на мануал.</string>
+    <string name="verify_interval_confirm">Звірено з мануалом</string>
     <string name="detail_stock">На складі</string>
     <string name="detail_passport">Паспорт</string>
     <string name="detail_history">Історія обслуговування</string>

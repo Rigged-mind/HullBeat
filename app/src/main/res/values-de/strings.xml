@@ -115,6 +115,9 @@
     <!-- Component Detail -->
     <string name="detail_back">Zurück</string>
     <string name="detail_next_service">Nächste Wartung</string>
+    <string name="verify_interval_title">Intervall mit dem Handbuch abgleichen</string>
+    <string name="verify_interval_body">Dieses Intervall ist gängige Praxis, keine Vorgabe Ihres Motorenherstellers. Wo das Handbuch etwas anderes sagt, gilt das Handbuch.</string>
+    <string name="verify_interval_confirm">Mit dem Handbuch abgeglichen</string>
     <string name="detail_stock">Ersatzteile an Bord</string>
     <string name="detail_passport">Datenblatt</string>
     <string name="detail_history">Wartungshistorie</string>

@@ -364,6 +364,51 @@ fun ComponentDetailScreen(
                 }
             }
 
+            // catalog/README.md: an interval marked `verify` is common practice,
+            // not the engine maker's figure, and must say so until the owner
+            // has checked it. Neutral on purpose - it sits beside the status,
+            // and red and amber there mean overdue and soon.
+            if (state.schedules.any { it.needsVerification }) {
+                item(key = "verify_interval") {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.verify_interval_title),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            Text(
+                                text = stringResource(R.string.verify_interval_body),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            OutlinedButton(
+                                onClick = { viewModel.confirmIntervalsVerified() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 56.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.verify_interval_confirm),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             // Next Maintenance Card
             item(key = "next_service") {
                 Card(
