@@ -33,7 +33,7 @@ HullBeat — надійний офлайн судновий журнал і пл
 
 3. ЖУРНАЛ СЕРВІСУ ТА РОБІТ
 • Повна хронологія сервісних робіт: заміна оливи, імпелера, анодів, фільтрів, обслуговування такелажу.
-• Внесення мотогодин вручну або фотографуванням лічильника з автоматичним розпізнаванням (OCR).
+• Показник мотогодин записується разом із ТО — від нього рахується наступний інтервал. Фото лічильника можна прикріпити до запису.
 • Фіксація витрат на деталі, паливо та сервісні послуги.
 
 4. СКЛАД ТА ЗАПАСНІ ЧАСТИНИ
@@ -41,8 +41,8 @@ HullBeat — надійний офлайн судновий журнал і пл
 • Контроль мінімальних залишків для автономних переходів.
 
 5. РЕЗЕРВНЕ КОПІЮВАННЯ ТА ЕКСПОРТ
-• Експорт повного суднового журналу та паспорта в Excel / PDF для інспекторів, страхових компаній або нового власника при продажу.
-• Локальний бекап через Storage Access Framework (SAF) у будь-яку обрану папку.
+• Експорт журналу ТО та складу в Excel, суднового паспорта й сервісної книжки в PDF — для інспекторів, страхових компаній або нового власника при продажу.
+• Резервна копія всієї бази з фото одним файлом у будь-яку обрану папку (Storage Access Framework).
 ```
 
 ---
@@ -72,11 +72,11 @@ KEY FEATURES:
 
 2. COMPONENT PASSPORTS & MARINE CATALOG
 • Deep vessel hierarchy covering propulsion, drivetrain, rigging, electrical, navigation, plumbing, and hull systems.
-• Technical passports storing part numbers, fluid capacities, serials, and manufacturer maintenance schedules.
+• Technical passports storing part numbers, fluid capacities, serials, and service intervals you match to your engine's manual.
 
 3. SERVICE LOG & ENGINE HOURS
 • Complete paper trail: oil changes, raw water impellers, zinc anodes, filters, and yard haul-outs.
-• Log engine hours manually or snap a photo of your meter for on-device AI recognition (ML Kit OCR).
+• Engine hours go in with each service record, and the next interval counts from them. A photo of the meter can be attached to the record.
 • Track costs, parts used, and servicing notes.
 
 4. ONBOARD SPARES & INVENTORY
@@ -84,8 +84,8 @@ KEY FEATURES:
 • Minimum stock thresholds to prevent running out of critical parts mid-passage.
 
 5. EXPORT & BACKUPS
-• Export a buyer-ready service dossier and maintenance history to PDF or Excel.
-• Automated local backups to a folder of your choice using Android's Storage Access Framework (SAF).
+• Export the service log and spares to Excel, and a buyer-ready vessel passport with its service book to PDF.
+• Back up the whole log with its photos as one file in a folder of your choice (Android's Storage Access Framework).
 ```
 
 ---
@@ -108,7 +108,7 @@ KEY FEATURES:
 ```markdown
 # Privacy Policy for HullBeat
 
-Last updated: September 2026
+Last updated: October 2026
 
 HullBeat ("we", "our", or "the app") is designed with a strict privacy-first architecture. 
 
@@ -120,10 +120,11 @@ All information entered into HullBeat — including vessel specifications, engin
 
 ### 3. Device Permissions Used
 - **POST_NOTIFICATIONS**: Used solely on your device to trigger scheduled local maintenance reminders and due date alerts.
-- **CAMERA**: Used solely on-device to capture photos of equipment or scan engine hour meters using on-device text recognition. Images are processed directly on your device and are never transmitted externally.
+
+HullBeat does not request the camera permission. Photos are chosen through Android's system photo picker, and only the ones you pick are copied into the app.
 
 ### 4. Backups and Export
-When you use the backup or export features, files (such as SQLite backups, PDF passports, or Excel logs) are saved directly to a local destination chosen by you via Android's Storage Access Framework (SAF). You maintain full control over these files.
+When you use the backup or export features, files (such as SQLite backups, PDF passports, or Excel logs) are saved directly to a local destination chosen by you via Android's Storage Access Framework (SAF). You maintain full control over these files. Backup files are not encrypted: if you keep one in a cloud folder, it is protected only by that service.
 
 ### 5. Third-Party Analytics and Ads
 HullBeat contains zero advertisements, zero tracking libraries, and zero third-party analytics SDKs.
