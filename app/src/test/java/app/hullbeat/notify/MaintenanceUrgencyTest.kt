@@ -22,6 +22,7 @@ class MaintenanceUrgencyTest {
         name = name,
         urgency = "",
         needsNewExpiry = false,
+        needsMeterReading = false,
         // Irrelevant to ordering, which is all this test measures - but a
         // real id, because 0 is not one.
         scheduleId = 1L,

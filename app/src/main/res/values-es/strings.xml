@@ -14,6 +14,7 @@
     <string name="notification_channel_due_description">Avisos cuando un trabajo vence o está vencido.</string>
     <string name="action_mark_done">Hecho</string>
     <string name="action_renew">Renovar…</string>
+    <string name="action_mark_done_with_hours">Hecho…</string>
     <string name="due_unknown">Vencimiento desconocido</string>
     <string name="due_unknown_needs_meter">Introduce las horas de motor iniciales para empezar la previsión</string>
     <string name="due_unknown_needs_schedule">Configura el plan de mantenimiento</string>
@@ -436,6 +437,7 @@
     <string name="now_enter_hours">Introducir horas</string>
     <string name="error_photo_save_failed">No se pudo guardar la foto</string>
     <string name="error_number_invalid">No es un número</string>
+    <string name="error_meter_required">Este trabajo necesita las horas de motor</string>
     <string name="error_expiry_before_service">Debe ser posterior a la fecha del trabajo</string>
     <string name="error_record_save_failed">No se pudo guardar el registro. No se perdió nada: inténtelo de nuevo.</string>
     <string name="action_ok">Aceptar</string>

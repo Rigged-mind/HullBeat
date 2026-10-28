@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-390 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+392 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -41,6 +41,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `notification_channel_due_description` | Reminders when a job is due or overdue. | **Erinnerungen, wenn eine Arbeit fällig oder überfällig ist.** | |
 | `action_mark_done` | Done | **Erledigt** | |
 | `action_renew` | Renew… | **Erneuern…** | |
+| `action_mark_done_with_hours` | Done… | **Erledigt…** | |
 | `due_unknown` | Due date unknown | **Fälligkeit unbekannt** | |
 | `due_unknown_needs_meter` | Enter initial engine hours to start forecast | **Motorstunden eintragen, um die Prognose zu starten** | |
 | `due_unknown_needs_schedule` | Configure maintenance schedule | **Wartungsplan festlegen** | |
@@ -417,6 +418,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `now_enter_hours` | Enter hours | **Stunden eintragen** | |
 | `error_photo_save_failed` | Could not save the photo | **Foto konnte nicht gespeichert werden** | |
 | `error_number_invalid` | Not a number | **Keine gültige Zahl** | |
+| `error_meter_required` | This job needs the engine hours | **Für diese Arbeit sind die Betriebsstunden nötig** | |
 | `error_expiry_before_service` | Must be later than the date of the service | **Muss nach dem Datum der Arbeiten liegen** | |
 | `error_record_save_failed` | Could not save the record. Nothing was lost - try again. | **Eintrag konnte nicht gespeichert werden. Nichts ist verloren - bitte erneut versuchen.** | |
 | `action_ok` | OK | **OK** | |

@@ -10,6 +10,7 @@
     <string name="notification_channel_due_description">Reminders when a job is due or overdue.</string>
     <string name="action_mark_done">Done</string>
     <string name="action_renew">Renew…</string>
+    <string name="action_mark_done_with_hours">Done…</string>
     <string name="due_unknown">Due date unknown</string>
     <string name="due_unknown_needs_meter">Enter initial engine hours to start forecast</string>
     <string name="due_unknown_needs_schedule">Configure maintenance schedule</string>
@@ -452,6 +453,7 @@
     <string name="now_enter_hours">Enter hours</string>
     <string name="error_photo_save_failed">Could not save the photo</string>
     <string name="error_number_invalid">Not a number</string>
+    <string name="error_meter_required">This job needs the engine hours</string>
     <string name="error_expiry_before_service">Must be later than the date of the service</string>
     <string name="error_record_save_failed">Could not save the record. Nothing was lost - try again.</string>
     <string name="action_ok">OK</string>

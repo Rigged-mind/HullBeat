@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-390 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+392 strings and 28 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -40,6 +40,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `notification_channel_due_description` | Reminders when a job is due or overdue. | **Avisos cuando un trabajo vence o está vencido.** | |
 | `action_mark_done` | Done | **Hecho** | |
 | `action_renew` | Renew… | **Renovar…** | |
+| `action_mark_done_with_hours` | Done… | **Hecho…** | |
 | `due_unknown` | Due date unknown | **Vencimiento desconocido** | |
 | `due_unknown_needs_meter` | Enter initial engine hours to start forecast | **Introduce las horas de motor iniciales para empezar la previsión** | |
 | `due_unknown_needs_schedule` | Configure maintenance schedule | **Configura el plan de mantenimiento** | |
@@ -416,6 +417,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `now_enter_hours` | Enter hours | **Introducir horas** | |
 | `error_photo_save_failed` | Could not save the photo | **No se pudo guardar la foto** | |
 | `error_number_invalid` | Not a number | **No es un número** | |
+| `error_meter_required` | This job needs the engine hours | **Este trabajo necesita las horas de motor** | |
 | `error_expiry_before_service` | Must be later than the date of the service | **Debe ser posterior a la fecha del trabajo** | |
 | `error_record_save_failed` | Could not save the record. Nothing was lost - try again. | **No se pudo guardar el registro. No se perdió nada: inténtelo de nuevo.** | |
 | `action_ok` | OK | **Aceptar** | |

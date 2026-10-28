@@ -9,6 +9,7 @@ import app.hullbeat.HullBeatApp
 import app.hullbeat.R
 import app.hullbeat.data.db.ServiceRecord
 import app.hullbeat.data.db.WorkType
+import app.hullbeat.domain.LogRequirements
 import java.time.LocalDate
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +31,8 @@ import kotlinx.coroutines.launch
  *    that Save stays disabled until that date is entered. Writing a record
  *    here without it would either drop the item off the list or bring it back
  *    on a date nobody chose. So an expiry-driven item is refused, and the
- *    tap does nothing: the body tap opens the sheet where the field is.
+ *    tap does nothing: the body tap opens the sheet where the field is. The
+ *    same goes for a job that runs on hours, which needs the meter reading.
  *
  * 2. IDEMPOTENT. Notifications stay in the shade until dismissed, and a second
  *    record already written today for this schedule is not written twice. Two
@@ -82,16 +84,19 @@ class MarkDoneReceiver : BroadcastReceiver() {
                 val schedule = scheduleId?.let { db.scheduleDao().byId(it) }
 
                 // Rule 1: an item whose due date comes from a printed expiry
-                // needs a new expiry, and only the sheet can ask for one.
-                // Judged on THIS schedule, the same test the worker used to
-                // offer the button: a liferaft's expiry must not silently
-                // swallow the tap on its annual inspection.
-                val needsNewExpiry = if (schedule != null) {
-                    schedule.expiresOn != null
+                // needs a new expiry, and one that runs on hours needs the
+                // meter reading; only the sheet can ask for either. Judged on
+                // THIS schedule, the same test the worker used to offer the
+                // button: a liferaft's expiry must not silently swallow the
+                // tap on its annual inspection. A card an older build left in
+                // the shade still offers one-tap "Done" on an oil change -
+                // refused here, or the record lands without its hours.
+                val needsForm = if (schedule != null) {
+                    LogRequirements.needsForm(schedule)
                 } else {
-                    db.scheduleDao().forComponent(componentId).any { it.expiresOn != null }
+                    db.scheduleDao().forComponent(componentId).any(LogRequirements::needsForm)
                 }
-                if (needsNewExpiry) return@launch
+                if (needsForm) return@launch
 
                 // Rule 2: atomic transaction check-and-insert ensures two rapid broadcasts
                 // or repeated actions never insert duplicate service records.

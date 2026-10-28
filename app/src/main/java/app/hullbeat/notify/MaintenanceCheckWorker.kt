@@ -14,6 +14,7 @@ import app.hullbeat.data.db.displayName
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.DueEngine
+import app.hullbeat.domain.LogRequirements
 import java.time.LocalDate
 import java.util.Comparator
 
@@ -126,7 +127,8 @@ class MaintenanceCheckWorker(
                     componentId = component.id,
                     name = component.displayName(applicationContext),
                     urgency = urgency(result),
-                    needsNewExpiry = primarySchedule.expiresOn != null,
+                    needsNewExpiry = LogRequirements.needsNewExpiry(primarySchedule),
+                    needsMeterReading = LogRequirements.needsMeterReading(primarySchedule),
                     scheduleId = primarySchedule.id,
                     overdue = evaluation.isOverdue,
                     daysRemaining = result.daysRemaining,
@@ -157,6 +159,7 @@ class MaintenanceCheckWorker(
                 componentName = it.name,
                 urgencyText = it.urgency,
                 needsNewExpiry = it.needsNewExpiry,
+                needsMeterReading = it.needsMeterReading,
                 scheduleId = it.scheduleId,
                 vesselName = vesselName,
             )
@@ -210,6 +213,8 @@ class MaintenanceCheckWorker(
             val name: String,
             val urgency: String,
             val needsNewExpiry: Boolean,
+            /** Runs on hours: "Зроблено…" opens the sheet for the reading. */
+            val needsMeterReading: Boolean,
             /**
              * The schedule that produced this notification.
              *

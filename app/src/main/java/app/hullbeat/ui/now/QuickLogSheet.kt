@@ -68,6 +68,7 @@ import app.hullbeat.data.db.labelRes
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DecimalInput
 import app.hullbeat.domain.DueCalculator
+import app.hullbeat.domain.LogRequirements
 import app.hullbeat.ui.components.AppDatePickerDialog
 import app.hullbeat.ui.components.DateSelectionRow
 import app.hullbeat.ui.components.MeterDecreaseWarning
@@ -155,7 +156,10 @@ fun QuickLogSheet(
 
     // A field that holds something that is not a number blocks Save. It used
     // to be read as blank, and the record went in without the meter reading.
-    val meterOk = !item.hasMeter || DecimalInput.isAcceptable(meterText)
+    // Blank blocks it too when the job runs on hours: without the reading
+    // the next interval has nothing to count from.
+    val meterRequired = item.hasMeter && LogRequirements.needsMeterReading(item.schedule)
+    val meterOk = !item.hasMeter || LogRequirements.meterInputOk(meterRequired, meterText)
     val costOk = DecimalInput.isAcceptable(costText)
 
     // A certificate renewed on the day of the service cannot run out before
@@ -266,11 +270,17 @@ fun QuickLogSheet(
                     label = { Text(stringResource(R.string.field_meter_hours)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
-                    isError = !meterOk,
+                    // Red is for what is wrong, and a field nobody has typed
+                    // in yet is not: the empty required field says so in the
+                    // neutral hint below, and Save stays off until it is filled.
+                    isError = !meterOk && meterText.isNotBlank(),
                     // No trend, so no estimate: the last reading is stated under
                     // the field, always visible, never in it. As a value, saved
                     // unedited on a later day, it would claim no hours were run.
                     supportingText = when {
+                        meterRequired && meterText.isBlank() -> {
+                            { Text(stringResource(R.string.error_meter_required)) }
+                        }
                         !meterOk -> {
                             { Text(stringResource(R.string.error_number_invalid)) }
                         }

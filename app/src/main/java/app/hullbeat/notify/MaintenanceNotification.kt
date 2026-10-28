@@ -22,7 +22,9 @@ import app.hullbeat.R
  * printed expiry - liferaft, flares, extinguisher - needs the NEW expiry, and
  * the verb changes with it: you do not *do* a liferaft, you send it for
  * service and get a date back. That item gets "Продовжити…", which opens the
- * sheet.
+ * sheet. So does a job that runs on hours, as "Зроблено…": its record needs
+ * the meter reading, or the next interval has nothing to count from
+ * (see [app.hullbeat.domain.LogRequirements]).
  *
  * The decision belongs here because a BroadcastReceiver on Android 10+ cannot
  * reliably start an Activity from the background: by the time the receiver
@@ -72,6 +74,11 @@ object MaintenanceNotification {
         urgencyText: String,
         needsNewExpiry: Boolean,
         /**
+         * The job runs on hours, so its record needs the meter reading -
+         * which the shade cannot ask for. Gets the sheet, like an expiry.
+         */
+        needsMeterReading: Boolean = false,
+        /**
          * The schedule this notification is about. Carried through so the
          * "Done" action closes THAT schedule and not, by omission, all of
          * them.
@@ -113,7 +120,7 @@ object MaintenanceNotification {
         // vessel never sees the line and never learns the app has fleets.
         if (vesselName != null) builder.setSubText(vesselName)
 
-        if (needsNewExpiry) {
+        if (needsNewExpiry || needsMeterReading) {
             val renew = PendingIntent.getActivity(
                 context,
                 0,
@@ -126,11 +133,11 @@ object MaintenanceNotification {
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
-            builder.addAction(
-                R.drawable.ic_renew,
-                context.getString(R.string.action_renew),
-                renew,
-            )
+            if (needsNewExpiry) {
+                builder.addAction(R.drawable.ic_renew, context.getString(R.string.action_renew), renew)
+            } else {
+                builder.addAction(R.drawable.ic_check, context.getString(R.string.action_mark_done_with_hours), renew)
+            }
         } else {
             val done = PendingIntent.getBroadcast(
                 context,
