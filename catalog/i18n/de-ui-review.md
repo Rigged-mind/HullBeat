@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-408 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+409 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -436,6 +436,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `error_number_invalid` | Not a number | **Keine gültige Zahl** | |
 | `error_meter_required` | This job needs the engine hours | **Für diese Arbeit sind die Betriebsstunden nötig** | |
 | `error_expiry_before_service` | Must be later than the date of the service | **Muss nach dem Datum der Arbeiten liegen** | |
+| `hint_expiry_needed` | Without this date there will be no reminder | **Ohne dieses Datum gibt es keine Erinnerung** | |
 | `error_record_save_failed` | Could not save the record. Nothing was lost - try again. | **Eintrag konnte nicht gespeichert werden. Nichts ist verloren - bitte erneut versuchen.** | |
 | `action_ok` | OK | **OK** | |
 | `nav_menu_title` | Menu | **Menü** | |

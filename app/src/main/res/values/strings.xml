@@ -471,6 +471,7 @@
     <string name="error_number_invalid">Not a number</string>
     <string name="error_meter_required">This job needs the engine hours</string>
     <string name="error_expiry_before_service">Must be later than the date of the service</string>
+    <string name="hint_expiry_needed">Without this date there will be no reminder</string>
     <string name="error_record_save_failed">Could not save the record. Nothing was lost - try again.</string>
     <string name="action_ok">OK</string>
     <string name="nav_menu_title">Menu</string>

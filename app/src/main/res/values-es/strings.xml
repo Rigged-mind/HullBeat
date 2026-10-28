@@ -455,6 +455,7 @@
     <string name="error_number_invalid">No es un número</string>
     <string name="error_meter_required">Este trabajo necesita las horas de motor</string>
     <string name="error_expiry_before_service">Debe ser posterior a la fecha del trabajo</string>
+    <string name="hint_expiry_needed">Sin esta fecha no habrá recordatorio</string>
     <string name="error_record_save_failed">No se pudo guardar el registro. No se perdió nada: inténtelo de nuevo.</string>
     <string name="action_ok">Aceptar</string>
 

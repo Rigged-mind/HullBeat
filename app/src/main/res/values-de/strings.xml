@@ -455,6 +455,7 @@
     <string name="error_number_invalid">Keine gültige Zahl</string>
     <string name="error_meter_required">Für diese Arbeit sind die Betriebsstunden nötig</string>
     <string name="error_expiry_before_service">Muss nach dem Datum der Arbeiten liegen</string>
+    <string name="hint_expiry_needed">Ohne dieses Datum gibt es keine Erinnerung</string>
     <string name="error_record_save_failed">Eintrag konnte nicht gespeichert werden. Nichts ist verloren - bitte erneut versuchen.</string>
     <string name="action_ok">OK</string>
 

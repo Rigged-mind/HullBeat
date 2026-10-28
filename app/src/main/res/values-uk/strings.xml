@@ -470,6 +470,7 @@
     <string name="error_number_invalid">Це не число</string>
     <string name="error_meter_required">Для цієї роботи потрібні мотогодини</string>
     <string name="error_expiry_before_service">Має бути пізніше за дату виконання робіт</string>
+    <string name="hint_expiry_needed">Без цієї дати нагадування не прийде</string>
     <string name="error_record_save_failed">Не вдалося зберегти запис. Введене не втрачено - спробуйте ще раз.</string>
     <string name="action_ok">Зрозуміло</string>
     <string name="nav_menu_title">Меню</string>

@@ -255,10 +255,19 @@ fun QuickLogSheet(
                         }
                     },
                     singleLine = true,
-                    isError = item.needsNewExpiry && (parsedNewExpiry == null || !expiryOk),
-                    supportingText = if (!expiryOk) {
-                        { Text(stringResource(R.string.error_expiry_before_service)) }
-                    } else null,
+                    // Red only for a date that is wrong. An empty one is not
+                    // overdue - red means that - it is simply still to come:
+                    // the neutral hint says why it is needed, and Save waits.
+                    isError = (newExpiryText.isNotBlank() && parsedNewExpiry == null) || !expiryOk,
+                    supportingText = when {
+                        !expiryOk -> {
+                            { Text(stringResource(R.string.error_expiry_before_service)) }
+                        }
+                        newExpiryText.isBlank() -> {
+                            { Text(stringResource(R.string.hint_expiry_needed)) }
+                        }
+                        else -> null
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
