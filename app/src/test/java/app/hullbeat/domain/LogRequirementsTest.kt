@@ -32,6 +32,30 @@ class LogRequirementsTest {
     }
 
     @Test
+    fun `a policy with no date yet asks for its first one`() {
+        // The catalog's insurance: no interval, and no date until the owner
+        // enters it. The sheet must ask, or it never gets one.
+        val insurance = ServiceSchedule(componentId = 4)
+        assertTrue(LogRequirements.needsNewExpiry(insurance))
+        assertTrue(LogRequirements.awaitsFirstExpiry(insurance))
+        assertTrue(LogRequirements.needsForm(insurance))
+    }
+
+    @Test
+    fun `an interval without an expiry never asks for a date`() {
+        assertFalse(LogRequirements.needsNewExpiry(antifouling))
+        assertFalse(LogRequirements.needsNewExpiry(oilChange))
+        assertFalse(LogRequirements.needsNewExpiry(ServiceSchedule(componentId = 5, intervalMiles = 1000.0)))
+        assertFalse(LogRequirements.awaitsFirstExpiry(antifouling))
+    }
+
+    @Test
+    fun `a dated certificate is renewed, not awaited`() {
+        assertTrue(LogRequirements.needsNewExpiry(liferaft))
+        assertFalse(LogRequirements.awaitsFirstExpiry(liferaft))
+    }
+
+    @Test
     fun `the hours field cannot be left blank for an hours job`() {
         assertFalse(LogRequirements.meterInputOk(required = true, text = ""))
         assertFalse(LogRequirements.meterInputOk(required = true, text = "  "))

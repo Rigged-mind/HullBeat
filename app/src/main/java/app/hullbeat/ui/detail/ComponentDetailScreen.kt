@@ -92,6 +92,7 @@ import app.hullbeat.data.db.WorkType
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.IntervalInput
+import app.hullbeat.domain.LogRequirements
 import app.hullbeat.domain.SpecUnit
 import app.hullbeat.domain.SpecUnits
 import app.hullbeat.ui.components.AppDatePickerDialog
@@ -481,7 +482,7 @@ fun ComponentDetailScreen(
                                 .heightIn(min = 56.dp),
                             shape = RoundedCornerShape(8.dp),
                         ) {
-                            val btnText = if (schedule?.expiresOn != null) {
+                            val btnText = if (schedule != null && LogRequirements.needsNewExpiry(schedule)) {
                                 stringResource(R.string.action_renew)
                             } else {
                                 stringResource(R.string.action_mark_done)
@@ -845,8 +846,8 @@ fun ComponentDetailScreen(
                     confidence = DueCalculator.Confidence.NONE,
                 ),
                 urgencyText = urgencyText,
-                actionVerb = if (schedule.expiresOn != null) stringResource(R.string.action_renew) else stringResource(R.string.action_mark_done),
-                needsNewExpiry = schedule.expiresOn != null,
+                actionVerb = if (LogRequirements.needsNewExpiry(schedule)) stringResource(R.string.action_renew) else stringResource(R.string.action_mark_done),
+                needsNewExpiry = LogRequirements.needsNewExpiry(schedule),
                 isDeferred = isDeferred,
                 deferredUntil = schedule.deferredUntil,
                 deferReason = schedule.deferReason,

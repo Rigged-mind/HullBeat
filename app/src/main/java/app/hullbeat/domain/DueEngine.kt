@@ -271,10 +271,7 @@ object DueEngine {
                 UnknownReason.NEEDS_INITIAL_METER
             // Nothing to count from and nothing counted to: this is the
             // shape the seeder gives an expiring document.
-            enabledSchedules.all {
-                it.intervalDays == null && it.intervalHours == null &&
-                    it.intervalMiles == null && it.expiresOn == null
-            } -> UnknownReason.NEEDS_EXPIRY_DATE
+            enabledSchedules.all(LogRequirements::awaitsFirstExpiry) -> UnknownReason.NEEDS_EXPIRY_DATE
             else -> UnknownReason.INSUFFICIENT_DATA
         }
 
@@ -364,10 +361,7 @@ object DueEngine {
                 UnknownReason.NEEDS_INITIAL_METER
             // Nothing to count from and nothing counted to: this is the
             // shape the seeder gives an expiring document.
-            enabledSchedules.all {
-                it.intervalDays == null && it.intervalHours == null &&
-                    it.intervalMiles == null && it.expiresOn == null
-            } -> UnknownReason.NEEDS_EXPIRY_DATE
+            enabledSchedules.all(LogRequirements::awaitsFirstExpiry) -> UnknownReason.NEEDS_EXPIRY_DATE
             else -> UnknownReason.INSUFFICIENT_DATA
         }
 

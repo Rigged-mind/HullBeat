@@ -30,6 +30,7 @@ import app.hullbeat.data.db.displayName
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.DueCalculator
 import app.hullbeat.domain.DueEngine
+import app.hullbeat.domain.LogRequirements
 import app.hullbeat.notify.MaintenanceCheckWorker
 import app.hullbeat.notify.MaintenanceNotification
 import java.time.LocalDate
@@ -231,7 +232,7 @@ class NowViewModel(
                     val schedule = evaluation.primarySchedule ?: continue
                     val result = evaluation.primaryResult
                     val urgency = formatUrgency(result, schedule.deferredUntil, schedule.deferReason)
-                    val verb = if (schedule.expiresOn != null) {
+                    val verb = if (LogRequirements.needsNewExpiry(schedule)) {
                         context.getString(R.string.action_renew)
                     } else {
                         context.getString(R.string.action_mark_done)
@@ -245,7 +246,7 @@ class NowViewModel(
                         result = result,
                         urgencyText = urgency,
                         actionVerb = verb,
-                        needsNewExpiry = schedule.expiresOn != null,
+                        needsNewExpiry = LogRequirements.needsNewExpiry(schedule),
                         isDeferred = evaluation.isDeferred,
                         deferredUntil = schedule.deferredUntil,
                         deferReason = schedule.deferReason,
@@ -260,7 +261,7 @@ class NowViewModel(
                     if (schedule != null) {
                         val result = evaluation.primaryResult
                         val urgency = formatUrgency(result, null, null)
-                        val verb = if (schedule.expiresOn != null) {
+                        val verb = if (LogRequirements.needsNewExpiry(schedule)) {
                             context.getString(R.string.action_renew)
                         } else {
                             context.getString(R.string.action_mark_done)
@@ -274,7 +275,7 @@ class NowViewModel(
                             result = result,
                             urgencyText = urgency,
                             actionVerb = verb,
-                            needsNewExpiry = schedule.expiresOn != null,
+                            needsNewExpiry = LogRequirements.needsNewExpiry(schedule),
                             isDeferred = false,
                             deferredUntil = null,
                             deferReason = null,
@@ -825,7 +826,9 @@ internal fun schedulesToRenew(
     schedules: List<ServiceSchedule>,
     scheduleId: Long?,
 ): List<ServiceSchedule> {
-    val expiring = schedules.filter { it.expiresOn != null }
+    // LogRequirements, not `expiresOn != null`: a policy's FIRST date goes
+    // in here too, and it has no date to be found by.
+    val expiring = schedules.filter(LogRequirements::needsNewExpiry)
     if (scheduleId == null) return expiring
     return expiring.filter { it.id == scheduleId }
 }

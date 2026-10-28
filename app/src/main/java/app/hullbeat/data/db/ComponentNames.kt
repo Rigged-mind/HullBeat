@@ -3,6 +3,7 @@ package app.hullbeat.data.db
 import android.content.Context
 import androidx.annotation.DrawableRes
 import app.hullbeat.R
+import app.hullbeat.domain.LogRequirements
 
 /**
  * What to call a component on screen.
@@ -169,7 +170,7 @@ fun formatScheduleInterval(context: Context, schedule: ServiceSchedule): String 
         val mStr = if (m % 1.0 == 0.0) m.toLong().toString() else m.toString()
         parts.add("$mStr ${context.getString(R.string.unit_short_nm)}")
     }
-    if (schedule.expiresOn != null) {
+    if (LogRequirements.needsNewExpiry(schedule)) {
         parts.add(context.getString(R.string.action_renew))
     }
     return parts.joinToString(" / ")
