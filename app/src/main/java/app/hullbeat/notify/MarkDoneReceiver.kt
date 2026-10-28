@@ -3,6 +3,7 @@ package app.hullbeat.notify
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.room.withTransaction
 import app.hullbeat.HullBeatApp
@@ -12,6 +13,7 @@ import app.hullbeat.data.db.WorkType
 import app.hullbeat.domain.LogRequirements
 import java.time.LocalDate
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,10 +80,13 @@ class MarkDoneReceiver : BroadcastReceiver() {
             try {
                 val db = app.database
 
-                // The schedule the button was offered for, if it still exists.
-                // A schedule deleted since the notification was posted falls
-                // back to the component, like an older build's intent.
+                // The schedule the button was offered for, if it still exists
+                // and still belongs to this component. A schedule deleted
+                // since the notification was posted falls back to the
+                // component, like an older build's intent; one that now
+                // names another component is not ours to close.
                 val schedule = scheduleId?.let { db.scheduleDao().byId(it) }
+                    ?.takeIf { it.componentId == componentId }
 
                 // Rule 1: an item whose due date comes from a printed expiry
                 // needs a new expiry, and one that runs on hours needs the
@@ -123,6 +128,13 @@ class MarkDoneReceiver : BroadcastReceiver() {
                     )
                 }
                 dismiss(context, notificationId, vesselId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Uncaught, this ends the process from a background tap. The
+                // card stays in the shade, so the owner can tap again or open
+                // the node - nothing was written, and nothing claims it was.
+                Log.e(TAG, "Done from the notification failed, the card stays", e)
             } finally {
                 processingKeys.remove(lockKey)
                 // Always: a receiver that never finishes its async work is an
@@ -158,6 +170,7 @@ class MarkDoneReceiver : BroadcastReceiver() {
         /** So the tapped reminder can be dismissed once the row is written. */
         const val EXTRA_NOTIFICATION_ID = "notification_id"
 
+        private const val TAG = "MarkDoneReceiver"
         private const val NO_ID = -1L
         private val processingKeys = ConcurrentHashMap.newKeySet<String>()
     }
