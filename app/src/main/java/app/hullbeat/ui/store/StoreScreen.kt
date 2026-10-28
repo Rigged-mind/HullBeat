@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,8 +24,6 @@ import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -50,6 +50,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -720,23 +722,31 @@ fun StorePartCard(
             ) {
                 val locLabel = detail.locationName?.let { storageLocationDisplayName(context, it) }
                     ?: stringResource(R.string.store_no_location)
-                AssistChip(
-                    onClick = {},
-                    label = { Text(locLabel, style = MaterialTheme.typography.labelSmall) },
-                    modifier = Modifier.height(28.dp),
+                // The locker is a label, not a button: it opens nothing.
+                ChipLabel(
+                    text = locLabel,
+                    container = Color.Transparent,
+                    content = MaterialTheme.colorScheme.onSurfaceVariant,
+                    border = true,
                 )
 
+                // A component chip stays small to the eye, but the finger
+                // gets the full 56 dp row height around it.
                 item.linkedComponents.forEach { comp ->
                     val compLabel = comp.displayName(context)
-                    AssistChip(
-                        onClick = { onOpenComponent(comp.componentId) },
-                        label = { Text(compLabel, style = MaterialTheme.typography.labelSmall) },
-                        modifier = Modifier.height(28.dp),
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            labelColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    )
+                    Box(
+                        modifier = Modifier
+                            .heightIn(min = 56.dp)
+                            .clickable(role = Role.Button) { onOpenComponent(comp.componentId) },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        ChipLabel(
+                            text = compLabel,
+                            container = MaterialTheme.colorScheme.surfaceVariant,
+                            content = MaterialTheme.colorScheme.primary,
+                            border = false,
+                        )
+                    }
                 }
             }
 
@@ -942,5 +952,28 @@ private fun partsInLocationList(
                 onOpenComponent = onOpenComponent,
             )
         }
+    }
+}
+
+/** The look of a small chip, without a chip's own touch target. */
+@Composable
+private fun ChipLabel(
+    text: String,
+    container: Color,
+    content: Color,
+    border: Boolean,
+) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = container,
+        contentColor = content,
+        border = if (border) BorderStroke(1.dp, MaterialTheme.colorScheme.outline) else null,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+        )
     }
 }

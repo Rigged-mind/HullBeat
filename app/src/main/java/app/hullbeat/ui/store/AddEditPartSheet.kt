@@ -391,7 +391,7 @@ fun AddEditPartSheet(
                     enabled = name.isNotBlank(),
                     modifier = Modifier
                         .weight(1f)
-                        .heightIn(min = 52.dp),
+                        .heightIn(min = 56.dp),
                     shape = RoundedCornerShape(8.dp),
                 ) {
                     Text(stringResource(R.string.action_save))

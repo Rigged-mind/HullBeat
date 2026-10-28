@@ -90,7 +90,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.hullbeat.HullBeatApp
 import app.hullbeat.R
@@ -540,7 +539,7 @@ fun SettingsDrawerSheet(
                                 },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(44.dp),
+                                    .height(56.dp),
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
                             ) {
@@ -562,7 +561,7 @@ fun SettingsDrawerSheet(
                                 },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(44.dp),
+                                    .height(56.dp),
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
                             ) {
@@ -902,7 +901,6 @@ fun SettingsDrawerSheet(
                                             },
                                             label = stringResource(labelRes),
                                             modifier = Modifier.weight(1f),
-                                            height = 38.dp,
                                         )
                                     }
                                 }
@@ -940,7 +938,7 @@ fun SettingsDrawerSheet(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(44.dp),
+                                .height(56.dp),
                             shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(
@@ -956,7 +954,7 @@ fun SettingsDrawerSheet(
                             onClick = { withExportVessel(exportPassportPdf) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(44.dp),
+                                .height(56.dp),
                             shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(
@@ -1028,13 +1026,17 @@ fun SettingsDrawerSheet(
                                 onClick = { createBackupLauncher.launch("hullbeat_backup.zip") },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(44.dp),
+                                    .heightIn(min = 56.dp),
                                 shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                             ) {
+                                // Two lines, not an ellipsis: half a row is
+                                // too narrow for "Створити резервну копію".
                                 Text(
                                     text = stringResource(R.string.settings_backup_create),
-                                    maxLines = 1,
+                                    maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
+                                    textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.labelMedium,
                                 )
                             }
@@ -1042,13 +1044,15 @@ fun SettingsDrawerSheet(
                                 onClick = { restoreBackupLauncher.launch(arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream", "*/*")) },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(44.dp),
+                                    .heightIn(min = 56.dp),
                                 shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                             ) {
                                 Text(
                                     text = stringResource(R.string.settings_backup_restore),
-                                    maxLines = 1,
+                                    maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
+                                    textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.labelMedium,
                                 )
                             }
@@ -1225,7 +1229,6 @@ private fun <T> SettingsUnitRow(
                     onClick = { onSelect(opt) },
                     label = shortLabel,
                     modifier = Modifier.weight(1f),
-                    height = 38.dp,
                 )
             }
         }
@@ -1351,7 +1354,7 @@ private fun SettingsDropdownItem(
             .padding(horizontal = 6.dp, vertical = 1.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(if (selected) colors.primaryContainer else Color.Transparent)
-            .heightIn(min = 48.dp),
+            .heightIn(min = 56.dp),
     )
 }
 
@@ -1389,11 +1392,10 @@ private fun SettingsSelectChip(
     onClick: () -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    height: Dp = 40.dp,
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.height(height),
+        modifier = modifier.heightIn(min = 56.dp),
         shape = RoundedCornerShape(8.dp),
         color = if (selected) {
             MaterialTheme.colorScheme.primaryContainer
