@@ -421,8 +421,9 @@
     <string name="field_map_component">Component</string>
 
     <!-- Backup & Restore -->
-    <string name="settings_backup_title">Backup &amp; restore (SAF)</string>
+    <string name="settings_backup_title">Backup &amp; restore</string>
     <string name="settings_backup_subtitle">Full database backup to storage or cloud</string>
+    <string name="settings_backup_unencrypted">The file is not encrypted: anyone who opens it sees your records and photos. Keep it somewhere you trust.</string>
     <string name="settings_backup_create">Create backup</string>
     <string name="settings_backup_restore">Restore from backup</string>
     <string name="settings_backup_success">Backup created successfully</string>

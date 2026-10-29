@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-409 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+410 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -388,8 +388,9 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `field_map_who` | Performed by | **Ausgeführt von** | |
 | `field_map_notes` | Notes | **Notizen** | |
 | `field_map_component` | Component | **Komponente** | |
-| `settings_backup_title` | Backup &amp; restore (SAF) | **Sicherung &amp; Wiederherstellung (SAF)** | |
+| `settings_backup_title` | Backup &amp; restore | **Sicherung &amp; Wiederherstellung** | |
 | `settings_backup_subtitle` | Full database backup to storage or cloud | **Vollständige Datenbanksicherung in den Speicher oder die Cloud** | |
+| `settings_backup_unencrypted` | The file is not encrypted: anyone who opens it sees your records and photos. Keep it somewhere you trust. | **Die Datei ist nicht verschlüsselt: Wer sie öffnet, sieht Einträge und Fotos. Bewahren Sie sie an einem vertrauenswürdigen Ort auf.** | |
 | `settings_backup_create` | Create backup | **Sicherung erstellen** | |
 | `settings_backup_restore` | Restore from backup | **Aus Sicherung wiederherstellen** | |
 | `settings_backup_success` | Backup created successfully | **Sicherung erstellt** | |

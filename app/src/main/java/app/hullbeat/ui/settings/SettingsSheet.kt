@@ -1016,6 +1016,13 @@ fun SettingsDrawerSheet(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                        // Said before the file leaves the phone, not after:
+                        // the ZIP holds every note and photo in the clear.
+                        Text(
+                            text = stringResource(R.string.settings_backup_unencrypted),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
 
                         // Backup & Restore buttons row
                         Row(

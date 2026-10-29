@@ -1,6 +1,6 @@
 # Interface strings to review - es
 
-409 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+410 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -387,8 +387,9 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `field_map_who` | Performed by | **Realizado por** | |
 | `field_map_notes` | Notes | **Notas** | |
 | `field_map_component` | Component | **Componente** | |
-| `settings_backup_title` | Backup &amp; restore (SAF) | **Copia de seguridad y restauración (SAF)** | |
+| `settings_backup_title` | Backup &amp; restore | **Copia de seguridad y restauración** | |
 | `settings_backup_subtitle` | Full database backup to storage or cloud | **Copia completa de la base de datos en el almacenamiento o la nube** | |
+| `settings_backup_unencrypted` | The file is not encrypted: anyone who opens it sees your records and photos. Keep it somewhere you trust. | **El archivo no está cifrado: quien lo abra verá registros y fotos. Guárdelo en un lugar de confianza.** | |
 | `settings_backup_create` | Create backup | **Crear copia de seguridad** | |
 | `settings_backup_restore` | Restore from backup | **Restaurar desde copia** | |
 | `settings_backup_success` | Backup created successfully | **Copia de seguridad creada** | |

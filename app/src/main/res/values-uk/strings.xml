@@ -420,8 +420,9 @@
     <string name="field_map_component">Вузол</string>
 
     <!-- Backup & Restore -->
-    <string name="settings_backup_title">Резервне копіювання (SAF)</string>
+    <string name="settings_backup_title">Резервна копія</string>
     <string name="settings_backup_subtitle">Повна копія бази даних на диск або в хмару</string>
+    <string name="settings_backup_unencrypted">Файл не зашифрований: хто його відкриє, побачить записи й фото. Зберігайте його там, де довіряєте.</string>
     <string name="settings_backup_create">Створити резервну копію</string>
     <string name="settings_backup_restore">Відновити з копії</string>
     <string name="settings_backup_success">Резервну копію успішно створено</string>

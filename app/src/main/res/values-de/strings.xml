@@ -406,8 +406,9 @@
     <string name="field_map_component">Komponente</string>
 
     <!-- Backup & Restore -->
-    <string name="settings_backup_title">Sicherung &amp; Wiederherstellung (SAF)</string>
+    <string name="settings_backup_title">Sicherung &amp; Wiederherstellung</string>
     <string name="settings_backup_subtitle">Vollständige Datenbanksicherung in den Speicher oder die Cloud</string>
+    <string name="settings_backup_unencrypted">Die Datei ist nicht verschlüsselt: Wer sie öffnet, sieht Einträge und Fotos. Bewahren Sie sie an einem vertrauenswürdigen Ort auf.</string>
     <string name="settings_backup_create">Sicherung erstellen</string>
     <string name="settings_backup_restore">Aus Sicherung wiederherstellen</string>
     <string name="settings_backup_success">Sicherung erstellt</string>

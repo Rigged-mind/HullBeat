@@ -406,8 +406,9 @@
     <string name="field_map_component">Componente</string>
 
     <!-- Backup & Restore -->
-    <string name="settings_backup_title">Copia de seguridad y restauración (SAF)</string>
+    <string name="settings_backup_title">Copia de seguridad y restauración</string>
     <string name="settings_backup_subtitle">Copia completa de la base de datos en el almacenamiento o la nube</string>
+    <string name="settings_backup_unencrypted">El archivo no está cifrado: quien lo abra verá registros y fotos. Guárdelo en un lugar de confianza.</string>
     <string name="settings_backup_create">Crear copia de seguridad</string>
     <string name="settings_backup_restore">Restaurar desde copia</string>
     <string name="settings_backup_success">Copia de seguridad creada</string>
