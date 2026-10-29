@@ -80,6 +80,7 @@ import app.hullbeat.data.db.formatScheduleInterval
 import app.hullbeat.data.db.formatWorkTypes
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.domain.formatCostTotals
+import app.hullbeat.ui.components.bleedHorizontally
 import app.hullbeat.ui.components.rememberSampledBitmap
 import app.hullbeat.ui.detail.EditServiceRecordSheet
 import java.text.NumberFormat
@@ -112,11 +113,10 @@ fun JournalScreen(
     var viewingPhotos by remember { mutableStateOf<List<Attachment>>(emptyList()) }
     var viewingPhotoIndex by remember { mutableIntStateOf(0) }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) {
+    // Filters and totals. Inside the list once there are records, so they
+    // scroll away with it: on a phone turned sideways they alone took a third
+    // of the height and the records ran in a slot beneath them.
+    val header: @Composable () -> Unit = {
         // Vessel selector if fleet > 1
         if (uiState.vessels.size > 1) {
             Row(
@@ -239,8 +239,15 @@ fun JournalScreen(
                 }
             }
         }
+    }
 
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
         if (uiState.isLoading) {
+            header()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -250,6 +257,7 @@ fun JournalScreen(
                 CircularProgressIndicator()
             }
         } else if (uiState.entries.isEmpty()) {
+            header()
             // Empty state
             Box(
                 modifier = Modifier
@@ -290,6 +298,10 @@ fun JournalScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 flingBehavior = appFlingBehavior(),
             ) {
+                item(key = "journal_header") {
+                    Column(modifier = Modifier.bleedHorizontally(16.dp)) { header() }
+                }
+
                 var prevYear: Int? = null
                 var prevMonth: Int? = null
 

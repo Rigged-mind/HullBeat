@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import app.hullbeat.ui.components.bleedHorizontally
 import app.hullbeat.ui.theme.appFlingBehavior
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -80,11 +81,10 @@ fun StoreScreen(
     var editingLocation by remember { mutableStateOf<StorageLocation?>(null) }
     var locationToDelete by remember { mutableStateOf<StorageLocation?>(null) }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) {
+    // Totals, search, add buttons and tabs. With parts listed it rides at the
+    // top of the list and scrolls away: fixed, it was some 200 dp - half of a
+    // phone on its side - and left the parts a strip beneath it.
+    val header: @Composable () -> Unit = {
         // Summary & Stats header
         Surface(
             color = MaterialTheme.colorScheme.surface,
@@ -259,9 +259,16 @@ fun StoreScreen(
                 }
             }
         }
+    }
 
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
         // Main content area
         if (uiState.isLoading) {
+            header()
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -269,6 +276,7 @@ fun StoreScreen(
                 CircularProgressIndicator()
             }
         } else if (uiState.totalCount == 0 && uiState.lockerCount == 0) {
+            header()
             // Global empty state
             Box(
                 modifier = Modifier
@@ -330,51 +338,55 @@ fun StoreScreen(
         } else {
             when (uiState.selectedTab) {
                 StoreTab.ALL, StoreTab.TO_BUY -> {
-                    if (uiState.items.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(24.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = if (uiState.selectedTab == StoreTab.TO_BUY) {
-                                    stringResource(R.string.store_tobuy_empty)
-                                } else {
-                                    stringResource(R.string.store_empty_desc)
-                                },
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center,
-                            )
+                    // One list whether or not anything matches: swapping it for
+                    // an empty-state box mid-search would rebuild the header,
+                    // and the search field would drop focus and the keyboard.
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        flingBehavior = appFlingBehavior(),
+                    ) {
+                        item(key = "store_header") {
+                            Column(modifier = Modifier.bleedHorizontally(16.dp)) { header() }
                         }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            flingBehavior = appFlingBehavior(),
-                        ) {
-                            items(uiState.items, key = { it.detail.id }) { item ->
-                                StorePartCard(
-                                    item = item,
-                                    onQuickAdjust = { delta ->
-                                        viewModel.quickAdjustQuantity(
-                                            itemId = item.detail.id,
-                                            delta = delta,
-                                        )
+                        if (uiState.items.isEmpty()) {
+                            item(key = "store_empty") {
+                                Text(
+                                    text = if (uiState.selectedTab == StoreTab.TO_BUY) {
+                                        stringResource(R.string.store_tobuy_empty)
+                                    } else {
+                                        stringResource(R.string.store_empty_desc)
                                     },
-                                    onEdit = { editingPart = item },
-                                    onDelete = { partToDelete = item },
-                                    onOpenComponent = onOpenComponent,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(24.dp),
                                 )
                             }
+                        }
+                        items(uiState.items, key = { it.detail.id }) { item ->
+                            StorePartCard(
+                                item = item,
+                                onQuickAdjust = { delta ->
+                                    viewModel.quickAdjustQuantity(
+                                        itemId = item.detail.id,
+                                        delta = delta,
+                                    )
+                                },
+                                onEdit = { editingPart = item },
+                                onDelete = { partToDelete = item },
+                                onOpenComponent = onOpenComponent,
+                            )
                         }
                     }
                 }
 
                 StoreTab.LOCATIONS -> {
                     if (uiState.locations.isEmpty()) {
+                        header()
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -406,10 +418,13 @@ fun StoreScreen(
 
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(16.dp),
+                            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             flingBehavior = appFlingBehavior(),
                         ) {
+                            item(key = "store_header") {
+                                Column(modifier = Modifier.bleedHorizontally(16.dp)) { header() }
+                            }
                             items(uiState.locations, key = { it.id }) { location ->
                                 val partsInLocation = itemsByLocation[location.id].orEmpty()
                                 LockerGroupCard(
