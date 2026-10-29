@@ -335,6 +335,8 @@
     <string name="settings_notifications_title">Maintenance reminders</string>
     <string name="settings_notifications_subtitle">Daily background check of overdue and upcoming service</string>
     <string name="settings_notifications_enabled">Enable reminders</string>
+    <string name="settings_notifications_blocked">Android does not allow HullBeat to show notifications, so no reminders will arrive.</string>
+    <string name="settings_notifications_open_system">Allow in Android settings</string>
     <string name="settings_notifications_advance">Advance notice</string>
     <string name="settings_notifications_days_7">7 days</string>
     <string name="settings_notifications_days_14">14 days</string>

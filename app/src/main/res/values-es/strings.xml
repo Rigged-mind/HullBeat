@@ -320,6 +320,8 @@
     <string name="settings_notifications_title">Avisos de mantenimiento</string>
     <string name="settings_notifications_subtitle">Comprobación diaria en segundo plano del mantenimiento vencido y próximo</string>
     <string name="settings_notifications_enabled">Activar avisos</string>
+    <string name="settings_notifications_blocked">Android no permite a HullBeat mostrar notificaciones, así que no llegarán avisos.</string>
+    <string name="settings_notifications_open_system">Permitir en los ajustes de Android</string>
     <string name="settings_notifications_advance">Antelación</string>
     <string name="settings_notifications_days_7">7 días</string>
     <string name="settings_notifications_days_14">14 días</string>

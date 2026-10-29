@@ -320,6 +320,8 @@
     <string name="settings_notifications_title">Wartungserinnerungen</string>
     <string name="settings_notifications_subtitle">Tägliche Prüfung im Hintergrund auf überfällige und anstehende Wartung</string>
     <string name="settings_notifications_enabled">Erinnerungen aktivieren</string>
+    <string name="settings_notifications_blocked">Android erlaubt HullBeat keine Benachrichtigungen – Erinnerungen kommen nicht an.</string>
+    <string name="settings_notifications_open_system">In den Android-Einstellungen erlauben</string>
     <string name="settings_notifications_advance">Vorlauf</string>
     <string name="settings_notifications_days_7">7 Tage</string>
     <string name="settings_notifications_days_14">14 Tage</string>

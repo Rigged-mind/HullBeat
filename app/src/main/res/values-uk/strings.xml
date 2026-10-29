@@ -334,6 +334,8 @@
     <string name="settings_notifications_title">Сповіщення про ТО</string>
     <string name="settings_notifications_subtitle">Щоденна перевірка термінів обслуговування судна</string>
     <string name="settings_notifications_enabled">Увімкнути нагадування</string>
+    <string name="settings_notifications_blocked">Android не дозволяє HullBeat показувати сповіщення — нагадування не прийдуть.</string>
+    <string name="settings_notifications_open_system">Дозволити в налаштуваннях Android</string>
     <string name="settings_notifications_advance">Завчасність сповіщення</string>
     <string name="settings_notifications_days_7">7 днів</string>
     <string name="settings_notifications_days_14">14 днів</string>

@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-410 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+412 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -312,6 +312,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `settings_notifications_title` | Maintenance reminders | **Wartungserinnerungen** | |
 | `settings_notifications_subtitle` | Daily background check of overdue and upcoming service | **Tägliche Prüfung im Hintergrund auf überfällige und anstehende Wartung** | |
 | `settings_notifications_enabled` | Enable reminders | **Erinnerungen aktivieren** | |
+| `settings_notifications_blocked` | Android does not allow HullBeat to show notifications, so no reminders will arrive. | **Android erlaubt HullBeat keine Benachrichtigungen – Erinnerungen kommen nicht an.** | |
+| `settings_notifications_open_system` | Allow in Android settings | **In den Android-Einstellungen erlauben** | |
 | `settings_notifications_advance` | Advance notice | **Vorlauf** | |
 | `settings_notifications_days_7` | 7 days | **7 Tage** | |
 | `settings_notifications_days_14` | 14 days | **14 Tage** | |

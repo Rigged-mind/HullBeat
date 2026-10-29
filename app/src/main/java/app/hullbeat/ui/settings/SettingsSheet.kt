@@ -1,5 +1,6 @@
 package app.hullbeat.ui.settings
 
+import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
@@ -24,6 +25,7 @@ import app.hullbeat.domain.backup.RestoreResult
 import app.hullbeat.domain.export.ExcelExporter
 import app.hullbeat.domain.export.ServiceRecordExportItem
 import app.hullbeat.notify.MaintenanceCheckWorker
+import app.hullbeat.notify.NotificationAccess
 import java.time.LocalDate
 import app.hullbeat.ui.export.rememberPassportPdfExport
 import androidx.compose.foundation.BorderStroke
@@ -114,6 +116,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -169,6 +173,18 @@ fun SettingsDrawerSheet(
     // Notifications state
     var notificationsEnabled by remember { mutableStateOf(AppPreferences.isNotificationsEnabled(context)) }
     var advanceDays by remember { mutableIntStateOf(AppPreferences.getAdvanceReminderDays(context)) }
+    // What Android allows, read again on every return: the owner may have
+    // just flipped it in system settings.
+    var systemAllowsNotifications by remember { mutableStateOf(NotificationAccess.systemAllows(context)) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        systemAllowsNotifications = NotificationAccess.systemAllows(context)
+    }
+    val askNotifications = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        systemAllowsNotifications = NotificationAccess.systemAllows(context)
+        if (granted) MaintenanceCheckWorker.runNow(context)
+    }
 
     // Past imports (the importer is gone; undoing what it wrote is not) and backup state
     var importSessions by remember { mutableStateOf<List<ImportSession>>(emptyList()) }
@@ -861,21 +877,48 @@ fun SettingsDrawerSheet(
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Medium,
                             )
+                            // On only when both the owner and Android say so.
                             Switch(
-                                checked = notificationsEnabled,
+                                checked = notificationsEnabled && systemAllowsNotifications,
                                 onCheckedChange = { checked ->
                                     notificationsEnabled = checked
                                     AppPreferences.setNotificationsEnabled(context, checked)
-                                    if (checked) {
-                                        MaintenanceCheckWorker.runNow(context)
-                                    } else {
+                                    if (!checked) {
                                         context.getSystemService(NotificationManager::class.java)?.cancelAll()
+                                    } else if (systemAllowsNotifications) {
+                                        MaintenanceCheckWorker.runNow(context)
+                                    } else if (NotificationAccess.canAskAtRuntime(context)) {
+                                        askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    } else {
+                                        context.startActivity(NotificationAccess.settingsIntent(context))
                                     }
                                 },
                             )
                         }
 
-                        if (notificationsEnabled) {
+                        // Wanted but blocked: say so, and where to lift it.
+                        // Neutral, not red - nothing here is overdue.
+                        if (notificationsEnabled && !systemAllowsNotifications) {
+                            Text(
+                                text = stringResource(R.string.settings_notifications_blocked),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            OutlinedButton(
+                                onClick = { context.startActivity(NotificationAccess.settingsIntent(context)) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 56.dp),
+                                shape = RoundedCornerShape(8.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.settings_notifications_open_system),
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                        }
+
+                        if (notificationsEnabled && systemAllowsNotifications) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 Text(
                                     text = stringResource(R.string.settings_notifications_advance),

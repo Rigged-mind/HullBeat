@@ -1,6 +1,9 @@
 package app.hullbeat.ui
 
+import android.Manifest
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import app.hullbeat.HullBeatApp
 import app.hullbeat.R
+import app.hullbeat.notify.NotificationAccess
 import app.hullbeat.data.catalog.ChecklistsLoader
 import app.hullbeat.data.db.AppDatabase
 import app.hullbeat.data.db.Vessel
@@ -118,12 +122,21 @@ fun HullBeatMainScaffold(
     LaunchedEffect(justCreated) {
         vesselCount = setupDb.vesselDao().allActive().size
     }
+    // Asked once the first boat exists, not at launch: by then the owner has
+    // a schedule to be reminded of and a reason to say yes. A refusal is an
+    // answer - Settings shows it and offers the way back.
+    val askNotifications = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { }
     if (vesselCount == 0) {
         VesselSetupScreen(
             database = setupDb,
             onReady = {
                 justCreated = it
                 nowViewModel.refresh()
+                if (NotificationAccess.canAskAtRuntime(setupContext)) {
+                    askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             },
             modifier = modifier,
         )

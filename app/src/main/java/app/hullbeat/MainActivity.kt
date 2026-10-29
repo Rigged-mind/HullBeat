@@ -1,19 +1,14 @@
 package app.hullbeat
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import app.hullbeat.data.preferences.AppPreferences
 import app.hullbeat.data.search.SearchIndexFreshness
 import androidx.lifecycle.lifecycleScope
@@ -33,15 +28,6 @@ import app.hullbeat.ui.theme.Scheme
  * into the Compose state.
  */
 class MainActivity : ComponentActivity() {
-
-    /**
-     * Asked for on screen, never from the worker: a worker that posts into a
-     * revoked permission fails silently, and the owner has no idea why the
-     * reminders stopped. Declining is a real answer - the app keeps working,
-     * it just stops nagging - so nothing here retries or explains twice.
-     */
-    private val askNotifications =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     private var pendingComponentId by mutableStateOf<Long?>(null)
     private var pendingRenew by mutableStateOf(false)
@@ -67,7 +53,6 @@ class MainActivity : ComponentActivity() {
                 SearchIndexFreshness.refreshIfStale(this@MainActivity, (application as HullBeatApp).database)
             }
         }
-        requestNotificationPermissionIfNeeded()
         handle(intent)
         setContent {
             HullBeatTheme(scheme = currentScheme) {
@@ -117,20 +102,6 @@ class MainActivity : ComponentActivity() {
                 pendingRenew = true
             }
         }
-    }
-
-    /**
-     * Unlike the notification CHANNEL - which needs no version guard, because
-     * minSdk 26 IS the release that introduced channels - this permission
-     * genuinely arrived in API 33, so the check here is load-bearing rather
-     * than decorative.
-     */
-    private fun requestNotificationPermissionIfNeeded() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-        val granted = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
-        if (!granted) askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     companion object {
