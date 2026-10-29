@@ -6,7 +6,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,8 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -243,6 +248,11 @@ fun HullBeatMainScaffold(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val drawerScope = rememberCoroutineScope()
 
+    // The window, not the device: a tablet in split screen is a phone-width
+    // window and keeps the bottom bar. 600 dp is where Material's compact
+    // width ends; past it the bar's four tabs spread over a hand's reach.
+    val wideWindow = LocalConfiguration.current.screenWidthDp >= 600
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -378,7 +388,7 @@ fun HullBeatMainScaffold(
                 )
             },
             bottomBar = {
-                NavigationBar(
+                if (!wideWindow) NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.heightIn(min = 56.dp),
                 ) {
@@ -400,10 +410,39 @@ fun HullBeatMainScaffold(
             },
             modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+        ) {
+        if (wideWindow) {
+            NavigationRail(
+                containerColor = MaterialTheme.colorScheme.surface,
+                // The Scaffold already padded for the system bars; the rail's own
+                // insets counted them twice and clipped Store to 54 dp.
+                windowInsets = WindowInsets(0),
+            ) {
+                // Under the top bar, the four tabs start where the eye does.
+                NavTab.entries.forEach { tab ->
+                    NavigationRailItem(
+                        selected = selectedTab == tab,
+                        onClick = { selectedTab = tab },
+                        icon = {
+                            Icon(
+                                painter = painterResource(tab.iconRes),
+                                contentDescription = stringResource(tab.titleRes),
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
+                        label = { Text(stringResource(tab.titleRes)) },
+                    )
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
             contentAlignment = Alignment.TopCenter,
         ) {
             Box(
@@ -497,6 +536,7 @@ fun HullBeatMainScaffold(
                     }
                 }
             }
+        }
         }
 
         if (showSearchSheet) {
