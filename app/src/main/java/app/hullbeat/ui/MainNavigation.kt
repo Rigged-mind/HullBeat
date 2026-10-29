@@ -5,8 +5,10 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -97,7 +101,7 @@ enum class NavTab(val titleRes: Int, val iconRes: Int) {
  *
  * [ Пульс ]   [ Човен ]   [ Журнал ]   [ Склад ]
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HullBeatMainScaffold(
     nowViewModel: NowViewModel,
@@ -253,6 +257,21 @@ fun HullBeatMainScaffold(
     // width ends; past it the bar's four tabs spread over a hand's reach.
     val wideWindow = LocalConfiguration.current.screenWidthDp >= 600
 
+    // The bar leaves on the way down and comes back on the way up: a phone on
+    // its side has some 410 dp of height, and a fixed 64 dp bar took a sixth.
+    val topBarScroll = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    LaunchedEffect(selectedTab) { topBarScroll.state.heightOffset = 0f }
+    // Typing on a short window: the keyboard takes over half the height and
+    // nothing scrolls to send the bar away, so it steps aside on its own.
+    val shortWindow = LocalConfiguration.current.screenHeightDp < 480
+    val imeVisible = WindowInsets.isImeVisible
+    LaunchedEffect(imeVisible, shortWindow) {
+        if (shortWindow) {
+            topBarScroll.state.heightOffset =
+                if (imeVisible) topBarScroll.state.heightOffsetLimit else 0f
+        }
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -385,6 +404,7 @@ fun HullBeatMainScaffold(
                         }
                     },
                     colors = appTopBarColors(),
+                    scrollBehavior = topBarScroll,
                 )
             },
             bottomBar = {
@@ -408,7 +428,9 @@ fun HullBeatMainScaffold(
                     }
                 }
             },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(topBarScroll.nestedScrollConnection),
         ) { innerPadding ->
         Row(
             modifier = Modifier
