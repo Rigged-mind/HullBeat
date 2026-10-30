@@ -257,9 +257,11 @@ fun HullBeatMainScaffold(
     // width ends; past it the bar's four tabs spread over a hand's reach.
     val wideWindow = LocalConfiguration.current.screenWidthDp >= 600
 
-    // The bar leaves on the way down and comes back on the way up: a phone on
-    // its side has some 410 dp of height, and a fixed 64 dp bar took a sixth.
-    val topBarScroll = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    // The bar leaves on the way down and comes back only once the list is back
+    // at its top: a phone on its side has some 410 dp of height, a fixed 64 dp
+    // bar took a sixth, and one that dropped in on every small upward nudge
+    // covered the rows being read mid-list.
+    val topBarScroll = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     LaunchedEffect(selectedTab) { topBarScroll.state.heightOffset = 0f }
     // Typing on a short window: the keyboard takes over half the height and
     // nothing scrolls to send the bar away, so it steps aside on its own.
