@@ -118,16 +118,21 @@ fun StoreScreen(
                         color = MaterialTheme.colorScheme.onSurface,
                     )
 
+                    // Stock badges are neutral, the word says it: errorContainer
+                    // and tertiaryContainer are not in the palette, so Compose
+                    // drew stock Material pink, and red here means overdue.
+                    // "None left" adds a frame to stand apart from "low".
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (uiState.outOfStockCount > 0) {
                             Surface(
-                                color = MaterialTheme.colorScheme.errorContainer,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 shape = RoundedCornerShape(12.dp),
                             ) {
                                 Text(
                                     text = stringResource(R.string.store_stat_gone, uiState.outOfStockCount),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 )
@@ -136,13 +141,13 @@ fun StoreScreen(
 
                         if (uiState.lowStockCount > 0) {
                             Surface(
-                                color = MaterialTheme.colorScheme.tertiaryContainer,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(12.dp),
                             ) {
                                 Text(
                                     text = stringResource(R.string.store_stat_low, uiState.lowStockCount),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 )
@@ -649,12 +654,13 @@ fun StorePartCard(
 
                         if (item.isOutOfStock) {
                             Surface(
-                                color = MaterialTheme.colorScheme.errorContainer,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 shape = RoundedCornerShape(4.dp),
                             ) {
                                 Text(
                                     text = stringResource(R.string.store_out_of_stock),
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
@@ -662,12 +668,12 @@ fun StorePartCard(
                             }
                         } else if (item.isLowStock) {
                             Surface(
-                                color = MaterialTheme.colorScheme.tertiaryContainer,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(4.dp),
                             ) {
                                 Text(
                                     text = stringResource(R.string.store_low_stock),
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),

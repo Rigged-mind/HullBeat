@@ -1660,9 +1660,12 @@ private fun ViewPhotoDialog(
                         FilledTonalIconButton(
                             onClick = { onDelete(currentPhoto) },
                             modifier = Modifier.size(56.dp),
+                            // Same plate as Close: errorContainer is not in the
+                            // palette and came out stock Material pink; the
+                            // bin glyph says what the button does.
                             colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f),
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                                contentColor = MaterialTheme.colorScheme.onSurface,
                             ),
                         ) {
                             Icon(
