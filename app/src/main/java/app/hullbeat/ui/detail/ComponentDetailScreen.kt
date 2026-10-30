@@ -355,16 +355,24 @@ fun ComponentDetailScreen(
                             )
                         }
                         Text("·", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        val (critRes, critColor) = when (component.criticality) {
-                            Criticality.HIGH -> R.string.crit_high to extended.status.overdue
-                            Criticality.MED -> R.string.crit_med to extended.status.dueSoon
-                            Criticality.LOW -> R.string.crit_low to extended.status.ok
+                        // How much the boat depends on this node, not whether it
+                        // is late: in the overdue red and due-soon amber, a
+                        // "Critical" pump read as overdue beside "in 23 days".
+                        // The word carries it; weight marks the high end.
+                        val critRes = when (component.criticality) {
+                            Criticality.HIGH -> R.string.crit_high
+                            Criticality.MED -> R.string.crit_med
+                            Criticality.LOW -> R.string.crit_low
                         }
                         Text(
                             text = stringResource(critRes),
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = critColor,
+                            fontWeight = if (component.criticality == Criticality.HIGH) {
+                                FontWeight.Bold
+                            } else {
+                                FontWeight.Normal
+                            },
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
