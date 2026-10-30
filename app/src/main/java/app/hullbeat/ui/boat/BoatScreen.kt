@@ -718,6 +718,7 @@ private fun VesselHeader(
                         if (photo != null) R.string.vessel_photo_change_label
                         else R.string.vessel_photo_add_label
                     ),
+                    role = Role.Button,
                 ) { onPickPhoto() },
         ) {
             if (photo != null) {
