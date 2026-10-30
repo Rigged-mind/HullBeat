@@ -65,7 +65,7 @@ description: Rules for screen states, fields, copy, motion and redesigns in Hull
   приклад (`512`, `12.03.2026`), ніколи не інструкцію.
 - **Рядок допомоги зарезервовано.** `supportingText = if (bad) {...} else null`
   додає рядок висотою ~16 dp у момент помилки, і все під полем стрибає
-  (так зараз у `EditServiceRecordSheet.kt`). Краще: поле завжди має
+  (так було в `EditServiceRecordSheet.kt` і `QuickLogSheet.kt`). Краще: поле завжди має
   `supportingText` — підказку або порожній рядок тієї ж висоти, — а помилка
   **заміняє** підказку, а не додається другим рядком.
 - Перевірка — після того, як поле вперше втратило фокус, далі на кожен ввід.

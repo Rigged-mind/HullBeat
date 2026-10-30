@@ -216,9 +216,12 @@ fun EditServiceRecordSheet(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     isError = !meterOk,
-                    supportingText = if (!meterOk) {
-                        { Text(stringResource(R.string.error_number_invalid)) }
-                    } else null,
+                    // The line is always there, empty when all is well: added
+                    // only on error, it pushed every field below down a line
+                    // under the owner's thumb mid-typing.
+                    supportingText = {
+                        Text(if (meterOk) "" else stringResource(R.string.error_number_invalid))
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -230,9 +233,9 @@ fun EditServiceRecordSheet(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
                 isError = !costOk,
-                supportingText = if (!costOk) {
-                    { Text(stringResource(R.string.error_number_invalid)) }
-                } else null,
+                supportingText = {
+                    Text(if (costOk) "" else stringResource(R.string.error_number_invalid))
+                },
                 modifier = Modifier.fillMaxWidth(),
             )
 

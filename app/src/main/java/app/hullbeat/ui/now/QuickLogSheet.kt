@@ -301,7 +301,11 @@ fun QuickLogSheet(
                                 )
                             }
                         }
-                        else -> null
+                        // Empty, not absent: the line stays reserved, so an
+                        // error appearing does not push the sheet down.
+                        else -> {
+                            { Text("") }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -321,9 +325,9 @@ fun QuickLogSheet(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
                 isError = !costOk,
-                supportingText = if (!costOk) {
-                    { Text(stringResource(R.string.error_number_invalid)) }
-                } else null,
+                supportingText = {
+                    Text(if (costOk) "" else stringResource(R.string.error_number_invalid))
+                },
                 modifier = Modifier.fillMaxWidth(),
             )
 

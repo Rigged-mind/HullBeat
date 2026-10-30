@@ -435,7 +435,7 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `pdf_compiled_by` | Compiled by owner via HullBeat | **Elaborado por el propietario con HullBeat** | |
 | `now_enter_hours` | Enter hours | **Introducir horas** | |
 | `error_photo_save_failed` | Could not save the photo | **No se pudo guardar la foto** | |
-| `error_number_invalid` | Not a number | **No es un número** | |
+| `error_number_invalid` | Digits and one decimal point only, e.g. 512.5 | **Solo cifras y una coma, p. ej. 512,5** | |
 | `error_meter_required` | This job needs the engine hours | **Este trabajo necesita las horas de motor** | |
 | `error_expiry_before_service` | Must be later than the date of the service | **Debe ser posterior a la fecha del trabajo** | |
 | `hint_expiry_needed` | Without this date there will be no reminder | **Sin esta fecha no habrá recordatorio** | |

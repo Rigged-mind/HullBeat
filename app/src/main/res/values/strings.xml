@@ -471,7 +471,7 @@
     <string name="pdf_compiled_by">Compiled by owner via HullBeat</string>
     <string name="now_enter_hours">Enter hours</string>
     <string name="error_photo_save_failed">Could not save the photo</string>
-    <string name="error_number_invalid">Not a number</string>
+    <string name="error_number_invalid">Digits and one decimal point only, e.g. 512.5</string>
     <string name="error_meter_required">This job needs the engine hours</string>
     <string name="error_expiry_before_service">Must be later than the date of the service</string>
     <string name="hint_expiry_needed">Without this date there will be no reminder</string>

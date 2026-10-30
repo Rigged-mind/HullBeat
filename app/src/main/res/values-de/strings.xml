@@ -455,7 +455,7 @@
     <string name="pdf_footer_brand">HullBeat Wartungsbuch</string>
     <string name="now_enter_hours">Stunden eintragen</string>
     <string name="error_photo_save_failed">Foto konnte nicht gespeichert werden</string>
-    <string name="error_number_invalid">Keine gültige Zahl</string>
+    <string name="error_number_invalid">Nur Ziffern und ein Komma, z. B. 512,5</string>
     <string name="error_meter_required">Für diese Arbeit sind die Betriebsstunden nötig</string>
     <string name="error_expiry_before_service">Muss nach dem Datum der Arbeiten liegen</string>
     <string name="hint_expiry_needed">Ohne dieses Datum gibt es keine Erinnerung</string>

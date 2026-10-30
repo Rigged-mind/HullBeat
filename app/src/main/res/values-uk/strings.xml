@@ -470,7 +470,7 @@
     <string name="pdf_compiled_by">Складено власником за даними HullBeat</string>
     <string name="now_enter_hours">Внести мотогодини</string>
     <string name="error_photo_save_failed">Не вдалося зберегти фотографію</string>
-    <string name="error_number_invalid">Це не число</string>
+    <string name="error_number_invalid">Лише цифри й кома, наприклад 512,5</string>
     <string name="error_meter_required">Для цієї роботи потрібні мотогодини</string>
     <string name="error_expiry_before_service">Має бути пізніше за дату виконання робіт</string>
     <string name="hint_expiry_needed">Без цієї дати нагадування не прийде</string>
