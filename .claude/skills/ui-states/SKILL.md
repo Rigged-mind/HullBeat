@@ -65,6 +65,19 @@ description: Rules for screen states, fields, copy, motion and redesigns in Hull
 екраном). Решта — `OutlinedButton` або `TextButton`, не голосніші за
 первинну. Видалення — вторинний стиль, якщо воно не є єдиною дією екрана.
 
+Кольорові ролі (з [material-3-skill](https://github.com/hamen/material-3-skill),
+підпорядковано `contrastPairs` у `design/palette.json`, а не замість них):
+
+- Спершу брати пару Material: на `X` — `onX`, на `surface*` — `onSurface`
+  або `onSurfaceVariant`. Пара поза цим правилом можлива, але лише разом із
+  новим рядком у `contrastPairs` (так `primary` на `surfaceVariant` у
+  Кольоровій). Пара за правилом теж не перевірена, поки її немає в списку.
+- `outlineVariant` — роздільники й рамки карток; `outline` — межа, що несе
+  зміст (поле вводу, бейдж «НЕМАЄ» проти «МАЛО»).
+- `Color(0x…)` поза `ui/theme/` — обхід палітри:
+  `grep -rn 'Color(0x' app/src/main/java | grep -v /ui/theme/` має бути
+  порожнім.
+
 ## 3. Поле вводу
 
 - Підпис — `label`, а не `placeholder`. `placeholder` показує формат або
