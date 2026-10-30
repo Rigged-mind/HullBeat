@@ -82,6 +82,11 @@ import java.time.LocalDate
  * Appears when tapping "Зроблено" or "Продовжити…" on a card or when launched
  * from a notification. For expiry items (liferaft, flares, extinguisher),
  * new expiry is mandatory and Save is disabled until provided.
+ *
+ * The sheet owns what has to outlive a rotation and what needs an Activity -
+ * the saved fields, the photo picker, the date dialog. What the owner sees
+ * is [QuickLogForm], which takes all of that as parameters, so the form can
+ * be previewed in every scheme without a sheet window around it.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,14 +113,12 @@ fun QuickLogSheet(
     saveFailed: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var dateString by rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
     val date = runCatching { LocalDate.parse(dateString) }.getOrDefault(LocalDate.now())
     var workTypeName by rememberSaveable { mutableStateOf(WorkType.SCHEDULED.name) }
     val workType = runCatching { WorkType.valueOf(workTypeName) }.getOrDefault(WorkType.SCHEDULED)
-    var workTypeExpanded by rememberSaveable { mutableStateOf(false) }
     // ui-spec.md §4: last known + the trend, for the owner to correct. Unlike
     // the expiry below, hours are something the app can honestly estimate.
     var meterText by rememberSaveable { mutableStateOf(item.meterEstimate?.let(::formatMeterInput) ?: "") }
@@ -148,39 +151,18 @@ fun QuickLogSheet(
     // can estimate. A date on a safety certificate is not a measurement.
     var newExpiryText by rememberSaveable { mutableStateOf("") }
 
-    val parsedNewExpiry: LocalDate? = try {
-        if (newExpiryText.isNotBlank()) LocalDate.parse(newExpiryText.trim()) else null
-    } catch (_: Exception) {
-        null
-    }
-
-    // A field that holds something that is not a number blocks Save. It used
-    // to be read as blank, and the record went in without the meter reading.
-    // Blank blocks it too when the job runs on hours: without the reading
-    // the next interval has nothing to count from.
-    val meterRequired = item.hasMeter && LogRequirements.needsMeterReading(item.schedule)
-    val meterOk = !item.hasMeter || LogRequirements.meterInputOk(meterRequired, meterText)
-    val costOk = DecimalInput.isAcceptable(costText)
-
-    // A certificate renewed on the day of the service cannot run out before
-    // it. The date used to be checked for its format only, so a slip of the
-    // year saved an expiry already in the past and the item went red at once
-    // - or, worse, looked renewed in the journal while still expired.
-    // A past expiry is still allowed: logging last spring's renewal after the
-    // fact is a real case.
-    val expiryOk = parsedNewExpiry == null || parsedNewExpiry.isAfter(date)
-
-    // Below the previous reading reads as a replaced meter: the trend starts
-    // over from it. Allowed - meters are replaced - but never silently.
-    val previousHours = remember(item.meterReadings, date) {
-        DueCalculator.previousMeter(item.meterReadings, date)
-    }
-    val enteredHours = if (item.hasMeter) DecimalInput.parse(meterText) else null
-    val isDecrease = enteredHours != null && previousHours != null && enteredHours < previousHours
     var decreaseAcknowledged by rememberSaveable { mutableStateOf(false) }
 
-    val canSave = (!item.needsNewExpiry || parsedNewExpiry != null) && expiryOk &&
-        meterOk && costOk && (!isDecrease || decreaseAcknowledged) && !isSaving
+    val input = QuickLogInput(
+        date = date,
+        workType = workType,
+        meterText = meterText,
+        costText = costText,
+        notesText = notesText,
+        newExpiryText = newExpiryText,
+        photoUris = photoUris,
+        decreaseAcknowledged = decreaseAcknowledged,
+    )
 
     ModalBottomSheet(
         onDismissRequest = { if (!isSaving) onDismiss() },
@@ -189,347 +171,445 @@ fun QuickLogSheet(
         modifier = modifier,
     ) {
         SheetSystemBars()
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Text(
-                text = item.component.displayName(context),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-            )
-
-            DateSelectionRow(
-                selectedDate = date,
-                onDateChange = { dateString = it.toString() },
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = workTypeExpanded,
-                onExpandedChange = { workTypeExpanded = !workTypeExpanded },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                OutlinedTextField(
-                    value = stringResource(workType.labelRes()),
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(stringResource(R.string.field_work_type)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = workTypeExpanded) },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
+        QuickLogForm(
+            item = item,
+            input = input,
+            onInputChange = { new ->
+                dateString = new.date.toString()
+                workTypeName = new.workType.name
+                meterText = new.meterText
+                costText = new.costText
+                notesText = new.notesText
+                newExpiryText = new.newExpiryText
+                photoUriStrings = new.photoUris.map { it.toString() }
+                decreaseAcknowledged = new.decreaseAcknowledged
+            },
+            onPickExpiry = { showExpiryDatePicker = true },
+            onAddPhoto = {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
-                DropdownMenu(
-                    expanded = workTypeExpanded,
-                    onDismissRequest = { workTypeExpanded = false },
-                ) {
-                    WorkType.values().forEach { type ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(type.labelRes())) },
-                            onClick = {
-                                workTypeName = type.name
-                                workTypeExpanded = false
-                            },
-                        )
-                    }
-                }
-            }
-
-            if (item.needsNewExpiry) {
-                OutlinedTextField(
-                    value = newExpiryText,
-                    onValueChange = { newExpiryText = it },
-                    label = { Text(stringResource(R.string.field_new_expiry)) },
-                    placeholder = { Text("YYYY-MM-DD") },
-                    trailingIcon = {
-                        IconButton(onClick = { showExpiryDatePicker = true }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_calendar),
-                                contentDescription = stringResource(R.string.field_new_expiry),
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    },
-                    singleLine = true,
-                    // Red only for a date that is wrong. An empty one is not
-                    // overdue - red means that - it is simply still to come:
-                    // the neutral hint says why it is needed, and Save waits.
-                    isError = (newExpiryText.isNotBlank() && parsedNewExpiry == null) || !expiryOk,
-                    supportingText = when {
-                        !expiryOk -> {
-                            { Text(stringResource(R.string.error_expiry_before_service)) }
-                        }
-                        newExpiryText.isBlank() -> {
-                            { Text(stringResource(R.string.hint_expiry_needed)) }
-                        }
-                        else -> null
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            if (item.hasMeter) {
-                OutlinedTextField(
-                    value = meterText,
-                    onValueChange = { meterText = it },
-                    label = { Text(stringResource(R.string.field_meter_hours)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    // Red is for what is wrong, and a field nobody has typed
-                    // in yet is not: the empty required field says so in the
-                    // neutral hint below, and Save stays off until it is filled.
-                    isError = !meterOk && meterText.isNotBlank(),
-                    // No trend, so no estimate: the last reading is stated under
-                    // the field, always visible, never in it. As a value, saved
-                    // unedited on a later day, it would claim no hours were run.
-                    supportingText = when {
-                        meterRequired && meterText.isBlank() -> {
-                            { Text(stringResource(R.string.error_meter_required)) }
-                        }
-                        !meterOk -> {
-                            { Text(stringResource(R.string.error_number_invalid)) }
-                        }
-                        item.meterEstimate == null && item.lastMeterReading != null -> {
-                            {
-                                Text(
-                                    "${stringResource(R.string.meter_current_reading)}: " +
-                                        "${formatMeterInput(item.lastMeterReading)} ${stringResource(R.string.meter_hours_unit)}"
-                                )
-                            }
-                        }
-                        // Empty, not absent: the line stays reserved, so an
-                        // error appearing does not push the sheet down.
-                        else -> {
-                            { Text("") }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                if (isDecrease && previousHours != null) {
-                    MeterDecreaseWarning(
-                        previousHours = previousHours,
-                        acknowledged = decreaseAcknowledged,
-                        onAcknowledgedChange = { decreaseAcknowledged = it },
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                value = costText,
-                onValueChange = { costText = it },
-                label = { Text("${stringResource(R.string.field_cost)} ($currency)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true,
-                isError = !costOk,
-                supportingText = {
-                    Text(if (costOk) "" else stringResource(R.string.error_number_invalid))
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            OutlinedTextField(
-                value = notesText,
-                onValueChange = { notesText = it },
-                label = { Text(stringResource(R.string.field_notes)) },
-                maxLines = 3,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            if (photoUris.isEmpty()) {
-                OutlinedButton(
-                    onClick = {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_camera),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.detail_add_more_photos),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // Heading only. Adding a photo is the tile at the end of the
-                    // strip below - a second button up here fired the same picker
-                    // under the same label, 24dp away from the first.
-                    Text(
-                        text = stringResource(R.string.detail_photos) + " (${photoUris.size})",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        // First, not last: the strip scrolls, and the tile that
-                        // adds a photo is the one thing that must never be behind
-                        // the right edge. The photos are what you scroll to.
-                        item(key = "add_photo") {
-                            Surface(
-                                shape = RoundedCornerShape(8.dp),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                                color = MaterialTheme.colorScheme.surface,
-                                modifier = Modifier
-                                    .size(72.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .clickable {
-                                        photoPickerLauncher.launch(
-                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                        )
-                                    },
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center,
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_camera),
-                                        contentDescription = stringResource(R.string.detail_add_photo),
-                                        modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        text = stringResource(R.string.detail_add_photo),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Medium,
-                                    )
-                                }
-                            }
-                        }
-
-                        items(photoUris, key = { it.toString() }) { uri ->
-                            Box(
-                                modifier = Modifier
-                                    .size(72.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                val thumb = rememberSampledBitmap(context, uri.toString(), maxDimension = 160)
-                                if (thumb != null) {
-                                    Image(
-                                        bitmap = thumb,
-                                        contentDescription = null,
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentScale = ContentScale.Crop,
-                                    )
-                                } else {
-                                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                                }
-
-                                // The target is 56 dp; the circle drawn inside it stays
-                                // small. Raising the badge itself would cover the
-                                // thumbnail it sits on - and this one DELETES a photo,
-                                // so it is the last control that should be hard to hit.
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.TopEnd)
-                                        .size(56.dp)
-                                        .clickable {
-                                            photoUriStrings = photoUriStrings.filter { it != uri.toString() }
-                                        },
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .clip(CircleShape)
-                                            .background(Color.Black.copy(alpha = 0.65f)),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_close),
-                                            contentDescription = stringResource(R.string.action_delete_photo),
-                                            tint = Color.White,
-                                            modifier = Modifier.size(12.dp),
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(8.dp))
-
-            if (saveFailed) {
-                Text(
-                    text = stringResource(R.string.error_record_save_failed),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                OutlinedButton(
-                    onClick = onDismiss,
-                    enabled = !isSaving,
-                    modifier = Modifier
-                        .weight(1f)
-                        .heightIn(min = 56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-
-                Button(
-                    onClick = {
-                        val hours = if (item.hasMeter) DecimalInput.parse(meterText) else null
-                        val cost = DecimalInput.parse(costText)
-                        val notes = notesText.ifBlank { null }
-                        onSave(date, workType, hours, cost, notes, parsedNewExpiry, photoUris)
-                    },
-                    enabled = canSave,
-                    modifier = Modifier
-                        .weight(1f)
-                        .heightIn(min = 56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    if (isSaving) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                    } else {
-                        Text(stringResource(R.string.action_save))
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
-        }
+            },
+            onCancel = onDismiss,
+            onSave = {
+                val hours = if (item.hasMeter) DecimalInput.parse(input.meterText) else null
+                val cost = DecimalInput.parse(input.costText)
+                val notes = input.notesText.ifBlank { null }
+                onSave(input.date, input.workType, hours, cost, notes, input.newExpiry, input.photoUris)
+            },
+            currency = currency,
+            isSaving = isSaving,
+            saveFailed = saveFailed,
+        )
     }
 
     if (showExpiryDatePicker) {
         AppDatePickerDialog(
-            initialDate = parsedNewExpiry ?: LocalDate.now().plusYears(1),
+            initialDate = input.newExpiry ?: LocalDate.now().plusYears(1),
             onDateSelected = { picked ->
                 newExpiryText = picked.toString()
             },
             onDismiss = { showExpiryDatePicker = false },
         )
+    }
+}
+
+/** Everything the owner has put into the quick-log form, as typed. */
+data class QuickLogInput(
+    val date: LocalDate,
+    val workType: WorkType = WorkType.SCHEDULED,
+    val meterText: String = "",
+    val costText: String = "",
+    val notesText: String = "",
+    val newExpiryText: String = "",
+    val photoUris: List<Uri> = emptyList(),
+    val decreaseAcknowledged: Boolean = false,
+) {
+    val newExpiry: LocalDate?
+        get() = try {
+            if (newExpiryText.isNotBlank()) LocalDate.parse(newExpiryText.trim()) else null
+        } catch (_: Exception) {
+            null
+        }
+}
+
+/** What [input] means for [item]: which fields are wrong, and whether Save is on. */
+class QuickLogCheck(item: NowItem, input: QuickLogInput, isSaving: Boolean) {
+    // A field that holds something that is not a number blocks Save. It used
+    // to be read as blank, and the record went in without the meter reading.
+    // Blank blocks it too when the job runs on hours: without the reading
+    // the next interval has nothing to count from.
+    val meterRequired = item.hasMeter && LogRequirements.needsMeterReading(item.schedule)
+    val meterOk = !item.hasMeter || LogRequirements.meterInputOk(meterRequired, input.meterText)
+    val costOk = DecimalInput.isAcceptable(input.costText)
+
+    val newExpiry = input.newExpiry
+
+    // A certificate renewed on the day of the service cannot run out before
+    // it. The date used to be checked for its format only, so a slip of the
+    // year saved an expiry already in the past and the item went red at once
+    // - or, worse, looked renewed in the journal while still expired.
+    // A past expiry is still allowed: logging last spring's renewal after the
+    // fact is a real case.
+    val expiryOk = newExpiry == null || newExpiry.isAfter(input.date)
+
+    // Below the previous reading reads as a replaced meter: the trend starts
+    // over from it. Allowed - meters are replaced - but never silently.
+    val previousHours = DueCalculator.previousMeter(item.meterReadings, input.date)
+    private val enteredHours = if (item.hasMeter) DecimalInput.parse(input.meterText) else null
+    val isDecrease = enteredHours != null && previousHours != null && enteredHours < previousHours
+
+    val canSave = (!item.needsNewExpiry || newExpiry != null) && expiryOk &&
+        meterOk && costOk && (!isDecrease || input.decreaseAcknowledged) && !isSaving
+}
+
+/**
+ * The quick-log form without its sheet: state in, changes out.
+ *
+ * [onInputChange] receives the whole new [QuickLogInput]; the picker and the
+ * date dialog belong to the caller and are asked for through [onAddPhoto]
+ * and [onPickExpiry].
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuickLogForm(
+    item: NowItem,
+    input: QuickLogInput,
+    onInputChange: (QuickLogInput) -> Unit,
+    onPickExpiry: () -> Unit,
+    onAddPhoto: () -> Unit,
+    onCancel: () -> Unit,
+    onSave: () -> Unit,
+    currency: String,
+    isSaving: Boolean = false,
+    saveFailed: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val check = remember(item, input, isSaving) { QuickLogCheck(item, input, isSaving) }
+    val newExpiryText = input.newExpiryText
+    val meterText = input.meterText
+    val photoUris = input.photoUris
+    var workTypeExpanded by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Text(
+            text = item.component.displayName(context),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
+
+        DateSelectionRow(
+            selectedDate = input.date,
+            onDateChange = { onInputChange(input.copy(date = it)) },
+        )
+
+        ExposedDropdownMenuBox(
+            expanded = workTypeExpanded,
+            onExpandedChange = { workTypeExpanded = !workTypeExpanded },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            OutlinedTextField(
+                value = stringResource(input.workType.labelRes()),
+                onValueChange = {},
+                readOnly = true,
+                label = { Text(stringResource(R.string.field_work_type)) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = workTypeExpanded) },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
+            )
+            DropdownMenu(
+                expanded = workTypeExpanded,
+                onDismissRequest = { workTypeExpanded = false },
+            ) {
+                WorkType.values().forEach { type ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(type.labelRes())) },
+                        onClick = {
+                            onInputChange(input.copy(workType = type))
+                            workTypeExpanded = false
+                        },
+                    )
+                }
+            }
+        }
+
+        if (item.needsNewExpiry) {
+            OutlinedTextField(
+                value = newExpiryText,
+                onValueChange = { onInputChange(input.copy(newExpiryText = it)) },
+                label = { Text(stringResource(R.string.field_new_expiry)) },
+                placeholder = { Text("YYYY-MM-DD") },
+                trailingIcon = {
+                    IconButton(onClick = onPickExpiry) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_calendar),
+                            contentDescription = stringResource(R.string.field_new_expiry),
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                },
+                singleLine = true,
+                // Red only for a date that is wrong. An empty one is not
+                // overdue - red means that - it is simply still to come:
+                // the neutral hint says why it is needed, and Save waits.
+                isError = (newExpiryText.isNotBlank() && check.newExpiry == null) || !check.expiryOk,
+                supportingText = when {
+                    !check.expiryOk -> {
+                        { Text(stringResource(R.string.error_expiry_before_service)) }
+                    }
+                    newExpiryText.isBlank() -> {
+                        { Text(stringResource(R.string.hint_expiry_needed)) }
+                    }
+                    else -> null
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        if (item.hasMeter) {
+            OutlinedTextField(
+                value = meterText,
+                onValueChange = { onInputChange(input.copy(meterText = it)) },
+                label = { Text(stringResource(R.string.field_meter_hours)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true,
+                // Red is for what is wrong, and a field nobody has typed
+                // in yet is not: the empty required field says so in the
+                // neutral hint below, and Save stays off until it is filled.
+                isError = !check.meterOk && meterText.isNotBlank(),
+                // No trend, so no estimate: the last reading is stated under
+                // the field, always visible, never in it. As a value, saved
+                // unedited on a later day, it would claim no hours were run.
+                supportingText = when {
+                    check.meterRequired && meterText.isBlank() -> {
+                        { Text(stringResource(R.string.error_meter_required)) }
+                    }
+                    !check.meterOk -> {
+                        { Text(stringResource(R.string.error_number_invalid)) }
+                    }
+                    item.meterEstimate == null && item.lastMeterReading != null -> {
+                        {
+                            Text(
+                                "${stringResource(R.string.meter_current_reading)}: " +
+                                    "${formatMeterInput(item.lastMeterReading)} ${stringResource(R.string.meter_hours_unit)}"
+                            )
+                        }
+                    }
+                    // Empty, not absent: the line stays reserved, so an
+                    // error appearing does not push the sheet down.
+                    else -> {
+                        { Text("") }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            val previousHours = check.previousHours
+            if (check.isDecrease && previousHours != null) {
+                MeterDecreaseWarning(
+                    previousHours = previousHours,
+                    acknowledged = input.decreaseAcknowledged,
+                    onAcknowledgedChange = { onInputChange(input.copy(decreaseAcknowledged = it)) },
+                )
+            }
+        }
+
+        OutlinedTextField(
+            value = input.costText,
+            onValueChange = { onInputChange(input.copy(costText = it)) },
+            label = { Text("${stringResource(R.string.field_cost)} ($currency)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            singleLine = true,
+            isError = !check.costOk,
+            supportingText = {
+                Text(if (check.costOk) "" else stringResource(R.string.error_number_invalid))
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        OutlinedTextField(
+            value = input.notesText,
+            onValueChange = { onInputChange(input.copy(notesText = it)) },
+            label = { Text(stringResource(R.string.field_notes)) },
+            maxLines = 3,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (photoUris.isEmpty()) {
+            OutlinedButton(
+                onClick = onAddPhoto,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 56.dp),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_camera),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.detail_add_more_photos),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Heading only. Adding a photo is the tile at the end of the
+                // strip below - a second button up here fired the same picker
+                // under the same label, 24dp away from the first.
+                Text(
+                    text = stringResource(R.string.detail_photos) + " (${photoUris.size})",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                )
+
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    // First, not last: the strip scrolls, and the tile that
+                    // adds a photo is the one thing that must never be behind
+                    // the right edge. The photos are what you scroll to.
+                    item(key = "add_photo") {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                            color = MaterialTheme.colorScheme.surface,
+                            modifier = Modifier
+                                .size(72.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable(onClick = onAddPhoto),
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_camera),
+                                    contentDescription = stringResource(R.string.detail_add_photo),
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = stringResource(R.string.detail_add_photo),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                            }
+                        }
+                    }
+
+                    items(photoUris, key = { it.toString() }) { uri ->
+                        Box(
+                            modifier = Modifier
+                                .size(72.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            val thumb = rememberSampledBitmap(context, uri.toString(), maxDimension = 160)
+                            if (thumb != null) {
+                                Image(
+                                    bitmap = thumb,
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            } else {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                            }
+
+                            // The target is 56 dp; the circle drawn inside it stays
+                            // small. Raising the badge itself would cover the
+                            // thumbnail it sits on - and this one DELETES a photo,
+                            // so it is the last control that should be hard to hit.
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(56.dp)
+                                    .clickable {
+                                        onInputChange(input.copy(photoUris = photoUris.filter { it != uri }))
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Black.copy(alpha = 0.65f)),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_close),
+                                        contentDescription = stringResource(R.string.action_delete_photo),
+                                        tint = Color.White,
+                                        modifier = Modifier.size(12.dp),
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        if (saveFailed) {
+            Text(
+                text = stringResource(R.string.error_record_save_failed),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            OutlinedButton(
+                onClick = onCancel,
+                enabled = !isSaving,
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 56.dp),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
+
+            Button(
+                onClick = onSave,
+                enabled = check.canSave,
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 56.dp),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                if (isSaving) {
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                } else {
+                    Text(stringResource(R.string.action_save))
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
     }
 }
 
