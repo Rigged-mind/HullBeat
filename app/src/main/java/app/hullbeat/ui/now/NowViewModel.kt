@@ -507,85 +507,12 @@ class NowViewModel(
             }
             val failedPhotoCount = allUris.size - savedUris.size
 
-            val undo = try { db.withTransaction {
-                var meterReadingId: Long? = null
-                var createdMeterId: Long? = null
-                if (meterHours != null) {
-                    val meters = db.meterDao().forComponent(componentId)
-                    val primaryMeter = meters.firstOrNull() ?: run {
-                        val vesselMeters = db.meterDao().forVessel(vesselId)
-                        val vComponents = db.componentDao().forVessel(vesselId).associateBy { it.id }
-                        val comp = vComponents[componentId]
-                        val engineMeter = if (comp != null && comp.categoryCode in setOf("engine_main", "drivetrain", "engine")) {
-                            if (comp.engineIndex != null) {
-                                vesselMeters.firstOrNull { vComponents[it.componentId]?.engineIndex == comp.engineIndex }
-                            } else {
-                                vesselMeters.firstOrNull { vComponents[it.componentId]?.categoryCode in setOf("engine_main", "drivetrain", "engine") }
-                                    ?: vesselMeters.firstOrNull()
-                            }
-                        } else null
-                        engineMeter ?: run {
-                            val newId = db.meterDao().insertMeter(Meter(componentId = componentId, unit = MeterUnit.HOURS))
-                            createdMeterId = newId
-                            Meter(id = newId, componentId = componentId, unit = MeterUnit.HOURS)
-                        }
-                    }
-                    meterReadingId = db.meterDao().insertReading(
-                        MeterReading(meterId = primaryMeter.id, date = date, value = meterHours)
-                    )
-                }
-
-                val record = ServiceRecord(
-                    componentId = componentId,
-                    scheduleId = scheduleId,
-                    date = date,
-                    workTypes = workType.name,
-                    description = if (newExpiry != null) {
-                        context.getString(R.string.action_renew)
-                    } else {
-                        context.getString(R.string.action_mark_done)
-                    },
-                    cost = cost,
-                    currency = if (cost != null) AppPreferences.getCurrencyCode(context) else null,
-                    notes = notes,
-                    meterReadingId = meterReadingId,
+            val undo = try {
+                writeQuickLog(
+                    db, context, componentId, vesselId, scheduleId, date, workType,
+                    meterHours, cost, notes, newExpiry, savedUris, failedPhotoCount,
                 )
-                val recordId = db.serviceRecordDao().insert(record)
-                db.componentDao().unarchive(componentId)
-
-                val attachmentIds = savedUris.map { uri ->
-                    db.attachmentDao().insert(
-                        Attachment(
-                            parentType = ParentType.SERVICE_RECORD,
-                            parentId = recordId,
-                            kind = AttachmentKind.PHOTO,
-                            fileUri = uri.toString(),
-                            takenAt = date,
-                        )
-                    )
-                }
-
-                val expiryBefore = mutableListOf<ServiceSchedule>()
-                if (newExpiry != null) {
-                    val schedules = db.scheduleDao().forComponent(componentId)
-                    for (s in schedulesToRenew(schedules, scheduleId)) {
-                        expiryBefore += s
-                        db.scheduleDao().update(s.copy(expiresOn = newExpiry, deferredUntil = null, deferReason = null))
-                    }
-                }
-
-                QuickLogUndo(
-                    recordId = recordId,
-                    meterReadingId = meterReadingId,
-                    createdMeterId = createdMeterId,
-                    expiryBefore = expiryBefore,
-                    componentId = componentId,
-                    vesselId = vesselId,
-                    attachmentIds = attachmentIds,
-                    attachmentId = attachmentIds.firstOrNull(),
-                    failedPhotoCount = failedPhotoCount,
-                )
-            } } catch (e: CancellationException) {
+            } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Log.e("NowViewModel", "Quick log for component $componentId was not saved", e)
@@ -831,6 +758,107 @@ internal fun schedulesToRenew(
     val expiring = schedules.filter(LogRequirements::needsNewExpiry)
     if (scheduleId == null) return expiring
     return expiring.filter { it.id == scheduleId }
+}
+
+/**
+ * The database half of [NowViewModel.saveQuickLog]: one transaction, nothing
+ * else. Kept apart from the ViewModel so a test can run it on an in-memory
+ * database - the ViewModel itself clears the selected vessel in the owner's
+ * preferences when it is not in the database it was given, and after a save
+ * it cancels notifications and starts the maintenance check.
+ */
+internal suspend fun writeQuickLog(
+    db: AppDatabase,
+    context: Context,
+    componentId: Long,
+    vesselId: Long,
+    scheduleId: Long?,
+    date: LocalDate,
+    workType: WorkType,
+    meterHours: Double?,
+    cost: Double?,
+    notes: String?,
+    newExpiry: LocalDate?,
+    savedUris: List<Uri>,
+    failedPhotoCount: Int,
+): NowViewModel.QuickLogUndo = db.withTransaction {
+    var meterReadingId: Long? = null
+    var createdMeterId: Long? = null
+    if (meterHours != null) {
+        val meters = db.meterDao().forComponent(componentId)
+        val primaryMeter = meters.firstOrNull() ?: run {
+            val vesselMeters = db.meterDao().forVessel(vesselId)
+            val vComponents = db.componentDao().forVessel(vesselId).associateBy { it.id }
+            val comp = vComponents[componentId]
+            val engineMeter = if (comp != null && comp.categoryCode in setOf("engine_main", "drivetrain", "engine")) {
+                if (comp.engineIndex != null) {
+                    vesselMeters.firstOrNull { vComponents[it.componentId]?.engineIndex == comp.engineIndex }
+                } else {
+                    vesselMeters.firstOrNull { vComponents[it.componentId]?.categoryCode in setOf("engine_main", "drivetrain", "engine") }
+                        ?: vesselMeters.firstOrNull()
+                }
+            } else null
+            engineMeter ?: run {
+                val newId = db.meterDao().insertMeter(Meter(componentId = componentId, unit = MeterUnit.HOURS))
+                createdMeterId = newId
+                Meter(id = newId, componentId = componentId, unit = MeterUnit.HOURS)
+            }
+        }
+        meterReadingId = db.meterDao().insertReading(
+            MeterReading(meterId = primaryMeter.id, date = date, value = meterHours)
+        )
+    }
+
+    val record = ServiceRecord(
+        componentId = componentId,
+        scheduleId = scheduleId,
+        date = date,
+        workTypes = workType.name,
+        description = if (newExpiry != null) {
+            context.getString(R.string.action_renew)
+        } else {
+            context.getString(R.string.action_mark_done)
+        },
+        cost = cost,
+        currency = if (cost != null) AppPreferences.getCurrencyCode(context) else null,
+        notes = notes,
+        meterReadingId = meterReadingId,
+    )
+    val recordId = db.serviceRecordDao().insert(record)
+    db.componentDao().unarchive(componentId)
+
+    val attachmentIds = savedUris.map { uri ->
+        db.attachmentDao().insert(
+            Attachment(
+                parentType = ParentType.SERVICE_RECORD,
+                parentId = recordId,
+                kind = AttachmentKind.PHOTO,
+                fileUri = uri.toString(),
+                takenAt = date,
+            )
+        )
+    }
+
+    val expiryBefore = mutableListOf<ServiceSchedule>()
+    if (newExpiry != null) {
+        val schedules = db.scheduleDao().forComponent(componentId)
+        for (s in schedulesToRenew(schedules, scheduleId)) {
+            expiryBefore += s
+            db.scheduleDao().update(s.copy(expiresOn = newExpiry, deferredUntil = null, deferReason = null))
+        }
+    }
+
+    NowViewModel.QuickLogUndo(
+        recordId = recordId,
+        meterReadingId = meterReadingId,
+        createdMeterId = createdMeterId,
+        expiryBefore = expiryBefore,
+        componentId = componentId,
+        vesselId = vesselId,
+        attachmentIds = attachmentIds,
+        attachmentId = attachmentIds.firstOrNull(),
+        failedPhotoCount = failedPhotoCount,
+    )
 }
 
 /** See [NowViewModel.quickLogStatus]. [scheduleId] tells a sheet whether it is its own save. */
