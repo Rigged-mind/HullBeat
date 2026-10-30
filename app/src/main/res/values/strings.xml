@@ -224,6 +224,9 @@
     <string name="picker_gallery">Gallery</string>
     <string name="picker_files">Files</string>
     <string name="vessel_photo_dialog_title">Vessel Photo</string>
+    <!-- TalkBack: "Double-tap to …" on the Boat tab's hero card -->
+    <string name="vessel_photo_change_label">change the vessel photo</string>
+    <string name="vessel_photo_add_label">add a vessel photo</string>
 
     <!-- Date selection -->
     <string name="date_today">Today</string>

@@ -88,7 +88,11 @@ def kt_expr(hexval):
         return "Color.Black"
     if hexval in RAMP_BY_HEX:
         return RAMP_BY_HEX[hexval]
-    return "Color(0xFF%s)" % hexval.lstrip("#").upper()
+    h = hexval.lstrip("#").upper()
+    if len(h) == 8:
+        # #RRGGBBAA in the palette (CSS order), 0xAARRGGBB in Compose.
+        return "Color(0x%s%s)" % (h[6:8], h[:6])
+    return "Color(0xFF%s)" % h
 
 
 def argb(hexval):
@@ -187,6 +191,13 @@ data class ExtendedColors(
     val status: StatusColors,
     val tint: StatusTints,
     val divider: Color,
+    /**
+     * Translucent band under text laid over the owner's photo. Its alpha is
+     * checked by check_contrast.py against a pure white and a pure black
+     * backdrop, so `onPhoto` holds on any picture.
+     */
+    val photoScrim: Color,
+    val onPhoto: Color,
     /** True only for the Sunlight scheme: use 2.dp borders and skip muted greys. */
     val isHighContrast: Boolean,
     /** Sunlight promotes dividers to real borders. */
@@ -199,6 +210,8 @@ val LocalExtendedColors = staticCompositionLocalOf {
             Color.Unspecified, Color.Unspecified),
         tint = StatusTints(Color.Unspecified, Color.Unspecified, Color.Unspecified),
         divider = Color.Unspecified,
+        photoScrim = Color.Unspecified,
+        onPhoto = Color.Unspecified,
         isHighContrast = false,
         borderWidth = 1,
     )
@@ -237,6 +250,8 @@ def gen_kt(p):
             out.append("        %s = %s,\n" % (field, kt_expr(t[token])))
         out.append("    ),\n")
         out.append("    divider = %s,\n" % kt_expr(t["divider"]))
+        out.append("    photoScrim = %s,\n" % kt_expr(t["photoScrim"]))
+        out.append("    onPhoto = %s,\n" % kt_expr(t["onPhoto"]))
         out.append("    isHighContrast = %s,\n"
                    % ("true" if s["isHighContrast"] else "false"))
         out.append("    borderWidth = %s,\n" % s["borderWidth"].rstrip("px"))

@@ -57,11 +57,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
@@ -94,6 +89,7 @@ import app.hullbeat.data.db.displayName
 import androidx.compose.foundation.background
 import app.hullbeat.ui.components.AddFromCatalogSheet
 import app.hullbeat.ui.components.rememberSampledBitmap
+import app.hullbeat.ui.theme.LocalExtendedColors
 import app.hullbeat.ui.theme.LocalScheme
 import app.hullbeat.ui.theme.Scheme
 import app.hullbeat.ui.theme.categorySectionColor
@@ -706,108 +702,100 @@ private fun VesselHeader(
         color = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier.fillMaxWidth(),
     ) {
+        // A floor, not a fixed height: a two-line name at a large font scale
+        // is taller than 160 dp, and a fixed card cut its top off. The photo
+        // follows the card with matchParentSize, so only the text (and the
+        // placeholder icon above it) decides how tall it grows.
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(160.dp)
-                .clickable { onPickPhoto() },
+                .heightIn(min = 160.dp)
+                // clickable merges the card's text into one node, so TalkBack
+                // reads the full name once, even where the screen ends it in
+                // "…", and then says what the tap does.
+                .clickable(
+                    onClickLabel = stringResource(
+                        if (photo != null) R.string.vessel_photo_change_label
+                        else R.string.vessel_photo_add_label
+                    ),
+                ) { onPickPhoto() },
         ) {
             if (photo != null) {
+                // Decorative: the name is the Text below, and a description
+                // here made TalkBack read it twice.
                 Image(
                     bitmap = photo,
-                    contentDescription = vessel?.name,
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.matchParentSize(),
                 )
-                // The name sits ON the photo, so it cannot rely on the theme
-                // for contrast - the owner's picture might be a white hull
-                // against a bright sky. A scrim over the lower half carries
-                // the text instead, and it works identically in all four
-                // colour schemes because it is part of the image, not the
-                // palette.
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                0.45f to Color.Transparent,
-                                1f to Color.Black.copy(alpha = 0.70f),
-                            )
-                        )
-                )
-            } else {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_nav_boat),
-                        contentDescription = null,
-                        modifier = Modifier.size(56.dp),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
             }
 
             val name = vessel?.name ?: stringResource(R.string.setup_default_name)
             val countLine = "$componentCount " +
                 stringResource(R.string.boat_component_count_suffix)
-            // Stroke width is in PIXELS, so it has to come from the density
-            // or the outline is hairline on one phone and heavy on another.
-            val outline = with(LocalDensity.current) { 2.dp.toPx() }
+            val extended = LocalExtendedColors.current
 
+            // The name sits ON the photo, so it cannot rely on the theme for
+            // contrast - a screenshot, a white hull or a bright sky can sit
+            // right behind it. A gradient over the card's lower half left the
+            // top of the name on 16 % black, 1.4:1 on white. The scrim is
+            // solid under the whole text block instead, grows with it at
+            // large font scales, and its alpha is the photoScrim token that
+            // check_contrast.py judges against a pure white backdrop.
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                    .fillMaxWidth(),
             ) {
                 if (photo != null) {
-                    // A scrim alone is not enough: a white hull against a
-                    // bright sky fills the whole frame, and the gradient only
-                    // darkens the bottom. The name is drawn twice - once as
-                    // an outline, once filled on top - so it holds its shape
-                    // whatever the owner photographed.
-                    Box {
-                        Text(
-                            text = name,
-                            style = MaterialTheme.typography.headlineMedium.copy(
-                                drawStyle = Stroke(width = outline, join = StrokeJoin.Round),
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(24.dp)
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(Color.Transparent, extended.photoScrim),
+                                )
                             ),
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black.copy(alpha = 0.75f),
-                        )
-                        Text(
-                            text = name,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                        )
-                    }
-                    Text(
-                        text = countLine,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            // A shadow here, not a stroke: at this size an
-                            // outline closes the counters of о, в and а and
-                            // the line turns into a smudge.
-                            shadow = Shadow(
-                                color = Color.Black.copy(alpha = 0.85f),
-                                offset = Offset(0f, 1f),
-                                blurRadius = 3f,
-                            ),
-                        ),
-                        color = Color.White,
                     )
                 } else {
+                    // In the column, not centred on the card: centred, it sat
+                    // on top of a two-line name. 16 + 56 + 8 dp above a
+                    // one-line block keeps the card at its 160 dp floor.
+                    Icon(
+                        painter = painterResource(R.drawable.ic_nav_boat),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = 16.dp, bottom = 8.dp)
+                            .size(56.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (photo != null) Modifier.background(extended.photoScrim)
+                            else Modifier
+                        )
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                ) {
+                    val textColor = if (photo != null) extended.onPhoto
+                        else MaterialTheme.colorScheme.onSurfaceVariant
                     Text(
                         text = name,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = textColor,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         text = countLine,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = textColor,
                     )
                 }
             }

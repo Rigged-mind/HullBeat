@@ -226,6 +226,8 @@
     <string name="picker_gallery">Галерея</string>
     <string name="picker_files">Файли</string>
     <string name="vessel_photo_dialog_title">Фото судна</string>
+    <string name="vessel_photo_change_label">змінити фото судна</string>
+    <string name="vessel_photo_add_label">додати фото судна</string>
 
     <!-- Date selection -->
     <string name="date_today">Сьогодні</string>

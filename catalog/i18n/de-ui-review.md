@@ -1,6 +1,6 @@
 # Interface strings to review - de
 
-412 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
+414 strings and 29 plurals drafted. None is confirmed. Check two things on each row: is it what a sailor would say, and does it fit a phone screen? Navigation tabs and buttons have the least room.
 
 `%s`, `%1$s`, `%d` are filled in by the app; keep them, move them freely within the sentence.
 
@@ -218,6 +218,8 @@ The places where a wrong word costs most. Each names the rows it is about, with 
 | `picker_gallery` | Gallery | **Galerie** | |
 | `picker_files` | Files | **Dateien** | |
 | `vessel_photo_dialog_title` | Vessel Photo | **Foto des Boots** | |
+| `vessel_photo_change_label` | change the vessel photo | **das Foto des Boots ändern** | |
+| `vessel_photo_add_label` | add a vessel photo | **ein Foto des Boots hinzufügen** | |
 | `date_today` | Today | **Heute** | |
 | `date_yesterday` | Yesterday | **Gestern** | |
 | `date_pick_other` | Calendar… | **Kalender…** | |

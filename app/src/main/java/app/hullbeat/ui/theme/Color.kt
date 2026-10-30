@@ -64,6 +64,13 @@ data class ExtendedColors(
     val status: StatusColors,
     val tint: StatusTints,
     val divider: Color,
+    /**
+     * Translucent band under text laid over the owner's photo. Its alpha is
+     * checked by check_contrast.py against a pure white and a pure black
+     * backdrop, so `onPhoto` holds on any picture.
+     */
+    val photoScrim: Color,
+    val onPhoto: Color,
     /** True only for the Sunlight scheme: use 2.dp borders and skip muted greys. */
     val isHighContrast: Boolean,
     /** Sunlight promotes dividers to real borders. */
@@ -76,6 +83,8 @@ val LocalExtendedColors = staticCompositionLocalOf {
             Color.Unspecified, Color.Unspecified),
         tint = StatusTints(Color.Unspecified, Color.Unspecified, Color.Unspecified),
         divider = Color.Unspecified,
+        photoScrim = Color.Unspecified,
+        onPhoto = Color.Unspecified,
         isHighContrast = false,
         borderWidth = 1,
     )
@@ -227,6 +236,8 @@ val LightExtended = ExtendedColors(
         deferred = Color(0xFFE5EDF2),
     ),
     divider = Color(0xFFD3E0DC),
+    photoScrim = Color(0x8C000000),
+    onPhoto = Color.White,
     isHighContrast = false,
     borderWidth = 1,
 )
@@ -244,6 +255,8 @@ val ColorfulExtended = ExtendedColors(
         deferred = Color(0xFFE5EDF2),
     ),
     divider = Color(0xFFD3E0DC),
+    photoScrim = Color(0x8C000000),
+    onPhoto = Color.White,
     isHighContrast = false,
     borderWidth = 1,
 )
@@ -261,6 +274,8 @@ val DarkExtended = ExtendedColors(
         deferred = Color(0xFF16242C),
     ),
     divider = Color(0xFF25332F),
+    photoScrim = Color(0x8C000000),
+    onPhoto = Color.White,
     isHighContrast = false,
     borderWidth = 1,
 )
@@ -278,6 +293,8 @@ val SunlightExtended = ExtendedColors(
         deferred = Color(0xFFE5EDF2),
     ),
     divider = Color(0xFF6E8781),
+    photoScrim = Color(0xAA000000),
+    onPhoto = Color.White,
     isHighContrast = true,
     borderWidth = 2,
 )
@@ -295,6 +312,8 @@ val NightExtended = ExtendedColors(
         deferred = Color(0xFF0F0503),
     ),
     divider = Color(0xFF2A0F09),
+    photoScrim = Color(0x8C000000),
+    onPhoto = Color.White,
     isHighContrast = false,
     borderWidth = 1,
 )

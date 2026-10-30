@@ -60,7 +60,9 @@
         "statusDeferred": "#3D5A6C",
         "tintOverdue": "#FBE4E2",
         "tintDueSoon": "#FDF0DC",
-        "tintDeferred": "#E5EDF2"
+        "tintDeferred": "#E5EDF2",
+        "photoScrim": "#0000008C",
+        "onPhoto": "#FFFFFF"
       },
       "isHighContrast": false,
       "borderWidth": "1px",
@@ -114,7 +116,9 @@
         "statusDeferred": "#3D5A6C",
         "tintOverdue": "#FBE4E2",
         "tintDueSoon": "#FDF0DC",
-        "tintDeferred": "#E5EDF2"
+        "tintDeferred": "#E5EDF2",
+        "photoScrim": "#0000008C",
+        "onPhoto": "#FFFFFF"
       },
       "isHighContrast": false,
       "borderWidth": "1px",
@@ -168,7 +172,9 @@
         "statusDeferred": "#9EC2D6",
         "tintOverdue": "#2A1614",
         "tintDueSoon": "#2A2010",
-        "tintDeferred": "#16242C"
+        "tintDeferred": "#16242C",
+        "photoScrim": "#0000008C",
+        "onPhoto": "#FFFFFF"
       },
       "isHighContrast": false,
       "borderWidth": "1px",
@@ -222,7 +228,9 @@
         "statusDeferred": "#22404F",
         "tintOverdue": "#F7E3E1",
         "tintDueSoon": "#F7EEDC",
-        "tintDeferred": "#E5EDF2"
+        "tintDeferred": "#E5EDF2",
+        "photoScrim": "#000000AA",
+        "onPhoto": "#FFFFFF"
       },
       "isHighContrast": true,
       "borderWidth": "2px",
@@ -276,7 +284,9 @@
         "statusDeferred": "#D84D34",
         "tintOverdue": "#2E0E07",
         "tintDueSoon": "#240B05",
-        "tintDeferred": "#0F0503"
+        "tintDeferred": "#0F0503",
+        "photoScrim": "#0000008C",
+        "onPhoto": "#FFFFFF"
       },
       "isHighContrast": false,
       "borderWidth": "1px",
@@ -394,6 +404,11 @@
       "outline",
       "background",
       "ui"
+    ],
+    [
+      "onPhoto",
+      "photoScrim",
+      "text"
     ]
   ]
 }

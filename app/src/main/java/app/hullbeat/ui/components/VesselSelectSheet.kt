@@ -230,7 +230,10 @@ fun VesselSelectSheet(
                                     text = vessel.displayName(context),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    maxLines = 1,
+                                    // Two, like the Boat tab's hero card: the
+                                    // sheet is the one other place a long
+                                    // name is read.
+                                    maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
                                 )
                                 val subtitle = listOfNotNull(

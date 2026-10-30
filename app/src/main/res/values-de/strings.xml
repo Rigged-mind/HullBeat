@@ -214,6 +214,8 @@
     <string name="picker_gallery">Galerie</string>
     <string name="picker_files">Dateien</string>
     <string name="vessel_photo_dialog_title">Foto des Boots</string>
+    <string name="vessel_photo_change_label">das Foto des Boots ändern</string>
+    <string name="vessel_photo_add_label">ein Foto des Boots hinzufügen</string>
 
     <!-- Date selection -->
     <string name="date_today">Heute</string>

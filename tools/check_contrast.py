@@ -32,7 +32,26 @@ def luminance(hex_colour):
     return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
 
 
+def over(hex_colour, backdrop):
+    """#RRGGBBAA composited onto an opaque #RRGGBB, the way Compose blends."""
+    h, b = hex_colour.lstrip("#"), backdrop.lstrip("#")
+    alpha = int(h[6:8], 16) / 255
+    return "#" + "".join(
+        "%02X" % round(int(h[i:i + 2], 16) * alpha + int(b[i:i + 2], 16) * (1 - alpha))
+        for i in (0, 2, 4))
+
+
 def ratio(fg, bg):
+    # A translucent background (photoScrim) sits on whatever the owner
+    # photographed, so it is judged on the worst backdrop it can land on:
+    # pure white and pure black bound every photo between them. What passes
+    # is BRIGHTNESS under the text, not the picture's content: a photo that
+    # has writing of its own (a screenshot, a sign on the quay) still shows
+    # that writing through the band, and no alpha short of opaque hides it.
+    # The pass also holds only where the scrim is solid: the hero's 24 dp
+    # fade above the band carries no text and is not covered here.
+    if len(bg.lstrip("#")) == 8:
+        return min(ratio(fg, over(bg, backdrop)) for backdrop in ("#FFFFFF", "#000000"))
     a, b = luminance(fg), luminance(bg)
     hi, lo = max(a, b), min(a, b)
     return (hi + 0.05) / (lo + 0.05)
