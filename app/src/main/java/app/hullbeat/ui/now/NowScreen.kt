@@ -907,7 +907,14 @@ private fun UpcomingMaintenanceCard(
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    // Colorful: the muted grey label on the pale plate read as
+                    // a disabled button, the same look as Save while a form is
+                    // wrong. The brand colour says it works.
+                    contentColor = if (isColorful) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
                 ),
             ) {
                 Text(

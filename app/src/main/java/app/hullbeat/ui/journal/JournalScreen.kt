@@ -130,12 +130,18 @@ fun JournalScreen(
                     selected = uiState.selectedVesselId == null,
                     onClick = { onSelectVessel(null) },
                     label = { Text(stringResource(R.string.fleet_all)) },
+                    colors = journalChipColors(),
+                    border = journalChipBorder(uiState.selectedVesselId == null),
+                    leadingIcon = journalChipCheck(uiState.selectedVesselId == null),
                 )
                 uiState.vessels.forEach { v ->
                     FilterChip(
                         selected = uiState.selectedVesselId == v.id,
                         onClick = { onSelectVessel(v.id) },
                         label = { Text(v.name) },
+                        colors = journalChipColors(),
+                        border = journalChipBorder(uiState.selectedVesselId == v.id),
+                        leadingIcon = journalChipCheck(uiState.selectedVesselId == v.id),
                     )
                 }
             }
@@ -159,6 +165,9 @@ fun JournalScreen(
                     selected = uiState.selectedCategoryCode == null,
                     onClick = { viewModel.selectCategory(null) },
                     label = { Text(stringResource(R.string.journal_all_categories)) },
+                    colors = journalChipColors(),
+                    border = journalChipBorder(uiState.selectedCategoryCode == null),
+                    leadingIcon = journalChipCheck(uiState.selectedCategoryCode == null),
                 )
                 sortedCategories.forEach { (catCode, catName) ->
                     val secColor = categorySectionColor(catCode)
@@ -174,26 +183,19 @@ fun JournalScreen(
                                     painter = painterResource(categoryIconRes(catCode)),
                                     contentDescription = null,
                                     modifier = Modifier.size(16.dp),
-                                    tint = if (isSelected) secColor.onContainer else secColor.accent,
+                                    // The section colour stays on the icon only:
+                                    // as a frame it put Electrical's amber and
+                                    // Propulsion's copper around a filter.
+                                    tint = if (isSelected) {
+                                        MaterialTheme.colorScheme.onPrimaryContainer
+                                    } else {
+                                        secColor.accent
+                                    },
                                 )
                             }
                         } else null,
-                        border = if (isColorful) {
-                            BorderStroke(
-                                1.dp,
-                                if (isSelected) secColor.accent else secColor.accent.copy(alpha = 0.5f)
-                            )
-                        } else FilterChipDefaults.filterChipBorder(enabled = true, selected = isSelected),
-                        colors = if (isColorful) {
-                            FilterChipDefaults.filterChipColors(
-                                containerColor = secColor.container.copy(alpha = 0.35f),
-                                labelColor = MaterialTheme.colorScheme.onSurface,
-                                iconColor = secColor.accent,
-                                selectedContainerColor = secColor.container,
-                                selectedLabelColor = secColor.onContainer,
-                                selectedLeadingIconColor = secColor.onContainer,
-                            )
-                        } else FilterChipDefaults.filterChipColors(),
+                        border = journalChipBorder(isSelected),
+                        colors = journalChipColors(),
                     )
                 }
             }
@@ -619,17 +621,15 @@ private fun JournalRecordRow(
         val secColor = categorySectionColor(entry.component.categoryCode)
         val isColorful = LocalScheme.current == Scheme.COLORFUL
 
-        // Main card
+        // Main card. Its frame is neutral in every scheme: a section colour is
+        // for icons and markers, and the category chip inside already carries it.
         Card(
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             ),
-            border = BorderStroke(
-                1.dp,
-                if (isColorful) secColor.accent.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant
-            ),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         ) {
             Column(
                 modifier = Modifier
@@ -949,3 +949,44 @@ private fun formatMonthHeader(monthValue: Int, locale: Locale): String {
     val name = month.getDisplayName(TextStyle.FULL_STANDALONE, locale)
     return name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
 }
+
+/*
+ * Colorful only. The stock selected chip fills with secondaryContainer, which
+ * in this scheme is the screen background itself, so the chosen boat read as
+ * plain text beside framed unselected ones. Selected here looks the way the
+ * settings drawer marks a choice: primaryContainer and a 1.5 dp brand frame.
+ */
+@Composable
+private fun journalChipColors() = if (LocalScheme.current == Scheme.COLORFUL) {
+    FilterChipDefaults.filterChipColors(
+        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    )
+} else {
+    FilterChipDefaults.filterChipColors()
+}
+
+@Composable
+private fun journalChipBorder(selected: Boolean) =
+    if (LocalScheme.current == Scheme.COLORFUL && selected) {
+        BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary)
+    } else {
+        FilterChipDefaults.filterChipBorder(enabled = true, selected = selected)
+    }
+
+// Colorful only: a tick on a chosen chip that has no icon of its own, so the
+// choice is not carried by fill and frame weight alone.
+@Composable
+private fun journalChipCheck(selected: Boolean): (@Composable () -> Unit)? =
+    if (selected && LocalScheme.current == Scheme.COLORFUL) {
+        {
+            Icon(
+                painter = painterResource(R.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+            )
+        }
+    } else {
+        null
+    }
