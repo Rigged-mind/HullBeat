@@ -4,7 +4,9 @@ import android.Manifest
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -446,20 +448,39 @@ fun HullBeatMainScaffold(
                 // insets counted them twice and clipped Store to 54 dp.
                 windowInsets = WindowInsets(0),
             ) {
-                // Under the top bar, the four tabs start where the eye does.
-                NavTab.entries.forEach { tab ->
-                    NavigationRailItem(
-                        selected = selectedTab == tab,
-                        onClick = { selectedTab = tab },
-                        icon = {
-                            Icon(
-                                painter = painterResource(tab.iconRes),
-                                contentDescription = stringResource(tab.titleRes),
-                                modifier = Modifier.size(24.dp),
+                // Spread over the height, as the bottom bar spreads them over
+                // the width: packed under the top bar they left the lower half
+                // of a phone's rail empty, the half a thumb reaches on its side.
+                // Capped at 480 dp and centred: spread over a tablet's 1280 dp
+                // they stood 400 dp apart and stopped reading as one set.
+                // No fillMaxWidth: the rail only sets a minimum width, so it
+                // took the whole row and pushed the screen off.
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .heightIn(max = 480.dp)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceEvenly,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        NavTab.entries.forEach { tab ->
+                            NavigationRailItem(
+                                selected = selectedTab == tab,
+                                onClick = { selectedTab = tab },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(tab.iconRes),
+                                        contentDescription = stringResource(tab.titleRes),
+                                        modifier = Modifier.size(24.dp),
+                                    )
+                                },
+                                label = { Text(stringResource(tab.titleRes)) },
                             )
-                        },
-                        label = { Text(stringResource(tab.titleRes)) },
-                    )
+                        }
+                    }
                 }
             }
         }
