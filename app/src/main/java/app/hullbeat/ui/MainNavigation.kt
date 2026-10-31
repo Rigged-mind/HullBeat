@@ -241,9 +241,9 @@ fun HullBeatMainScaffold(
                 },
                 quickLogStatus = quickLogStatus,
                 onQuickLogHandled = { nowViewModel.acknowledgeQuickLog() },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .widthIn(max = 840.dp),
+                // Full width: its top bar runs edge to edge, and the screen
+                // centres its own list in 840 dp.
+                modifier = Modifier.fillMaxSize(),
             )
         }
         return
@@ -469,10 +469,14 @@ fun HullBeatMainScaffold(
                 .fillMaxHeight(),
             contentAlignment = Alignment.TopCenter,
         ) {
+            // widthIn BEFORE fillMaxSize: the other way round fillMaxSize had
+            // already fixed the full width and the cap changed nothing, so on
+            // a tablet on its side buttons ran 1200 dp and a row's chevron
+            // sat a screen away from its name.
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .widthIn(max = 840.dp),
+                    .widthIn(max = 840.dp)
+                    .fillMaxSize(),
             ) {
                 when (selectedTab) {
                     NavTab.NOW -> {

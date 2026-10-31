@@ -286,11 +286,16 @@ fun ComponentDetailScreen(
         },
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
+        // The list keeps the full width, so it scrolls from anywhere, but its
+        // content sits in the same 840 dp column as the tabs: on a tablet on
+        // its side the buttons ran 1200 dp and a passport value sat a screen
+        // away from its label.
+        val side = maxOf(16, (LocalConfiguration.current.screenWidthDp - 840) / 2 + 16).dp
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(horizontal = side, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             flingBehavior = appFlingBehavior(),
         ) {
